@@ -1,4 +1,9 @@
 root: ./content
 structure:
   summary: SUMMARY.md
+plugins:
+  - mathjax
+pluginsConfig:
+  mathjax:
+    version: "3.1.2"
 
