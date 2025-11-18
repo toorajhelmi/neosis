@@ -359,17 +359,16 @@ Executing the internal computation incurs a running cost that depends on the siz
 $$
 C_{\text{run}} : \mathbb{N}^3 \to \mathbb{R}_{\ge 0},
 $$
-which may, for example, depend on the number of internal nodes, input bits, and output bits. A simple choice is
+which may, for example, depend on the number of internal nodes and input bits. A simple choice is
 $$
-C_{\text{run}}(n_t, m_t, p_t)
-  = c_{\text{node}}\, n_t + c_{\text{in}}\, m_t + c_{\text{out}}\, p_t,
+C_{\text{run}}(n_t, m_t)
+  = c_{\text{node}}\, n_t + c_{\text{in}}\, m_t,
 $$
-with non-negative constants $$c_{\text{node}}, c_{\text{in}}, c_{\text{out}}$$.
+with non-negative constants $$c_{\text{node}}, c_{\text{in}}$$.
+$$
+N_t' = N_t - C_{\text{run}}(n_t, m_t).
+$$
 
-Given this cost function, the Neo’s energy after running the computation but before receiving any reward is
-$$
-N_t' = N_t - C_{\text{run}}(n_t, m_t, p_t).
-$$
 If $$N_t' \le 0$$, the Neo has exhausted its energy and becomes inert; its trajectory terminates, and no further computation or mutation occurs.
 
 ### 2.6.4 Reward (Spark) and Energy Update
