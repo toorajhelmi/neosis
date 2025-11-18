@@ -38,7 +38,7 @@ where $$k_i$$ is the parameter dimensionality associated with that node. These p
 
 This separation between discrete structure (which nodes exist and how they are connected) and continuous parameters $$\theta_i$$ (how each node computes) is deliberate. It allows Neos to evolve by changing their topology in a combinatorial way, while still supporting rich, smooth families of local computations at each node. Later sections will make this distinction explicit when we define the internal graph of a Neo and the node-local update functions.
 
-### 2.1.5 Global State at Tick \(t\)
+### 2.1.5 Global State at Tick $$t$$
 
 At each tick $$t$$, we conceptually distinguish between the internal state of a Neo and the state of the surrounding world. We write
 $$
