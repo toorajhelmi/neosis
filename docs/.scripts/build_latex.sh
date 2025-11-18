@@ -1,7 +1,10 @@
 #!/bin/bash
 # Build script for LaTeX documentation
 
-set -e
+# Update PATH to include TeX binaries (for BasicTeX/MacTeX)
+if [ -d "/Library/TeX/texbin" ]; then
+    export PATH="/Library/TeX/texbin:$PATH"
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOCS_DIR="$(dirname "$SCRIPT_DIR")"
@@ -15,12 +18,18 @@ mkdir -p "$BUILD_DIR"
 
 # Copy LaTeX files
 echo "Copying LaTeX files..."
-cp -r "$LATEX_DIR"/* "$BUILD_DIR/"
+cp -r "$LATEX_DIR"/* "$BUILD_DIR/" 2>/dev/null || true
 cp -r "$DOCS_DIR/assets" "$BUILD_DIR/" 2>/dev/null || true
 
 # Convert Markdown content to LaTeX (if pandoc is available)
 if command -v pandoc &> /dev/null; then
     echo "Converting Markdown content to LaTeX..."
+    
+    # Check if pandoc-citeproc filter is available
+    CITEPROC_FILTER=""
+    if command -v pandoc-citeproc &> /dev/null; then
+        CITEPROC_FILTER="--filter pandoc-citeproc"
+    fi
     
     # Convert each content file
     for md_file in "$DOCS_DIR"/content/**/*.md; do
@@ -29,14 +38,17 @@ if command -v pandoc &> /dev/null; then
             tex_file="$BUILD_DIR/chapters/${rel_path%.md}.tex"
             mkdir -p "$(dirname "$tex_file")"
             
-            # Convert with pandoc, filtering out GitBook-specific content
-            pandoc "$md_file" \
+            # Convert with pandoc
+            if pandoc "$md_file" \
                 -f markdown \
                 -t latex \
-                --filter pandoc-citeproc \
+                $CITEPROC_FILTER \
                 -o "$tex_file" \
-                --wrap=none \
-                2>/dev/null || echo "Warning: Could not convert $md_file"
+                --wrap=none 2>&1; then
+                echo "  ✓ Converted: $rel_path"
+            else
+                echo "  ✗ Failed to convert: $rel_path"
+            fi
         fi
     done
 else

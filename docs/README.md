@@ -2,6 +2,8 @@
 
 This directory contains the source documentation for Neosis, structured to support both GitBook (web) and LaTeX (academic paper/thesis) outputs.
 
+📄 **[Download PDF Version](neosis.pdf)**
+
 ## Structure
 
 ```
