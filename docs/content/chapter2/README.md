@@ -288,7 +288,162 @@ This primitive allows the Neo to explore nearby computational behaviors while ke
 
 Together, these five primitive operations describe how the structural and parametric components of a Neo can change in discrete steps. Evo’s role is to decide which mutations to attempt, when to apply them, and how to balance structural exploration against the energy costs that will be introduced in the next section.
 
-## 2.6 The Cycle (Operational Semantics)
+## 2.6 The Cycle: Operational Semantics
+
+We now describe how a Neo evolves from tick $$t$$ to tick $$t+1$$. The Cycle specifies the order in which perception, internal computation, reward, energy update, and mutation occur. All quantities are understood to be conditioned on the current internal state
+$$
+\text{Neo}_t = (\text{Lio}_t,\ \text{Evo}_t,\ N_t)
+$$
+and the external world state $$\text{World}_t$$.
+
+For readability, we keep the description at a single-Neo level; in later chapters, populations of Neos will be handled by applying the same rules to each individual.
+
+### 2.6.1 Perception
+
+At the beginning of tick $$t$$, the Neo perceives the NeoVerse through the projection function introduced in Section 2.2. The world is in state $$\text{World}_t$$, and the percept is
+$$
+\mathbf{U}_t = \Phi_t(\text{World}_t) \in \mathbb{B}^{m_t}.
+$$
+
+This value is written into Lio’s input component, so that
+$$
+\text{Lio}_t = (\mathbf{V}_t,\ E_t,\ \Theta_t,\ \mathbf{U}_t,\ \mathbf{Y}_t),
+$$
+with $$\mathbf{U}_t$$ matching the current projection of the NeoVerse.
+
+### 2.6.2 Internal Computation and Output
+
+Given $$\mathbf{V}_t$$, $$\mathbf{U}_t$$, the edge set $$E_t$$, and parameters $$\Theta_t$$, Lio updates its internal state and produces an output.
+
+For each node index $$i = 1,\dots,n_t$$:
+
+1. Construct the input index set $$\mathcal{I}_t(i)$$ and the corresponding binary vector
+   $$
+   \mathbf{z}_i(t) \in \mathbb{B}^{k_i}
+   $$
+   by reading from $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$.
+
+2. Sample a stochastic bit
+   $$
+   \eta_i(t) \sim \text{Bernoulli}(0.5).
+   $$
+
+3. Compute the activation using the node’s parameters $$\theta_i = (w_i, \alpha_i, b_i)$$:
+   $$
+   a_i(t) = w_i^\top \mathbf{z}_i(t) + \alpha_i\, \eta_i(t) + b_i.
+   $$
+
+4. Update the node’s binary state using the local rule
+   $$
+   \mathbf{V}_{t+1}[i]
+     = \text{Lex}_i\big(\mathbf{z}_i(t), \eta_i(t), \theta_i\big)
+     = H\big(a_i(t)\big),
+   $$
+   where $$H(\cdot)$$ is the Heaviside step function.
+
+We adopt snapshot semantics: all nodes read $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ and their own $$\eta_i(t)$$ at the start of tick $$t$$, and all updates to $$\mathbf{V}_{t+1}$$ are conceptually applied in parallel.
+
+The output vector $$\mathbf{Y}_t \in \mathbb{B}^{p_t}$$ is obtained by reading out a designated subset of node states. Let
+$$
+\mathcal{O}_t = \{o_1,\dots,o_{p_t}\} \subseteq \{1,\dots,n_t\}
+$$
+be the set of output indices. We define
+$$
+\mathbf{Y}_t[j] = \mathbf{V}_t[o_j], \qquad j = 1,\dots,p_t.
+$$
+Thus at tick $$t$$, the Neo produces a prediction $$\mathbf{Y}_t$$ based on its internal state and the current percept, while its internal memory is updated to $$\mathbf{V}_{t+1}$$ for use at the next tick.
+
+### 2.6.3 Running Cost and Energy Deduction
+
+Executing the internal computation incurs a running cost that depends on the size of the Neo’s active structure. We introduce a cost function
+$$
+C_{\text{run}} : \mathbb{N}^3 \to \mathbb{R}_{\ge 0},
+$$
+which may, for example, depend on the number of internal nodes, input bits, and output bits. A simple choice is
+$$
+C_{\text{run}}(n_t, m_t, p_t)
+  = c_{\text{node}}\, n_t + c_{\text{in}}\, m_t + c_{\text{out}}\, p_t,
+$$
+with non-negative constants $$c_{\text{node}}, c_{\text{in}}, c_{\text{out}}$$.
+
+Given this cost function, the Neo’s energy after running the computation but before receiving any reward is
+$$
+N_t' = N_t - C_{\text{run}}(n_t, m_t, p_t).
+$$
+If $$N_t' \le 0$$, the Neo has exhausted its energy and becomes inert; its trajectory terminates, and no further computation or mutation occurs.
+
+### 2.6.4 Reward (Spark) and Energy Update
+
+After Lio has produced $$\mathbf{Y}_t$$ and updated its internal state, the NeoVerse advances to the next tick. The world transitions to $$\text{World}_{t+1}$$ according to its own dynamics, and the Neo receives a new percept
+$$
+\mathbf{U}_{t+1} = \Phi_{t+1}(\text{World}_{t+1}).
+$$
+
+The quality of the Neo’s prediction is assessed by a reward function
+$$
+R : \mathbb{B}^{p_t} \times \mathbb{B}^{m_{t+1}} \to \mathbb{R},
+$$
+which compares $$\mathbf{Y}_t$$ to $$\mathbf{U}_{t+1}$$. We write the resulting reward (Spark) as
+$$
+S_t = R(\mathbf{Y}_t,\ \mathbf{U}_{t+1}).
+$$
+The Neo’s energy is then updated to
+$$
+N_t'' = N_t' + S_t.
+$$
+
+The specific form of $$R$$ can vary with the environment; in many examples it will reward accurate prediction of selected components of $$\mathbf{U}_{t+1}$$ and penalize systematic errors. For the formal model, it is enough to assume that $$R$$ is well-defined and can be evaluated from $$\mathbf{Y}_t$$ and $$\mathbf{U}_{t+1}$$.
+
+### 2.6.5 Mutation Phase
+
+If $$N_t'' > 0$$, Evo may attempt to modify Lio’s structure or parameters. At tick $$t$$, Evo’s policy $$\Xi_t$$ can inspect the current internal state and energy
+$$
+(\text{Lio}_t,\ N_t'')
+$$
+and select a (possibly empty) finite sequence of mutation primitives
+$$
+(a_{t,1}, a_{t,2}, \dots, a_{t,K_t}), \qquad a_{t,k} \in \mathcal{A}_{\text{mut}},
+$$
+to be applied to $$(\mathbf{V}_{t+1}, E_t, \Theta_t, \mathbf{U}_{t+1}, \mathbf{Y}_t)$$.
+
+Each mutation type $$a \in \mathcal{A}_{\text{mut}}$$ has an associated non-negative energy cost
+$$
+C_{\text{mut}}(a) \in \mathbb{R}_{\ge 0}.
+$$
+Let
+$$
+C_{\text{mut,total}}(t)
+= \sum_{k=1}^{K_t} C_{\text{mut}}(a_{t,k})
+$$
+be the total cost of the proposed mutations. Evo can only apply mutations up to the available energy. Formally, the sequence of mutations is truncated, if necessary, at the largest prefix that satisfies
+$$
+N_t'' - \sum_{k=1}^{k^\ast} C_{\text{mut}}(a_{t,k}) > 0.
+$$
+The truncated prefix is then applied in order, yielding updated structural and parametric components (which we still denote by $$E_{t+1}$$ and $$\Theta_{t+1}$$ for simplicity). All bookkeeping on $$\mathbf{V}_{t+1}$$, $$\mathbf{U}_{t+1}$$, and $$\mathbf{Y}_t$$ required to maintain consistency with the new structure is treated as part of the mutation operation.
+
+The final energy after mutation is
+$$
+N_{t+1}
+  = N_t'' - \sum_{k=1}^{k^\ast} C_{\text{mut}}(a_{t,k}),
+$$
+and the Neo’s internal state at tick $$t+1$$ is
+$$
+\text{Lio}_{t+1} = (\mathbf{V}_{t+1}, E_{t+1}, \Theta_{t+1}, \mathbf{U}_{t+1}, \mathbf{Y}_{t+1}),
+$$
+where $$\mathbf{Y}_{t+1}$$ will be determined at the next computation step.
+
+### 2.6.6 Summary of One Cycle
+
+Putting the pieces together, one full Cycle from tick $$t$$ to tick $$t+1$$ consists of:
+
+1. **Perception**: observe $$\mathbf{U}_t = \Phi_t(\text{World}_t)$$.  
+2. **Computation**: update $$\mathbf{V}_{t+1}$$ and produce $$\mathbf{Y}_t$$ via local node rules.  
+3. **Running cost**: deduct $$C_{\text{run}}(n_t, m_t, p_t)$$ to obtain $$N_t'$$.  
+4. **World update and reward**: compute $$\mathbf{U}_{t+1}$$ and reward $$S_t = R(\mathbf{Y}_t,\ \mathbf{U}_{t+1})$$, yielding energy $$N_t''$$.  
+5. **Mutation** (optional): Evo selects and applies affordable mutations from $$\mathcal{A}_{\text{mut}}$$, updating $$(E_t, \Theta_t)$$ to $$(E_{t+1}, \Theta_{t+1})$$ and reducing energy to $$N_{t+1}$$.  
+6. **Termination check**: if $$N_{t+1} \le 0$$, the Neo becomes inert; otherwise, the Cycle repeats.
+
+This operational definition provides a complete, minimal description of how a single Neo interacts with the NeoVerse, computes, earns or loses energy, and modifies its own structure over time. In the next section, we introduce a performance measure that summarizes how efficiently a Neo converts structure and energy into predictive success.
 
 ## 2.7 Performance Measure: NeoQuotient
 
