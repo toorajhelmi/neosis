@@ -145,13 +145,9 @@ Conceptually, the mutation policy $$\Xi_t$$ is a rule that can inspect the curre
 
 This separation between Lio (which computes and predicts) and Evo (which decides how Lio itself should change) is central to Neosis. It mirrors the distinction, in biological systems, between fast neural dynamics and slower evolutionary or developmental processes that shape the underlying circuitry.
 
-## 2.4 Local Computation: Node Inputs and Updates
-
-Having specified the structural components of a Neo, we now describe how internal binary states are updated from one tick to the next. The basic idea is that each node reads a subset of internal and perceptual bits, combines them according to its parameters, and produces a new binary state through a simple local rule.
-
 ### 2.4.1 Node Inputs
 
-At tick $$t$$, the internal state of the Neo is given by
+At tick $$t$$, the internal state of the Neo is
 $$
 \mathbf{V}_t \in \mathbb{B}^{n_t},
 $$
@@ -170,28 +166,40 @@ which lists the internal and input coordinates that feed into node $$i$$ at tick
 $$
 \mathbf{z}_i(t) \in \mathbb{B}^{k_i},
 $$
-by collecting the corresponding bits from $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ in a fixed order. The integer $$k_i$$ is therefore the number of binary inputs that node $$i$$ currently receives. It may change over time as edges are added or removed, or as the Neo gains or loses input channels.
+by collecting the corresponding bits from $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ in a fixed order, where $$k_i = |\mathcal{I}_t(i)|$$. As before, $$k_i$$ may change over time as edges or inputs are added or removed.
 
-### 2.4.2 Parametric Local Update Rule
+In addition to these deterministic inputs, each node also receives a stochastic binary input
+$$
+\eta_i(t) \sim \text{Bernoulli}(0.5),
+$$
+independent across nodes and ticks unless otherwise specified. This random bit allows local computations to be intrinsically stochastic even when $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ are fixed.
+
+### 2.4.2 Parametric Local Update Rule (Stochastic Lex)
 
 Each node $$i$$ carries a continuous parameter vector
 $$
-\theta_i \in \mathbb{R}^{k_i + 1},
+\theta_i \in \mathbb{R}^{k_i + 2},
 $$
 which we interpret as a concatenation of weights and a bias:
 $$
-\theta_i = (w_i, b_i), \qquad w_i \in \mathbb{R}^{k_i},\ b_i \in \mathbb{R}.
+\theta_i = (w_i, \alpha_i, b_i),
 $$
-Given the binary input vector $$\mathbf{z}_i(t) \in \mathbb{B}^{k_i}$$, the node computes a real-valued activation
+where
 $$
-a_i(t) = w_i^\top \mathbf{z}_i(t) + b_i,
+w_i \in \mathbb{R}^{k_i}, \qquad \alpha_i \in \mathbb{R}, \qquad b_i \in \mathbb{R}.
 $$
-and then applies a threshold to obtain the new binary state. In the simplest deterministic version, the update rule is
+
+Given the binary input vector $$\mathbf{z}_i(t) \in \mathbb{B}^{k_i}$$ and the stochastic bit $$\eta_i(t) \in \mathbb{B}$$, the node first computes a real-valued activation
 $$
-\mathbf{V}_{t+1}[i] = \text{Lex}_i\big(\mathbf{z}_i(t), \theta_i\big)
+a_i(t) = w_i^\top \mathbf{z}_i(t) + \alpha_i\, \eta_i(t) + b_i,
+$$
+and then applies a threshold to obtain the new binary state:
+$$
+\mathbf{V}_{t+1}[i]
+= \text{Lex}_i\big(\mathbf{z}_i(t), \eta_i(t), \theta_i\big)
 = H\big(a_i(t)\big),
 $$
-where $$H(\cdot)$$ is the Heaviside step function
+with the Heaviside step function
 $$
 H(x) =
 \begin{cases}
@@ -200,31 +208,14 @@ H(x) =
 \end{cases}
 $$
 
-This local rule has several useful properties:
+This definition preserves the properties we want:
 
-- It depends only on the node’s current inputs $$\mathbf{z}_i(t)$$ and parameters $$\theta_i$$.
-- It is compatible with the binary state substrate, since the output is always in $$\mathbb{B}$$.
-- It remains well-defined as $$k_i$$ changes; adding or removing inputs simply changes the dimensionality of $$w_i$$ and the construction of $$\mathbf{z}_i(t)$$.
+- **Locality**: each update depends only on $$\mathbf{z}_i(t)$$, $$\eta_i(t)$$, and $$\theta_i$$.  
+- **Binary state**: outputs stay in $$\mathbb{B}$$.  
+- **Stochasticity**: even with fixed $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$, the next state can vary due to $$\eta_i(t)$$.  
+- **Structural robustness**: when $$k_i$$ changes, we only resize $$w_i$$ and the construction of $$\mathbf{z}_i(t)$$; $$\alpha_i$$ and $$b_i$$ remain single scalars.
 
-The collection of all node updates defines a global state transition from $$\mathbf{V}_t$$ to $$\mathbf{V}_{t+1}$$. We adopt snapshot semantics: all nodes read $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ as they were at the beginning of tick $$t$$, compute their activations and outputs in parallel, and write their new values into $$\mathbf{V}_{t+1}$$.
-
-### 2.4.3 Outputs as Designated Nodes
-
-The Neo’s output at tick $$t$$ is a binary vector
-$$
-\mathbf{Y}_t \in \mathbb{B}^{p_t},
-$$
-defined by a designated set of output indices
-$$
-\mathcal{O}_t \subseteq \{1,\dots,n_t\}, \qquad |\mathcal{O}_t| = p_t.
-$$
-We enumerate $$\mathcal{O}_t = \{o_1,\dots,o_{p_t}\}$$ and set
-$$
-\mathbf{Y}_t[j] = \mathbf{V}_t[o_j], \qquad j = 1,\dots,p_t.
-$$
-Thus outputs are not special nodes with different internal rules; they are ordinary nodes whose current states are simply read out as the Neo’s prediction vector. As with inputs, the cardinality $$p_t$$ may change over time as the Neo gains or loses output nodes.
-
-Taken together, the constructions above specify how a Neo transforms percepts and internal states at tick $$t$$ into a new internal state $$\mathbf{V}_{t+1}$$ and an output $$\mathbf{Y}_t$$, using only local node computations controlled by continuous parameters. In the next sections, we will describe how these structures can change over time through mutation, and how the resulting predictions feed into the energy dynamics that govern survival.
+Snapshot semantics remain as before: all nodes read $$\mathbf{V}_t$$, $$\mathbf{U}_t$$, and their own $$\eta_i(t)$$ at the beginning of tick $$t$$, then update in parallel to produce $$\mathbf{V}_{t+1}$$.
 
 ## 2.5 Mutation Primitives and Structural Updates
 
