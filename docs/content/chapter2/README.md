@@ -98,21 +98,25 @@ The vector $$\mathbf{V}_t$$ is the internal binary state (or memory) of the Neo:
 $$
 \mathbf{V}_t \in \mathbb{B}^{n_t},
 $$
-where $$n_t$$ is the number of internal nodes at tick $$t$$. Each coordinate of $$\mathbf{V}_t$$ corresponds to the state of a single node in the Neo’s computational graph.
-
-The graph structure itself is captured by
+where $$n_t$$ is the number of internal nodes at tick $$t$$. Each coordinate $$\mathbf{V}_t[i]$$ corresponds to the state of a single node. We will use indices
 $$
-G_t = (\mathcal{N}_t,\ E_t),
+i \in \{1,\dots,n_t\}
 $$
-where $$\mathcal{N}_t = \{1,\dots,n_t\}$$ is the set of node indices and $$E_t \subseteq \mathcal{N}_t \times \mathcal{N}_t$$ is the set of directed edges between nodes. We do not impose any topological restriction: $$G_t$$ may be feedforward, recurrent, or contain cycles. This flexibility allows the Neo to evolve arbitrary computational motifs, including those that resemble neural networks, finite-state machines, or more complex dynamical systems.
+to refer to nodes, so there is no separate symbol for the node set.
 
-Each node $$i \in \mathcal{N}_t$$ is associated with a continuous parameter vector
+The graph structure is captured by
+$$
+G_t = E_t,
+$$
+where $$E_t \subseteq \{1,\dots,n_t\} \times \{1,\dots,n_t\}$$ is the set of directed edges between nodes. We do not impose any topological restriction: $$E_t$$ may describe a feedforward, recurrent, or cyclic graph. This flexibility allows the Neo to evolve arbitrary computational motifs, including those that resemble neural networks, finite-state machines, or more complex dynamical systems.
+
+Each node $$i \in \{1,\dots,n_t\}$$ is associated with a continuous parameter vector
 $$
 \theta_i \in \mathbb{R}^{k_i},
 $$
 which determines how that node processes its inputs. We collect all node parameters at tick $$t$$ into
 $$
-\Theta_t = \{\theta_i : i \in \mathcal{N}_t\}.
+\Theta_t = \{\theta_i : i = 1,\dots,n_t\}.
 $$
 These parameters will be used in Section 2.4 to define the node-local update rules that map incoming binary signals to new node states.
 
@@ -123,7 +127,7 @@ $$
 $$
 The input $$\mathbf{U}_t$$ is the percept at tick $$t$$ defined by the projection in Section 2.2. The output $$\mathbf{Y}_t$$ is produced by a designated subset of nodes, and will later be interpreted as a prediction about future percepts. The dimensions $$m_t$$ and $$p_t$$ may change over time as the Neo gains or loses input and output nodes through structural mutation.
 
-In summary, Lio at tick $$t$$ is an evolving binary graph with continuous parameters, equipped with a binary input and output interface. The pair $$(G_t,\ \Theta_t)$$ specifies *what* computational structure exists, while $$(\mathbf{V}_t,\ \mathbf{U}_t,\ \mathbf{Y}_t)$$ specifies the current binary activity flowing through that structure.
+In summary, Lio at tick $$t$$ is an evolving binary graph with continuous parameters, equipped with a binary input and output interface. The pair $$(E_t,\ \Theta_t)$$ specifies *what* computational structure exists, while $$(\mathbf{V}_t,\ \mathbf{U}_t,\ \mathbf{Y}_t)$$ specifies the current binary activity flowing through that structure.
 
 ### 2.3.2 Evo as a Meta-Level Mutation Controller
 
@@ -140,7 +144,6 @@ Conceptually, the mutation policy $$\Xi_t$$ is a rule that can inspect the curre
 - must respect the available energy when doing so.
 
 This separation between Lio (which computes and predicts) and Evo (which decides how Lio itself should change) is central to Neosis. It mirrors the distinction, in biological systems, between fast neural dynamics and slower evolutionary or developmental processes that shape the underlying circuitry.
-
 
 ## 2.4 Local Computation (Lex and Node Updates)
 
