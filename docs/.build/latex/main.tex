@@ -1,0 +1,45 @@
+\documentclass[11pt,a4paper]{article}
+% For thesis: use \documentclass[11pt,a4paper]{report} or {book}
+
+\input{preamble}
+
+\title{Neosis: A Computational Framework for Energy-Constrained Self-Modifying Organisms}
+\author{Tooraj Helmi}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{chapters/abstract}
+\end{abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+% Main content
+% Chapters are auto-generated from content/chapter*/README.md via build script
+% The build script converts Markdown to LaTeX and places them in chapters/
+\input{chapters/chapter1/README}
+\input{chapters/chapter2/README}
+\input{chapters/chapter3/README}
+\input{chapters/chapter4/README}
+\input{chapters/chapter5/README}
+\input{chapters/chapter6/README}
+\input{chapters/chapter7/README}
+\input{chapters/chapter8/README}
+\input{chapters/chapter9/README}
+\input{chapters/chapter10/README}
+
+% Bibliography
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+% Appendices (optional)
+\appendix
+\input{chapters/appendix}
+
+\end{document}
+
