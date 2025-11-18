@@ -357,7 +357,7 @@ Thus at tick $$t$$, the Neo produces a prediction $$\mathbf{Y}_t$$ based on its 
 
 Executing the internal computation incurs a running cost that depends on the size of the Neo’s active structure. We introduce a cost function
 $$
-C_{\text{run}} : \mathbb{N}^3 \to \mathbb{R}_{\ge 0},
+C_{\text{run}} : \mathbb{N}^2 \to \mathbb{R}_{\ge 0},
 $$
 which may, for example, depend on the number of internal nodes and input bits. A simple choice is
 $$
@@ -444,6 +444,28 @@ Putting the pieces together, one full Cycle from tick $$t$$ to tick $$t+1$$ cons
 
 This operational definition provides a complete, minimal description of how a single Neo interacts with the NeoVerse, computes, earns or loses energy, and modifies its own structure over time. In the next section, we introduce a performance measure that summarizes how efficiently a Neo converts structure and energy into predictive success.
 
-## 2.7 Performance Measure: NeoQuotient
+## 2.7 Performance Measures: Lifetime and Vitality
 
+The formal model of Neosis defines a complete energy trajectory
+$$
+N_0, N_1, N_2, \dots
+$$
+for each Neo interacting with a given NeoVerse. This trajectory already combines prediction rewards and structural costs, so we do not introduce an additional ratio of “reward over cost.” Instead, we summarize performance with two simple quantities that capture how long a Neo remains alive and how much energy it manages to accumulate during its existence.
 
+### 2.7.1 Lifetime
+
+A Neo is considered alive at tick $$t$$ if its energy is strictly positive, $$N_t > 0$$. Once its energy reaches zero, it becomes inert and can no longer compute or mutate. We define the **lifetime**
+$$
+\tau = \max\{t \ge 0 : N_t > 0\},
+$$
+as the last tick at which the Neo is still alive. A longer lifetime indicates that the Neo is better at maintaining a positive energy budget in the given environment, either by predicting well, using a frugal structure, or both.
+
+### 2.7.2 Vitality
+
+While lifetime measures how long a Neo survives, we also want to quantify how energetically “alive” it becomes during that period. We define the **Vitality** of a Neo as the maximum energy it attains over its lifetime:
+$$
+\text{Vitality} = \max_{0 \le t \le \tau} N_t.
+$$
+A high Vitality means that the Neo was able to build up a substantial energy reserve at some point in its life, reflecting a strong match between its internal structure and the statistics of the NeoVerse. A low Vitality indicates that the Neo never accumulated much energy and remained close to the brink of exhaustion.
+
+In most analyses, we will consider the pair $$(\tau,\ \text{Vitality})$$ as the basic summary of a Neo’s performance in a given environment. This pair captures both endurance (how long the Neo survives) and energetic strength (how “alive” it becomes) without introducing additional normalizations or heuristic ratios. More refined metrics can be derived from the full trajectory $$\{N_t\}$$ when needed in later chapters, but lifetime and Vitality are sufficient for the core formal model developed here.
