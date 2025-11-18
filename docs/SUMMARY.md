@@ -1,6 +1,6 @@
 # Summary
 
-* [Chapter 1: Introduction and Motivation](content/chapter1/README.md)
+* [Introduction](content/chapter1/README.md)
 * [Chapter 2: Neosis Axioms and Formal Model](content/chapter2/README.md)
 * [Chapter 3: Micro Dynamics of a Single Neo](content/chapter3/README.md)
 * [Chapter 4: Few-Neo Interactions and Micro Simulations](content/chapter4/README.md)
