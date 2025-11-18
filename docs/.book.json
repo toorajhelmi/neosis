@@ -9,16 +9,11 @@
     "summary": "SUMMARY.md"
   },
   "plugins": [
-    "mathjax",
+    "katex",
     "code",
     "include-codeblock",
     "anchors",
     "expandable-chapters"
-  ],
-  "pluginsConfig": {
-    "mathjax": {
-      "version": "3.1.2"
-    }
-  }
+  ]
 }
 
