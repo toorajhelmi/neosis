@@ -219,6 +219,75 @@ Snapshot semantics remain as before: all nodes read $$\mathbf{V}_t$$, $$\mathbf{
 
 ## 2.5 Mutation Primitives and Structural Updates
 
+So far we have treated the internal structure of a Neo at tick $$t$$ as fixed: Lio is specified by $$(\mathbf{V}_t, E_t, \Theta_t, \mathbf{U}_t, \mathbf{Y}_t)$$ and Evo by $$(\Psi_t, \Xi_t)$$. In Neosis, however, the defining property of a Neo is that this structure can change over time. Structural and parametric changes are not continuous “training steps” on a fixed graph, but discrete mutation events selected and triggered by Evo.
+
+In this section we introduce a minimal set of mutation primitives. Each primitive is a local operation on the tuple $$(\mathbf{V}_t, E_t, \Theta_t, \mathbf{U}_t, \mathbf{Y}_t)$$. Later, in the Cycle definition, we will associate each operation with an energy cost and specify when mutations can occur.
+
+For clarity, we collect all mutation types into a finite set
+$$
+\mathcal{A}_{\text{mut}}
+= \{\text{node}^+,\ \text{node}^-,\ \text{edge}^+,\ \text{edge}^-,\ \text{param}^f\}.
+$$
+
+### 2.5.1 Node Addition (node$$^+$$)
+
+A node-addition mutation increases the number of internal nodes from $$n_t$$ to $$n_t + 1$$. Concretely, we extend the state vector and parameter set as
+$$
+\mathbf{V}_t' \in \mathbb{B}^{n_t+1}, \qquad
+\Theta_t' = \Theta_t \cup \{\theta_{n_t+1}\},
+$$
+where the new coordinate $$\mathbf{V}_t'[n_t+1]$$ is initialized (for example) to zero, and the new parameter vector $$\theta_{n_t+1}$$ is drawn from an initialization distribution over $$\mathbb{R}^{k_{n_t+1}+2}$$. The edge set is extended by optionally adding new edges involving node $$n_t+1$$:
+$$
+E_t' = E_t \cup E_{\text{new}},
+$$
+where $$E_{\text{new}} \subseteq \{n_t+1\} \times \{1,\dots,n_t+1\} \cup \{1,\dots,n_t\} \times \{n_t+1\}$$.
+
+The exact choice of $$E_{\text{new}}$$ and the initialization distribution for $$\theta_{n_t+1}$$ are controlled by Evo’s mutation policy $$\Xi_t$$. The definition above only requires that the result be a valid graph and parameter set.
+
+### 2.5.2 Node Removal (node$$^-$$)
+
+A node-removal mutation selects an index $$i \in \{1,\dots,n_t\}$$ and deletes that node. All edges incident to $$i$$ are removed, and the corresponding coordinate is removed from the state vector and parameter set. Formally, we obtain a new dimension $$n_t' = n_t - 1$$ and a new state vector $$\mathbf{V}_t' \in \mathbb{B}^{n_t'}$$ by deleting $$\mathbf{V}_t[i]$$ and re-indexing the remaining coordinates. The parameter set $$\Theta_t$$ is updated in the same way, and the edge set becomes
+$$
+E_t' = \{(j,k) \in E_t : j \neq i,\ k \neq i\},
+$$
+with node indices re-labeled to match the new indexing of $$\mathbf{V}_t'$$.
+
+If the removed node belonged to the output set $$\mathcal{O}_t$$, the output index set must also be updated by deleting that index; similarly, if the node played a role in interpreting inputs, the mapping from percept coordinates to internal indices must be updated. These adjustments are local bookkeeping steps that ensure the consistency of $$\mathbf{U}_t$$ and $$\mathbf{Y}_t$$ with the new internal graph.
+
+Node removal can in principle disconnect the graph into multiple components. In this chapter we simply require that $$E_t'$$ defines a valid (possibly disconnected) graph. Whether disconnected components become separate Neos in a population will be specified in later chapters on survival and reproduction.
+
+### 2.5.3 Edge Addition (edge$$^+$$)
+
+An edge-addition mutation selects a pair of node indices $$(j,k)$$ with $$j \neq k$$ and adds a directed edge from $$j$$ to $$k$$:
+$$
+E_t' = E_t \cup \{(j,k)\}.
+$$
+This change affects the input index set $$\mathcal{I}_t(k)$$ of node $$k$$ by adding $$j$$ to it, and therefore increases the dimensionality $$k_k$$ of its input vector $$\mathbf{z}_k(t)$$. To keep the local update rule for node $$k$$ well-defined, its parameter vector $$\theta_k = (w_k, \alpha_k, b_k)$$ must be expanded by appending a new weight for the incoming signal from node $$j$$. This can be done by sampling a new weight component from a chosen initialization distribution.
+
+All other nodes, and their parameter vectors, remain unchanged.
+
+### 2.5.4 Edge Removal (edge$$^-$$)
+
+An edge-removal mutation selects an existing edge $$(j,k) \in E_t$$ and deletes it:
+$$
+E_t' = E_t \setminus \{(j,k)\}.
+$$
+The input index set $$\mathcal{I}_t(k)$$ of node $$k$$ is updated by removing $$j$$, and the corresponding weight component is removed from $$w_k$$. The dimensionality $$k_k$$ of its input vector decreases by one. As with node removal, the graph may become disconnected; we only require that $$E_t'$$ remains a valid directed graph over the current node indices.
+
+### 2.5.5 Parameter Perturbation (param$$^f$$)
+
+A parameter-perturbation mutation changes the continuous parameters of a single node without altering the graph structure. For some selected node index $$i$$, we replace
+$$
+\theta_i \leftarrow \theta_i + \Delta_i,
+$$
+where $$\Delta_i \in \mathbb{R}^{k_i+2}$$ is a random perturbation drawn from a specified distribution (for example, a zero-mean Gaussian with fixed covariance). All other parameters and the edge set remain unchanged.
+
+This primitive allows the Neo to explore nearby computational behaviors while keeping its structure fixed. When combined with node and edge mutations, it provides a simple but expressive mechanism for evolving both the topology and the local computations of Lio.
+
+---
+
+Together, these five primitive operations describe how the structural and parametric components of a Neo can change in discrete steps. Evo’s role is to decide which mutations to attempt, when to apply them, and how to balance structural exploration against the energy costs that will be introduced in the next section.
+
 ## 2.6 The Cycle (Operational Semantics)
 
 ## 2.7 Performance Measure: NeoQuotient
