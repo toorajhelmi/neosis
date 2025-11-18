@@ -9,7 +9,7 @@
     "summary": "SUMMARY.md"
   },
   "plugins": [
-    "katex",
+    "mathTex",
     "code",
     "include-codeblock",
     "anchors",
