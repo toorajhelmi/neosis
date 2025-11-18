@@ -1,0 +1,25 @@
+{
+  "title": "Neosis Documentation",
+  "description": "A computational framework for simulating computational organisms",
+  "author": "Tooraj Helmi",
+  "language": "en",
+  "gitbook": "3.2.3",
+  "root": ".",
+  "structure": {
+    "readme": "../README.md",
+    "summary": "SUMMARY.md"
+  },
+  "plugins": [
+    "mathjax",
+    "code",
+    "include-codeblock",
+    "anchors",
+    "expandable-chapters"
+  ],
+  "pluginsConfig": {
+    "mathjax": {
+      "version": "3.1.2"
+    }
+  }
+}
+

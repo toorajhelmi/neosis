@@ -1,0 +1,72 @@
+#!/bin/bash
+# Build script for LaTeX documentation
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOCS_DIR="$(dirname "$SCRIPT_DIR")"
+LATEX_DIR="$DOCS_DIR/latex"
+BUILD_DIR="$DOCS_DIR/_build/latex"
+
+echo "Building LaTeX documentation..."
+
+# Create build directory
+mkdir -p "$BUILD_DIR"
+
+# Copy LaTeX files
+echo "Copying LaTeX files..."
+cp -r "$LATEX_DIR"/* "$BUILD_DIR/"
+cp -r "$DOCS_DIR/assets" "$BUILD_DIR/" 2>/dev/null || true
+
+# Convert Markdown content to LaTeX (if pandoc is available)
+if command -v pandoc &> /dev/null; then
+    echo "Converting Markdown content to LaTeX..."
+    
+    # Convert each content file
+    for md_file in "$DOCS_DIR"/content/**/*.md; do
+        if [ -f "$md_file" ]; then
+            rel_path="${md_file#$DOCS_DIR/content/}"
+            tex_file="$BUILD_DIR/chapters/${rel_path%.md}.tex"
+            mkdir -p "$(dirname "$tex_file")"
+            
+            # Convert with pandoc, filtering out GitBook-specific content
+            pandoc "$md_file" \
+                -f markdown \
+                -t latex \
+                --filter pandoc-citeproc \
+                -o "$tex_file" \
+                --wrap=none \
+                2>/dev/null || echo "Warning: Could not convert $md_file"
+        fi
+    done
+else
+    echo "Warning: pandoc not found. Install with: brew install pandoc (macOS) or apt-get install pandoc (Linux)"
+    echo "LaTeX files copied, but Markdown content not converted."
+fi
+
+# Build LaTeX document
+cd "$BUILD_DIR"
+
+if command -v pdflatex &> /dev/null; then
+    echo "Compiling LaTeX document..."
+    
+    # First pass
+    pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1 || true
+    
+    # Bibliography (if bibtex is available)
+    if command -v bibtex &> /dev/null && [ -f bibliography.bib ]; then
+        bibtex main > /dev/null 2>&1 || true
+    fi
+    
+    # Second pass for references
+    pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1 || true
+    pdflatex -interaction=nonstopmode main.tex > /dev/null 2>&1 || true
+    
+    echo "✓ LaTeX documentation built successfully!"
+    echo "Output: $BUILD_DIR/main.pdf"
+else
+    echo "Warning: pdflatex not found. Install a LaTeX distribution (e.g., MacTeX, TeX Live)"
+    echo "LaTeX source files prepared in: $BUILD_DIR"
+    echo "You can manually compile with: pdflatex main.tex"
+fi
+

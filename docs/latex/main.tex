@@ -1,0 +1,41 @@
+\documentclass[11pt,a4paper]{article}
+% For thesis: use \documentclass[11pt,a4paper]{report} or {book}
+
+\input{preamble}
+
+\title{Neosis: A Computational Framework for Energy-Constrained Self-Modifying Organisms}
+\author{Tooraj Helmi}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{chapters/abstract}
+\end{abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+% Main content
+\input{chapters/introduction}
+\input{chapters/background}
+\input{chapters/methodology}
+\input{chapters/architecture}
+\input{chapters/experiments}
+\input{chapters/results}
+\input{chapters/discussion}
+\input{chapters/conclusion}
+
+% Bibliography
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+% Appendices (optional)
+\appendix
+\input{chapters/appendix}
+
+\end{document}
+
