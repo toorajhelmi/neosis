@@ -8,7 +8,7 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOCS_DIR="$(dirname "$SCRIPT_DIR")"
-LATEX_DIR="$DOCS_DIR/latex"
+LATEX_DIR="$DOCS_DIR/.latex"
 BUILD_DIR="$DOCS_DIR/_build/latex"
 
 echo "Building LaTeX documentation..."
@@ -19,7 +19,7 @@ mkdir -p "$BUILD_DIR"
 # Copy LaTeX files
 echo "Copying LaTeX files..."
 cp -r "$LATEX_DIR"/* "$BUILD_DIR/" 2>/dev/null || true
-cp -r "$DOCS_DIR/assets" "$BUILD_DIR/" 2>/dev/null || true
+cp -r "$DOCS_DIR/.assets" "$BUILD_DIR/" 2>/dev/null || true
 
 # Convert Markdown content to LaTeX (if pandoc is available)
 if command -v pandoc &> /dev/null; then
