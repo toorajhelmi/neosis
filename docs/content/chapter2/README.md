@@ -469,3 +469,51 @@ $$
 A high Vitality means that the Neo was able to build up a substantial energy reserve at some point in its life, reflecting a strong match between its internal structure and the statistics of the NeoVerse. A low Vitality indicates that the Neo never accumulated much energy and remained close to the brink of exhaustion.
 
 In most analyses, we will consider the pair $$(\tau,\ \text{Vitality})$$ as the basic summary of a Neo’s performance in a given environment. This pair captures both endurance (how long the Neo survives) and energetic strength (how “alive” it becomes) without introducing additional normalizations or heuristic ratios. More refined metrics can be derived from the full trajectory $$\{N_t\}$$ when needed in later chapters, but lifetime and Vitality are sufficient for the core formal model developed here.
+
+## 2.8 Rationale for the Neo Structure
+
+The formal model above makes a specific set of design choices: a Neo is an evolving directed graph over binary node states, with continuous local parameters, one stochastic bit per node, and an explicit separation between fast computation (Lio) and slower structural change (Evo). In this section we briefly justify these choices and relate them to both artificial neural networks and biological synapses.
+
+### 2.8.1 Relation to Neurons and Synapses
+
+At the level of a single node, the update rule
+$$
+\mathbf{V}_{t+1}[i]
+  = H\big(w_i^\top \mathbf{z}_i(t) + \alpha_i \eta_i(t) + b_i\big)
+$$
+is deliberately close to a threshold neuron: it combines a weighted sum of inputs with a bias and then applies a nonlinearity. The directed edges $$E_t$$ play the role of synapses, determining which nodes can influence which others, and the continuous parameters $$\theta_i = (w_i, \alpha_i, b_i)$$ determine the strength and sign of those influences.
+
+The key differences from a standard artificial neuron are:
+
+- **Binary internal state**: node outputs live in $$\mathbb{B}$$, making the local state space as simple as possible while still allowing rich global dynamics through the network.
+- **Evolving topology**: the edge set $$E_t$$ is not fixed. Nodes and edges can be added or removed, unlike conventional ANNs where the graph is chosen once and trained only in weight space.
+- **Explicit energy accounting**: each run and mutation is charged against $$N_t$$, tying “synaptic complexity” and structural changes directly to survival.
+
+This makes each node loosely analogous to a neuron with a discrete firing state and continuously tunable synaptic efficacy, while Evo provides a separate mechanism more reminiscent of developmental or evolutionary processes acting on circuitry over longer timescales.
+
+### 2.8.2 Why Stochasticity at Each Node?
+
+The inclusion of a stochastic bit $$\eta_i(t) \sim \text{Bernoulli}(0.5)$$ per node is intentional rather than cosmetic. Even with binary inputs $$\mathbf{z}_i(t)$$ fixed, the activation
+$$
+a_i(t) = w_i^\top \mathbf{z}_i(t) + \alpha_i \eta_i(t) + b_i
+$$
+can change from tick to tick through $$\eta_i(t)$$, and thus the output can fluctuate.
+
+This local randomness serves several purposes:
+
+- **Exploration in parameter and structure space**: stochastic node outputs can cause different sequences of rewards $$S_t$$ under the same environment, which in turn biases Evo’s choices of mutations. This provides an intrinsic exploration mechanism without needing an additional external noise process at the level of Evo.
+- **Symmetry breaking**: in purely deterministic systems, structurally identical Neos placed in identical environments would follow identical trajectories. The per-node stochasticity allows initially identical Neos to diverge, supporting richer population-level dynamics without complicating the deterministic part of the update rule.
+- **Modeling stochastic environments**: many NeoVerses are inherently noisy. Allowing internal computations to incorporate randomness makes it easier for Neos to represent and approximate stochastic mappings from past percepts to future outcomes, rather than being restricted to deterministic input–output relationships.
+
+Crucially, the stochasticity is added in the simplest possible way: a single Bernoulli bit enters linearly with weight $$\alpha_i$$. This keeps the local rule analytically tractable while still providing a source of randomness that can be up- or down-weighted by evolution (through changes in $$\alpha_i$$).
+
+### 2.8.3 Minimality and Extensibility
+
+The overall structure of a Neo is chosen to be minimal but extensible:
+
+- **Minimal substrate**: all observable states (internal, input, output) are binary, and all structure is encoded in a finite directed graph $$E_t$$ and parameter set $$\Theta_t$$. This keeps the state space simple and makes it easy to reason about limits such as small-Neo behavior or single-node dynamics.
+- **Continuous parameters with discrete structure**: separating discrete topology from continuous parameters allows us to treat structural mutations (node$$^+$$, node$$^-$$, edge$$^+$$, edge$$^-$$) and local parametric changes (param$$^f$$) within a single framework. Conventional ANNs appear as a special case where $$E_t$$ is fixed and only parameter updates are allowed.
+- **Clean energy coupling**: by charging both running cost and mutation cost directly to $$N_t$$, every aspect of the Neo’s complexity—depth, width, connectivity, and rate of structural change—becomes subject to selection pressure through Lifetime and Vitality. There is no separate, ad hoc regularizer.
+- **Straightforward generalizations**: the current node rule is threshold-based, but replacing $$H(\cdot)$$ by another nonlinearity, or allowing continuous-valued node states, requires only local modifications to Section 2.4. The rest of the framework (structure, energy, mutation, Cycle) remains unchanged.
+
+In summary, the chosen Neo structure sits deliberately between biological inspiration and mathematical simplicity. It is close enough to a network of stochastic threshold neurons with evolving synapses to be cognitively meaningful, yet minimal enough to support precise analysis of survival, evolution, and emergent computation in the subsequent chapters.
