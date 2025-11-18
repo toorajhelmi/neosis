@@ -1,0 +1,5 @@
+root: .
+structure:
+  readme: false
+  summary: SUMMARY.md
+
