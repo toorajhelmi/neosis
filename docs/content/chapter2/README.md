@@ -49,8 +49,28 @@ $$
 for the complete internal state of a single Neo at the same tick, including its binary memory, graph structure, parameters, and energy. In this chapter we will focus on formalizing $$\text{Neo}_t$$; the NeoVerse state $$\text{World}_t$$ will be treated abstractly and will be accessed only through a projection function introduced in Section 2.2.
 
 ## 2.2 The NeoVerse and Perception
-- World state
-- Projection Φ to U_t
+
+Neos do not exist in isolation. They operate inside an external world, called the NeoVerse, whose dynamics generate the signals that Neos attempt to predict. In this section we keep the NeoVerse deliberately abstract. The aim is not to model the entire environment in detail, but to specify how it interfaces with a Neo through perception.
+
+At each tick $$t$$, the NeoVerse has a state
+$$
+\text{World}_t,
+$$
+which may be arbitrarily complex and high-dimensional. We do not constrain how $$\text{World}_t$$ evolves over time; it may follow a deterministic or stochastic rule, and it may or may not depend on the past behavior of Neos. For the purposes of this chapter, it is sufficient to regard $$\{\text{World}_t\}_{t \ge 0}$$ as an exogenous process that generates the raw conditions under which Neos must operate.
+
+A Neo does not have direct access to $$\text{World}_t$$. Instead, it perceives only a projection of the NeoVerse through a perceptual interface. Formally, we introduce a projection function
+$$
+\Phi_t : \text{World}_t \longrightarrow \mathbb{B}^{m_t},
+$$
+and define the perceptual input at tick $$t$$ as
+$$
+\mathbf{U}_t = \Phi_t(\text{World}_t) \in \mathbb{B}^{m_t}.
+$$
+The dimensionality $$m_t$$ represents the number of binary channels the Neo can currently observe. This dimensionality is not fixed: as the Neo gains or loses input nodes through structural mutation, its perceptual capacity can change, and the corresponding projection $$\Phi_t$$ can be updated to match.
+
+In the simplest cases, $$\mathbf{U}_t$$ may consist of a single bit, expressing a minimal signal about the NeoVerse. More generally, $$\mathbf{U}_t$$ can be a vector of bits encoding multiple aspects of $$\text{World}_t$$. The exact semantics of each bit are not specified at this level; they depend on the particular environment and experimental setup. What matters for the formal model is that all percepts are binary vectors, and that perception is always mediated by some projection $$\Phi_t$$ from $$\text{World}_t$$ into the Neo's current input space.
+
+This view makes the Neo's situation explicitly partially observable. The Neo must form internal representations and predictions on the basis of $$\mathbf{U}_t$$ rather than on the full underlying state $$\text{World}_t$$. In later sections, we will define the output $$\mathbf{Y}_t$$ of a Neo as a prediction about future percepts $$\mathbf{U}_{t+1}$$, and we will use the accuracy of these predictions to determine the Neo's energy gain or loss.
 
 ## 2.3 The Neo: Internal Structure
 - Lio: (V_t, G_t, Lex, U_t, Y_t)
