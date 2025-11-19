@@ -250,8 +250,6 @@ $$
 $$
 and produce an updated structure consistent with the rules of the Neo's internal graph.
 
----
-
 ### 2.5.1 Node Mutation (node)
 
 Node mutations modify the number of internal nodes. A node mutation consists of either
@@ -293,8 +291,6 @@ from the output set.
 
 Node removal may disconnect the graph; the result is still considered valid.
 
----
-
 ### 2.5.2 Edge Mutation (edge)
 
 Edge mutations change information flow by adding or removing directed edges.
@@ -320,8 +316,6 @@ $$
 
 The corresponding coordinate is removed from $$w_k$$, decreasing its input dimensionality.
 
----
-
 ### 2.5.3 Parameter Perturbation (param$$^f$$)
 
 A parameter-perturbation mutation updates the continuous parameters of a single node
@@ -335,8 +329,6 @@ where $$\Delta_i$$ is drawn from a zero-mean perturbation distribution on
 $$\mathbb{R}^{k_i+2}$$. All other nodes and edges remain unchanged.
 
 This primitive enables exploration of local computational behaviors.
-
----
 
 ### 2.5.4 Output Mutation (output)
 
