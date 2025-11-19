@@ -84,6 +84,27 @@ with open(temp_file, 'w') as f:
                 -t latex \
                 --wrap=none \
                 -o "$tex_file" 2>&1; then
+                # Post-process to fix numbering and convert to chapters
+                python3 -c "
+import re
+import sys
+
+tex_file = '$tex_file'
+with open(tex_file, 'r') as f:
+    content = f.read()
+
+# Convert \\section{Chapter X --- Title} to \\chapter{Title}
+content = re.sub(r'\\\\section\{Chapter \d+ --- ([^}]+)\}', r'\\\\chapter{\\1}', content)
+
+# Convert \\subsection{X.Y Title} to \\section{Title} (remove number prefix)
+content = re.sub(r'\\\\subsection\{[\d.]+ ([^}]+)\}', r'\\\\section{\\1}', content)
+
+# Convert \\subsubsection{X.Y.Z Title} to \\subsection{Title} (remove number prefix)
+content = re.sub(r'\\\\subsubsection\{[\d.]+ ([^}]+)\}', r'\\\\subsection{\\1}', content)
+
+with open(tex_file, 'w') as f:
+    f.write(content)
+"
                 echo "  ✓ Converted: $rel_path"
             else
                 echo "  ✗ Failed to convert: $rel_path"
