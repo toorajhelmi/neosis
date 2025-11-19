@@ -38,25 +38,7 @@ $$
 
 These updates let a Neo adapt to new conditions during its own lifetime without involving mutation. This mechanism is evolvable: structures that compute useful $$\Delta\theta_i$$ improve survival and are retained by selection.
 
-## 4.3 Learnability: Formal Definition
-
-Let two Neos begin with the same structure $$S$$ and the same initial state, but encounter different perceptual histories. Their outputs are
-
-$$
-\mathbf{Y}_t = \mathbf{V}_t[O], \qquad \mathbf{Y}'_t = \mathbf{V}'_t[O].
-$$
-
-**Definition (Learnability).** A Neo is learnable if, without any structural mutation,
-
-$$
-\mathbf{Y}_t \neq \mathbf{Y}'_t \quad \text{for some } t>0,
-$$
-
-due to differences in internal trajectories or In-Life parameter adjustments.
-
-This definition captures both dynamical sensitivity to experience and the ability to refine parameters internally.
-
-## 4.4 Relationship Between Learnability and Survival
+## 4.3 Relationship Between Learnability and Survival
 
 In-Life learning enables a Neo to adjust its behavior quickly in response to environmental changes. If these adjustments increase expected energy,
 
@@ -68,6 +50,6 @@ then evolutionary pressure will favor structures $$S$$ that support effective pl
 
 Lifetime learning determines what kinds of In-Life learning a Neo can express, while In-Life learning directly shapes immediate survival within the NeoVerse.
 
-## 4.5 Summary
+## 4.4 Summary
 
 A Neo is learnable when a fixed structure $$S$$ supports behavior that adapts to experience. This adaptation arises either through internal dynamical responses or through small parameter updates computed by the Neo's own circuitry. Lifetime learning shapes structure slowly via mutation, while In-Life learning provides fast, flexible adjustment during a single lifetime.
