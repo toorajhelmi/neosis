@@ -91,7 +91,7 @@ where $$N_t$$ is the energy (Nex) introduced in Section 2.1.
 
 Lio contains all components directly involved in perception, internal computation, and prediction. At tick $$t$$, we represent it as
 $$
-\text{Lio}_t = (\mathbf{V}_t,\ G_t,\ \Theta_t,\ \mathbf{U}_t,\ \mathbf{Y}_t).
+\text{Lio}_t = (\mathbf{V}_t,\ G_t,\ \Theta_t,\ \mathbf{U}_t,\ O_t),
 $$
 
 The vector $$\mathbf{V}_t$$ is the internal binary state (or memory) of the Neo:
@@ -120,14 +120,17 @@ $$
 $$
 These parameters will be used in Section 2.4 to define the node-local update rules that map incoming binary signals to new node states.
 
-The interface between Lio and the NeoVerse is given by the input and output vectors
+The interface between Lio and the NeoVerse is given by the input vector
 $$
-\mathbf{U}_t \in \mathbb{B}^{m_t}, \qquad
-\mathbf{Y}_t \in \mathbb{B}^{p_t}.
+\mathbf{U}_t \in \mathbb{B}^{m_t}.
 $$
-The input $$\mathbf{U}_t$$ is the percept at tick $$t$$ defined by the projection in Section 2.2. The output $$\mathbf{Y}_t$$ is produced by a designated subset of nodes, and will later be interpreted as a prediction about future percepts. The dimensions $$m_t$$ and $$p_t$$ may change over time as the Neo gains or loses input and output nodes through structural mutation.
+The input $$\mathbf{U}_t$$ is the percept at tick $$t$$ defined by the projection in Section 2.2. The output $$\mathbf{Y}_t$$ is defined as a direct readout of the internal state at the output indices:
+$$
+\mathbf{Y}_t = \mathbf{V}_t[O_t] \in \mathbb{B}^{p_t},
+$$
+where $$O_t$$ is the set of output node indices stored in $$\text{Lio}_t$$. Since $$\mathbf{Y}_t$$ is always a direct readout of $$\mathbf{V}_t$$ at indices $$O_t$$, it carries no independent state beyond what is already encoded in $$\mathbf{V}_t$$ and $$O_t$$. The dimensions $$m_t$$ and $$p_t$$ may change over time as the Neo gains or loses input and output nodes through structural mutation.
 
-In summary, Lio at tick $$t$$ is an evolving binary graph with continuous parameters, equipped with a binary input and output interface. The pair $$(E_t,\ \Theta_t)$$ specifies *what* computational structure exists, while $$(\mathbf{V}_t,\ \mathbf{U}_t,\ \mathbf{Y}_t)$$ specifies the current binary activity flowing through that structure.
+In summary, Lio at tick $$t$$ is an evolving binary graph with continuous parameters, equipped with a binary input interface. The pair $$(E_t,\ \Theta_t)$$ specifies *what* computational structure exists, while $$(\mathbf{V}_t,\ \mathbf{U}_t)$$ specifies the current binary activity flowing through that structure. The output $$\mathbf{Y}_t$$ is derived from $$\mathbf{V}_t$$ via the output index set $$O_t$$.
 
 ### 2.3.2 Evo as a Meta-Level Mutation Controller
 
@@ -243,7 +246,7 @@ $$C_{\text{mut}}(a) \ge 0$$.
 
 All mutations operate locally on the tuple
 $$
-(V_t, E_t, \Theta_t, U_t, Y_t, O_t),
+(V_t, E_t, \Theta_t, U_t, O_t),
 $$
 and produce an updated structure consistent with the rules of the Neo's internal graph.
 
@@ -338,7 +341,7 @@ This primitive enables exploration of local computational behaviors.
 ### 2.5.4 Output Mutation (output)
 
 Output mutations allow the Neo to change which internal nodes contribute to its prediction
-vector $$Y_t$$. The output index set at tick $$t$$ is
+vector $$\mathbf{Y}_t = \mathbf{V}_t[O_t]$$. The output index set at tick $$t$$ is
 
 $$
 O_t = \{o_1, \dots, o_{p_t}\} \subseteq \{1,\dots,n_t\}.
@@ -401,9 +404,9 @@ $$
 \mathbf{U}_t = \Phi_t(\text{World}_t) \in \mathbb{B}^{m_t}.
 $$
 
-This value is written into Lio’s input component, so that
+This value is written into Lio's input component, so that
 $$
-\text{Lio}_t = (\mathbf{V}_t,\ E_t,\ \Theta_t,\ \mathbf{U}_t,\ \mathbf{Y}_t),
+\text{Lio}_t = (\mathbf{V}_t,\ E_t,\ \Theta_t,\ \mathbf{U}_t,\ O_t),
 $$
 with $$\mathbf{U}_t$$ matching the current projection of the NeoVerse.
 
@@ -439,14 +442,11 @@ For each node index $$i = 1,\dots,n_t$$:
 
 We adopt snapshot semantics: all nodes read $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ and their own $$\eta_i(t)$$ at the start of tick $$t$$, and all updates to $$\mathbf{V}_{t+1}$$ are conceptually applied in parallel.
 
-The output vector $$\mathbf{Y}_t \in \mathbb{B}^{p_t}$$ is obtained by reading out a designated subset of node states. Let
+The output vector $$\mathbf{Y}_t \in \mathbb{B}^{p_t}$$ is defined as a direct readout of the internal state at the output indices:
 $$
-\mathcal{O}_t = \{o_1,\dots,o_{p_t}\} \subseteq \{1,\dots,n_t\}
+\mathbf{Y}_t = \mathbf{V}_t[O_t],
 $$
-be the set of output indices. We define
-$$
-\mathbf{Y}_t[j] = \mathbf{V}_t[o_j], \qquad j = 1,\dots,p_t.
-$$
+
 Thus at tick $$t$$, the Neo produces a prediction $$\mathbf{Y}_t$$ based on its internal state and the current percept, while its internal memory is updated to $$\mathbf{V}_{t+1}$$ for use at the next tick.
 
 ### 2.6.3 Running Cost and Energy Deduction
@@ -499,7 +499,7 @@ and select a (possibly empty) finite sequence of mutation primitives
 $$
 (a_{t,1}, a_{t,2}, \dots, a_{t,K_t}), \qquad a_{t,k} \in \mathcal{A}_{\text{mut}},
 $$
-to be applied to $$(\mathbf{V}_{t+1}, E_t, \Theta_t, \mathbf{U}_{t+1}, \mathbf{Y}_t)$$.
+to be applied to $$(\mathbf{V}_{t+1}, E_t, \Theta_t, \mathbf{U}_{t+1}, O_t)$$.
 
 Each mutation type $$a \in \mathcal{A}_{\text{mut}}$$ has an associated non-negative energy cost
 $$
@@ -514,18 +514,18 @@ be the total cost of the proposed mutations. Evo can only apply mutations up to 
 $$
 N_t'' - \sum_{k=1}^{k^\ast} C_{\text{mut}}(a_{t,k}) > 0.
 $$
-The truncated prefix is then applied in order, yielding updated structural and parametric components (which we still denote by $$E_{t+1}$$ and $$\Theta_{t+1}$$ for simplicity). All bookkeeping on $$\mathbf{V}_{t+1}$$, $$\mathbf{U}_{t+1}$$, and $$\mathbf{Y}_t$$ required to maintain consistency with the new structure is treated as part of the mutation operation.
+The truncated prefix is then applied in order, yielding updated structural and parametric components (which we still denote by $$E_{t+1}$$, $$\Theta_{t+1}$$, and $$O_{t+1}$$ for simplicity). All bookkeeping on $$\mathbf{V}_{t+1}$$ and $$\mathbf{U}_{t+1}$$ required to maintain consistency with the new structure is treated as part of the mutation operation.
 
 The final energy after mutation is
 $$
 N_{t+1}
   = N_t'' - \sum_{k=1}^{k^\ast} C_{\text{mut}}(a_{t,k}),
 $$
-and the Neo’s internal state at tick $$t+1$$ is
+and the Neo's internal state at tick $$t+1$$ is
 $$
-\text{Lio}_{t+1} = (\mathbf{V}_{t+1}, E_{t+1}, \Theta_{t+1}, \mathbf{U}_{t+1}, \mathbf{Y}_{t+1}),
+\text{Lio}_{t+1} = (\mathbf{V}_{t+1}, E_{t+1}, \Theta_{t+1}, \mathbf{U}_{t+1}, O_{t+1}),
 $$
-where $$\mathbf{Y}_{t+1}$$ will be determined at the next computation step.
+where $$\mathbf{Y}_{t+1}$$ will be derived from $$\mathbf{V}_{t+1}$$ via $$O_{t+1}$$ at the next computation step.
 
 ### 2.6.6 Summary of One Cycle
 
