@@ -1,7 +1,7 @@
-% Chapter 9
+% Chapter 8
 
-# Discussion and Interpretation
+# Macro Simulations and Validation
 
-<!-- Interpretation of results, limitations, and philosophical implications of Neosis. -->
+<!-- Large-scale simulations and comparison between macro predictions and micro simulations. -->
 
 

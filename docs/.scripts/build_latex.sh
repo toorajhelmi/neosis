@@ -38,17 +38,58 @@ if command -v pandoc &> /dev/null; then
             tex_file="$BUILD_DIR/chapters/${rel_path%.md}.tex"
             mkdir -p "$(dirname "$tex_file")"
             
+            # Convert inline $$ to $, but preserve display math blocks ($$ on separate lines)
+            temp_file=$(mktemp)
+            python3 -c "
+md_file = '$md_file'
+temp_file = '$temp_file'
+
+with open(md_file, 'r') as f:
+    lines = f.readlines()
+
+result = []
+i = 0
+dollar_dollar = '\$\$'  # Escape $$ to avoid bash interpretation
+
+while i < len(lines):
+    line = lines[i]
+    stripped = line.strip()
+    
+    # Display math block: $$ on its own line
+    if stripped == dollar_dollar:
+        # Keep as $$ for display math
+        result.append(line)
+        i += 1
+        # Keep all lines until closing $$
+        while i < len(lines) and lines[i].strip() != dollar_dollar:
+            result.append(lines[i])
+            i += 1
+        if i < len(lines):
+            result.append(lines[i])  # Closing $$
+        i += 1
+        continue
+    
+    # For all other lines, convert $$...$$ to $...$ (inline math)
+    line = line.replace(dollar_dollar, '\$')
+    result.append(line)
+    i += 1
+
+with open(temp_file, 'w') as f:
+    f.write(''.join(result))
+"
+            
             # Convert with pandoc
-            if pandoc "$md_file" \
+            if pandoc "$temp_file" \
                 -f markdown \
                 -t latex \
-                $CITEPROC_FILTER \
-                -o "$tex_file" \
-                --wrap=none 2>&1; then
+                --wrap=none \
+                -o "$tex_file" 2>&1; then
                 echo "  ✓ Converted: $rel_path"
             else
                 echo "  ✗ Failed to convert: $rel_path"
             fi
+            
+            rm -f "$temp_file"
         fi
     done
 else

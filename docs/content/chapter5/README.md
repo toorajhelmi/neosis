@@ -1,7 +1,5 @@
-% Chapter 5
+# Chapter 5 — Few-Neo Interactions and Micro Simulations
 
-# Micro–Macro Correspondence
-
-<!-- Mathematical bridge showing how macro observables emerge from micro Neo dynamics. -->
+<!-- Behavior of small groups of Neos, competition/cooperation, and micro-level simulations. -->
 
 

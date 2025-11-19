@@ -1,7 +1,7 @@
-% Chapter 8
+% Chapter 7
 
-# Macro Simulations and Validation
+# Macro Modelling of Neo Populations
 
-<!-- Large-scale simulations and comparison between macro predictions and micro simulations. -->
+<!-- Definition and analysis of macro-level models for large populations of Neos. -->
 
 

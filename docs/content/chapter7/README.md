@@ -1,7 +1,7 @@
-% Chapter 7
+% Chapter 6
 
-# Macro Modelling of Neo Populations
+# Related Theories and Neosis in Context
 
-<!-- Definition and analysis of macro-level models for large populations of Neos. -->
+<!-- Review of evolutionary dynamics, statistical mechanics, and other related frameworks. -->
 
 

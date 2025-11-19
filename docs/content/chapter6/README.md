@@ -1,7 +1,7 @@
-% Chapter 6
+% Chapter 5
 
-# Related Theories and Neosis in Context
+# Micro–Macro Correspondence
 
-<!-- Review of evolutionary dynamics, statistical mechanics, and other related frameworks. -->
+<!-- Mathematical bridge showing how macro observables emerge from micro Neo dynamics. -->
 
 
