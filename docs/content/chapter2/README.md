@@ -250,12 +250,12 @@ $$
 $$
 and produce an updated structure consistent with the rules of the Neo's internal graph.
 
-### 2.5.1 Node Mutation (node)
+### 2.5.1 Node Mutation 
 
 Node mutations modify the number of internal nodes. A node mutation consists of either
 adding a new node or removing an existing one.
 
-#### Node Addition (node$$^+$$)
+#### node$$^+$$
 
 A node-addition mutation introduces a new internal node and increases the dimensionality
 of the state vector from $$n_t$$ to $$n_t+1$$.
@@ -276,7 +276,7 @@ $$
 
 All index sets and parameter vectors are resized accordingly.
 
-#### Node Removal (node$$^-$$)
+#### node$$^-$$
 
 A node-removal mutation selects an index $$i \in \{1,\dots,n_t\}$$ and deletes it. The
 updated dimensionality becomes $$n'_t = n_t - 1$$. All edges incident to $$i$$ are removed:
@@ -291,11 +291,11 @@ from the output set.
 
 Node removal may disconnect the graph; the result is still considered valid.
 
-### 2.5.2 Edge Mutation (edge)
+### 2.5.2 Edge Mutation 
 
 Edge mutations change information flow by adding or removing directed edges.
 
-#### Edge Addition (edge$$^+$$)
+#### edge$$^+$$
 
 Select a pair $$(j,k)$$ with $$j \neq k$$. The edge is added:
 
@@ -306,7 +306,7 @@ $$
 This increases the input dimensionality of node $$k$$ by one, requiring expansion of its weight
 vector $$w_k$$ by appending a new weight drawn from an initialization distribution.
 
-#### Edge Removal (edge$$^-$$)
+#### edge$$^-$$
 
 Select an existing edge $$(j,k) \in E_t$$ and delete it:
 
@@ -316,7 +316,7 @@ $$
 
 The corresponding coordinate is removed from $$w_k$$, decreasing its input dimensionality.
 
-### 2.5.3 Parameter Perturbation (param$$^f$$)
+### 2.5.3 Parameter Perturbation 
 
 A parameter-perturbation mutation updates the continuous parameters of a single node
 without altering the graph structure. For a selected node $$i$$:
@@ -330,7 +330,7 @@ $$\mathbb{R}^{k_i+2}$$. All other nodes and edges remain unchanged.
 
 This primitive enables exploration of local computational behaviors.
 
-### 2.5.4 Output Mutation (output)
+### 2.5.4 Output Mutation 
 
 Output mutations allow the Neo to change which internal nodes contribute to its prediction
 vector $$\mathbf{Y}_t = \mathbf{V}_t[O_t]$$. The output index set at tick $$t$$ is
@@ -341,7 +341,7 @@ $$
 
 We introduce two subtypes.
 
-#### Output Addition (output$$^+$$)
+#### output$$^+$$
 
 Select a node index $$i \in \{1,\dots,n_t\}$$ with $$i \notin O_t$$ and add it to the output set:
 
@@ -351,7 +351,7 @@ $$
 
 This increases the output dimensionality $$p_t \to p_{t+1} = p_t + 1$$.
 
-#### Output Removal (output$$^-$$)
+#### output$$^-$$
 
 Select $$i \in O_t$$ and remove it:
 
@@ -366,16 +366,7 @@ pruning, and reallocation of computational resources.
 
 ---
 
-Together, the unified mutation set
-$$
-A_{\text{mut}} = \{
-\texttt{node}^+, \texttt{node}^-,
-\texttt{edge}^+, \texttt{edge}^-,
-\texttt{param}^f,
-\texttt{output}^+, \texttt{output}^- \}
-$$
-provides a minimal but expressive basis for evolving both the topology and computation of
-Lio. By associating each primitive with an energy cost and constraining mutations to be
+Together the unified mutation setprovides a minimal but expressive basis for evolving both the topology and computation of Lio. By associating each primitive with an energy cost and constraining mutations to be
 affordable at tick $$t$$, Evo must balance exploration against the Neo's available energy,
 embedding evolutionary pressure directly into the organism's survival dynamics.
 
