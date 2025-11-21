@@ -84,3 +84,20 @@
 % Page margins
 \usepackage[margin=1in]{geometry}
 
+% Headers and footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} % Clear all headers and footers
+\fancyhead[LE]{\leftmark} % Chapter name on left (even pages)
+\fancyhead[RO]{\rightmark} % Section name on right (odd pages)
+\fancyfoot[C]{\thepage} % Page number centered
+\renewcommand{\headrulewidth}{0.4pt} % Header rule
+\renewcommand{\footrulewidth}{0pt} % No footer rule
+
+% Plain style for title page and chapter starts
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
