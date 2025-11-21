@@ -4,43 +4,10 @@ This chapter situates Neosis within the broader landscape of computational, cogn
 
 A diagram illustrating this three-axis taxonomy is shown in Figure 7.1.
 
-<!-- GITBOOK_ONLY -->
 ![Figure 7.1: Conceptual Placement of Theoretical Frameworks](assets/neosis-cube-diagram.svg)
-<!-- END_GITBOOK_ONLY -->
 
-```latex
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}[x={(1cm,0cm)}, y={(0.5cm,0.866cm)}, z={(0cm,1cm)}]
-% Cube edges
-\draw[thick] (0,0,0) -- (4,0,0) -- (4,4,0) -- (0,4,0) -- cycle;
-\draw[thick] (0,0,4) -- (4,0,4) -- (4,4,4) -- (0,4,4) -- cycle;
-\draw[thick] (0,0,0) -- (0,0,4);
-\draw[thick] (4,0,0) -- (4,0,4);
-\draw[thick] (4,4,0) -- (4,4,4);
-\draw[thick] (0,4,0) -- (0,4,4);
-% Axis labels
-\node[below] at (2,0,0) {Locus of Structural Adaptation};
-\node[right] at (4,2,0) {Origin of Objectives};
-\node[above] at (0,4,2) {Developmental Regime};
-% Representative theories
-\node at (3.5,0.5,0.5) {ANN / SNN};
-\node at (3.5,3.5,0.5) {Neuroevolution};
-\node at (0.5,3.5,0.5) {ALife};
-\node at (0.5,0.5,3.5) {CCS / DST};
-\node at (3.5,0.5,3.5) {Reservoir / NAS};
-\node[font=\bfseries] at (2,2,3.5) {Neosis};
-\end{tikzpicture}
-\caption{Conceptual placement of major theoretical families in a three-axis space.}
-\label{fig:neosis-cube}
-\end{figure}
-```
-
-<!-- GITBOOK_ONLY -->
 **Figure 7.1:** Conceptual placement of major theoretical families in a three-axis space. The three axes represent: (1) **Locus of Structural Adaptation** (X-axis): Fixed, generational, developmental, or in-lifetime; (2) **Origin of Objectives** (Y-axis): External loss, external reinforcement, replication fitness, or internal energy survival; (3) **Developmental Regime** (Z-axis): Static capacity, generationally expandable, biologically scaffolded, or self-expanding. Neosis occupies a distinct region characterized by in-lifetime self-modification, internal energy survival objectives, and open-ended developmental growth.
-<!-- END_GITBOOK_ONLY -->
 
-<!-- GITBOOK_ONLY -->
 | Theory Family | Structural Adaptation | Objective Source | Developmental Regime |
 |---------------|----------------------|-----------------|---------------------|
 | Artificial Neural Networks | Fixed | External loss | Static |
@@ -57,38 +24,8 @@ A diagram illustrating this three-axis taxonomy is shown in Figure 7.1.
 | Liquid State Machines | Fixed | External training | Static |
 | Hypernetworks / Meta-learning | Fixed meta-topology | External loss | Static |
 | **Neosis** | **In-lifetime self-modifying** | **Internal energy survival** | **Open-ended** |
-<!-- END_GITBOOK_ONLY -->
 
-```latex
-\begin{table}[h]
-\centering
-\begin{tabular}{lccc}
-\toprule
-\textbf{Theory Family} & \textbf{Structural Adaptation} & \textbf{Objective Source} & \textbf{Developmental Regime} \\
-\midrule
-Artificial Neural Networks & Fixed & External loss & Static \\
-Spiking Neural Networks & Fixed & External loss & Static \\
-Reinforcement Learning & Fixed & External reward & Static \\
-Neuroevolution (NEAT, HyperNEAT) & Generational & External task fitness & Generational \\
-Artificial Life (Tierra, Avida) & Generational & Replication fitness & Generational \\
-Predictive Processing / FEP & Fixed hierarchy & Variational free energy & Static \\
-Developmental Systems Theory & Developmental & Biological fitness & Scaffolding \\
-Dynamical Systems Theory & Fixed attractor landscape & None / emergent & Continuous \\
-Embodied/Enactive Cognition & Structural coupling & Viability & Developmental \\
-Reservoir Computing & Fixed & External training & Static \\
-Neural Architecture Search & Generational/Meta & External loss & Static \\
-Liquid State Machines & Fixed & External training & Static \\
-Hypernetworks / Meta-learning & Fixed meta-topology & External loss & Static \\
-\textbf{Neosis} & \textbf{In-lifetime self-modifying} & \textbf{Internal energy survival} & \textbf{Open-ended} \\
-\bottomrule
-\end{tabular}
-\caption{Comprehensive mapping of theoretical frameworks to the three categorical axes.}
-\end{table}
-```
-
-<!-- GITBOOK_ONLY -->
 **Table 7.1:** Comprehensive mapping of theoretical frameworks to the three categorical axes.
-<!-- END_GITBOOK_ONLY -->
 
 The following sections review major theoretical traditions that share conceptual territory with Neosis. For each, we highlight connections, distinctions, and key insights that motivate the need for a unified, energy-based, self-modifying computational framework.
 

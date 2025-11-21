@@ -38,7 +38,7 @@ if command -v pandoc &> /dev/null; then
             tex_file="$BUILD_DIR/chapters/${rel_path%.md}.tex"
             mkdir -p "$(dirname "$tex_file")"
             
-            # Pre-process: Remove GitBook-only sections, keep LaTeX-only sections
+            # Pre-process: Convert inline $$ to $, but preserve display math blocks
             temp_file=$(mktemp)
             python3 -c "
 import re
@@ -48,27 +48,6 @@ temp_file = '$temp_file'
 
 with open(md_file, 'r') as f:
     content = f.read()
-
-# Remove GitBook-only sections (between <!-- GITBOOK_ONLY --> and <!-- END_GITBOOK_ONLY -->)
-content = re.sub(
-    r'<!--\s*GITBOOK_ONLY\s*-->.*?<!--\s*END_GITBOOK_ONLY\s*-->',
-    '',
-    content,
-    flags=re.DOTALL
-)
-
-# Extract LaTeX code from code blocks (```latex ... ```) and replace with the LaTeX content
-def extract_latex_code_block(match):
-    latex_code = match.group(1)
-    return latex_code
-
-# Replace ```latex ... ``` code blocks with their content
-content = re.sub(
-    r'```latex\n(.*?)```',
-    extract_latex_code_block,
-    content,
-    flags=re.DOTALL
-)
 
 # Convert inline $$ to $, but preserve display math blocks
 lines = content.split('\n')
