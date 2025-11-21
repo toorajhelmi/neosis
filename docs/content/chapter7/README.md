@@ -4,12 +4,11 @@ This chapter situates Neosis within the broader landscape of computational, cogn
 
 A diagram illustrating this three-axis taxonomy is shown in Figure 7.1.
 
+<!-- GITBOOK_ONLY -->
 ![Figure 7.1: Conceptual Placement of Theoretical Frameworks](assets/neosis-cube-diagram.svg)
+<!-- END_GITBOOK_ONLY -->
 
-**Figure 7.1:** Conceptual placement of major theoretical families in a three-axis space. The three axes represent: (1) **Locus of Structural Adaptation** (X-axis): Fixed, generational, developmental, or in-lifetime; (2) **Origin of Objectives** (Y-axis): External loss, external reinforcement, replication fitness, or internal energy survival; (3) **Developmental Regime** (Z-axis): Static capacity, generationally expandable, biologically scaffolded, or self-expanding. Neosis occupies a distinct region characterized by in-lifetime self-modification, internal energy survival objectives, and open-ended developmental growth.
-
-<!-- LaTeX Figure: 3D cube diagram -->
-<!--
+<!-- LATEX_ONLY -->
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[x={(1cm,0cm)}, y={(0.5cm,0.866cm)}, z={(0cm,1cm)}]
@@ -35,10 +34,30 @@ A diagram illustrating this three-axis taxonomy is shown in Figure 7.1.
 \caption{Conceptual placement of major theoretical families in a three-axis space.}
 \label{fig:neosis-cube}
 \end{figure}
--->
+<!-- END_LATEX_ONLY -->
 
-<!-- LaTeX Table: Comprehensive mapping -->
-<!--
+**Figure 7.1:** Conceptual placement of major theoretical families in a three-axis space. The three axes represent: (1) **Locus of Structural Adaptation** (X-axis): Fixed, generational, developmental, or in-lifetime; (2) **Origin of Objectives** (Y-axis): External loss, external reinforcement, replication fitness, or internal energy survival; (3) **Developmental Regime** (Z-axis): Static capacity, generationally expandable, biologically scaffolded, or self-expanding. Neosis occupies a distinct region characterized by in-lifetime self-modification, internal energy survival objectives, and open-ended developmental growth.
+
+<!-- GITBOOK_ONLY -->
+| Theory Family | Structural Adaptation | Objective Source | Developmental Regime |
+|---------------|----------------------|-----------------|---------------------|
+| Artificial Neural Networks | Fixed | External loss | Static |
+| Spiking Neural Networks | Fixed | External loss | Static |
+| Reinforcement Learning | Fixed | External reward | Static |
+| Neuroevolution (NEAT, HyperNEAT) | Generational | External task fitness | Generational |
+| Artificial Life (Tierra, Avida) | Generational | Replication fitness | Generational |
+| Predictive Processing / FEP | Fixed hierarchy | Variational free energy | Static |
+| Developmental Systems Theory | Developmental | Biological fitness | Scaffolding |
+| Dynamical Systems Theory | Fixed attractor landscape | None / emergent | Continuous |
+| Embodied/Enactive Cognition | Structural coupling | Viability | Developmental |
+| Reservoir Computing | Fixed | External training | Static |
+| Neural Architecture Search | Generational/Meta | External loss | Static |
+| Liquid State Machines | Fixed | External training | Static |
+| Hypernetworks / Meta-learning | Fixed meta-topology | External loss | Static |
+| **Neosis** | **In-lifetime self-modifying** | **Internal energy survival** | **Open-ended** |
+<!-- END_GITBOOK_ONLY -->
+
+<!-- LATEX_ONLY -->
 \begin{table}[h]
 \centering
 \begin{tabular}{lccc}
@@ -63,24 +82,7 @@ Hypernetworks / Meta-learning & Fixed meta-topology & External loss & Static \\
 \end{tabular}
 \caption{Comprehensive mapping of theoretical frameworks to the three categorical axes.}
 \end{table}
--->
-
-| Theory Family | Structural Adaptation | Objective Source | Developmental Regime |
-|---------------|----------------------|-----------------|---------------------|
-| Artificial Neural Networks | Fixed | External loss | Static |
-| Spiking Neural Networks | Fixed | External loss | Static |
-| Reinforcement Learning | Fixed | External reward | Static |
-| Neuroevolution (NEAT, HyperNEAT) | Generational | External task fitness | Generational |
-| Artificial Life (Tierra, Avida) | Generational | Replication fitness | Generational |
-| Predictive Processing / FEP | Fixed hierarchy | Variational free energy | Static |
-| Developmental Systems Theory | Developmental | Biological fitness | Scaffolding |
-| Dynamical Systems Theory | Fixed attractor landscape | None / emergent | Continuous |
-| Embodied/Enactive Cognition | Structural coupling | Viability | Developmental |
-| Reservoir Computing | Fixed | External training | Static |
-| Neural Architecture Search | Generational/Meta | External loss | Static |
-| Liquid State Machines | Fixed | External training | Static |
-| Hypernetworks / Meta-learning | Fixed meta-topology | External loss | Static |
-| **Neosis** | **In-lifetime self-modifying** | **Internal energy survival** | **Open-ended** |
+<!-- END_LATEX_ONLY -->
 
 **Table 7.1:** Comprehensive mapping of theoretical frameworks to the three categorical axes.
 
