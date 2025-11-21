@@ -14,29 +14,74 @@ A Neo adapts through:
 
 Learnability encompasses both modes, but In-Life learning is the primary source of rapid adaptation.
 
-## 4.2 In-Life Learning Through Parameter Drift
+## 4.2 In-Life Learning in Neo
 
-In-Life learning arises not from new update laws but from $$S$$ computing how its own parameters should change. For each node $$i$$, a **plasticity head** subgraph produces a parameter adjustment vector
+In-Life learning refers to parameter-level adjustments a Neo performs within its lifetime without altering its topology. It operates entirely inside **Lio**, independent of **Evo**, and relies only on signals physically available to each node: its own activation, its local inputs, and the global reward. In-Life learning introduces no new node types, no plasticity subgraphs, and no global optimization rule. Instead, each node applies a small local update that statistically reinforces behaviors correlated with positive reward.
+
+### 4.2.1 Motivation
+
+Digital organisms require a mechanism for within-lifetime adaptation that is (i) local, (ii) energy-limited, (iii) structure-invariant, and (iv) sufficiently stochastic to explore the behavioral space. Biological nervous systems satisfy these properties using simple reward-modulated Hebbian adjustments rather than gradient-based global supervision. Neo adopts the same principle: learning arises from local correlations between input, output, and reward, not from derivatives of a loss function.
+
+To maintain exploration, Neo preserves a stochastic component inside Lex, the node-level transfer mechanism, rather than embedding noise directly into the learning rule. This separation keeps the learning dynamics simple while preserving rich stochastic behavior.
+
+### 4.2.2 Local State and Required Inputs
+
+Each node $$i$$ maintains two small internal memory elements:
+
+- **Activation register** $$\mathbf{V}_t[i]$$, stored as part of Lex's computation.
+- **Hebbian register** $$h_i(t) \in \{-1,0,+1\}$$, indicating whether the node's recent activity contributed positively, negatively, or not at all to the outcome.
+
+Lio receives an extended external input vector
 
 $$
-\Delta\theta_i(t) = P_i(\mathbf{V}_t, \mathbf{U}_t, O, N_t),
+\mathbf{U}_t = (\text{environment inputs},\, S_t),
 $$
 
-using the same Lex-based computation as any other part of the Neo.
+where $$S_t$$ is the externally supplied reward. The reward channel is broadcast to all nodes exactly like any other external signal. Each node also stores its incoming inputs $$\mathbf{u}_i(t)$$ for one tick to support local parameter updates.
 
-The Neo then applies a small update:
+### 4.2.3 Node-Level In-Life Learning Rule
 
-$$
-\theta_i(t+1) = \theta_i(t) + \epsilon\, \Delta\theta_i(t),
-$$
-
-with energy cost
+In-Life learning is expressed as a local update to the parameters $$\theta_i$$ of node $$i$$. After each prediction and reward cycle, the node updates its Hebbian register:
 
 $$
-\text{Cost}_i(t) = c_\theta \|\Delta\theta_i(t)\|.
+h_i(t) = 
+\begin{cases}
++1 & \text{if } \mathbf{V}_t[i] = 1 \text{ and } S_t > 0, \\[2mm]
+-1 & \text{if } \mathbf{V}_t[i] = 1 \text{ and } S_t < 0, \\[2mm]
+0  & \text{otherwise}.
+\end{cases}
 $$
 
-These updates let a Neo adapt to new conditions during its own lifetime without involving mutation. This mechanism is evolvable: structures that compute useful $$\Delta\theta_i$$ improve survival and are retained by selection.
+If the node was active during a successful tick, it is marked as helpful; if it was active during an unsuccessful tick, it is marked as harmful; otherwise it is neutral for that tick.
+
+Given this flag, the node updates its parameters:
+
+$$
+\theta_i(t+1)
+= \theta_i(t)
++ \epsilon\, h_i(t)\, \mathbf{u}_i(t),
+$$
+
+where $$\mathbf{u}_i(t)$$ is the input vector received by node $$i$$ at tick $$t$$, and $$\epsilon$$ is a small global In-Life learning constant. The associated metabolic cost is
+
+$$
+\text{Cost}_i(t)
+= c_\theta \, \|\epsilon\, h_i(t)\, \mathbf{u}_i(t)\|.
+$$
+
+All computation is local; no global gradient information or structural change is involved.
+
+### 4.2.4 Stochasticity and Lex's Role
+
+Lex preserves the stochastic component originally introduced into node outputs:
+
+$$
+y_i(t) \sim \text{Bernoulli}(p_i(\mathbf{V}_t, \theta_i)).
+$$
+
+This is the only source of intentional noise in In-Life learning. Learning itself remains deterministic given the stochastic outputs, so updates inherit randomness through $$y_i(t)$$.
+
+Exploration arises because node outputs are stochastic; repeated reward-correlated co-activations produce consistent parameter drift, while uncorrelated fluctuations average out. This yields a statistical direction of improvement without requiring explicit noise in $$\Delta\theta$$.
 
 ## 4.3 Relationship Between Learnability and Survival
 
@@ -46,10 +91,10 @@ $$
 \mathbb{E}[N_t \mid \text{In-Life learning}] > \mathbb{E}[N_t \mid \text{no In-Life learning}],
 $$
 
-then evolutionary pressure will favor structures $$S$$ that support effective plasticity heads and stable parameter drift.
+then evolutionary pressure will favor structures $$S$$ that support effective local Hebbian updates and stable parameter drift.
 
-Lifetime learning determines what kinds of In-Life learning a Neo can express, while In-Life learning directly shapes immediate survival within the NeoVerse.
+Lifetime learning determines what kinds of In-Life learning a Neo can express through its evolved topology, while In-Life learning directly shapes immediate survival within the NeoVerse.
 
 ## 4.4 Summary
 
-A Neo is learnable when a fixed structure $$S$$ supports behavior that adapts to experience. This adaptation arises either through internal dynamical responses or through small parameter updates computed by the Neo's own circuitry. Lifetime learning shapes structure slowly via mutation, while In-Life learning provides fast, flexible adjustment during a single lifetime.
+A Neo is learnable when a fixed structure $$S$$ supports behavior that adapts to experience. This adaptation arises either through internal dynamical responses or through local Hebbian parameter updates driven by reward correlation. Lifetime learning shapes structure slowly via mutation, while In-Life learning provides rapid, flexible adjustment during a single lifetime through local reward-modulated updates.
