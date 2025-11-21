@@ -5,7 +5,7 @@
 * [Chapter 3: Neo's Learnability](chapter3/README.md)
 * [Chapter 4: Micro Analysis of a Single Neo](chapter4/README.md)
 * [Chapter 5: Expressive Power of a Neo](chapter5/README.md)
-* [Chapter 6: Micro–Macro Correspondence](chapter6/README.md)
+* [Chapter 6: From Micro to Macro: Rationale and Transition](chapter6/README.md)
 * [Chapter 7: Related Theories and Neosis in Context](chapter7/README.md)
 * [Chapter 8: Macro Analysis of Neo Dynamics](chapter8/README.md)
 * [Chapter 9: Advanced Macro Analysis of Neo Dynamics](chapter9/README.md)
