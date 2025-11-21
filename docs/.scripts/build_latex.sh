@@ -25,10 +25,14 @@ cp -r "$DOCS_DIR/.assets" "$BUILD_DIR/" 2>/dev/null || true
 if command -v pandoc &> /dev/null; then
     echo "Converting Markdown content to LaTeX..."
     
-    # Check if pandoc-citeproc filter is available
-    CITEPROC_FILTER=""
-    if command -v pandoc-citeproc &> /dev/null; then
-        CITEPROC_FILTER="--filter pandoc-citeproc"
+    # Check pandoc version for citation support
+    PANDOC_VERSION=$(pandoc --version | head -1 | awk '{print $2}')
+    CITEPROC_OPTIONS=""
+    # Pandoc 3.0+ uses --citeproc, older versions use --filter pandoc-citeproc
+    if [[ $(echo "$PANDOC_VERSION 3.0" | awk '{print ($1 >= $2)}') == 1 ]]; then
+        CITEPROC_OPTIONS="--citeproc"
+    elif command -v pandoc-citeproc &> /dev/null; then
+        CITEPROC_OPTIONS="--filter pandoc-citeproc"
     fi
     
     # Convert each content file
@@ -81,11 +85,20 @@ with open(temp_file, 'w') as f:
     f.write(''.join(result))
 "
             
-            # Convert with pandoc (with bibliography support if available)
-            BIB_OPTIONS=""
-            if [ -f "$LATEX_DIR/bibliography.bib" ] && command -v pandoc-citeproc &> /dev/null; then
-                BIB_OPTIONS="--filter pandoc-citeproc --bibliography=$LATEX_DIR/bibliography.bib"
-            fi
+            # Convert pandoc citations [@key] to LaTeX \cite{key} before pandoc
+            python3 -c "
+import re
+with open('$temp_file', 'r') as f:
+    content = f.read()
+# Convert [@key1; @key2] to \cite{key1,key2} (handle multiple citations first)
+content = re.sub(r'\[@([^;]+);\s*@([^\]]+)\]', r'\\\\cite{\\1,\\2}', content)
+# Convert single [@key] to \cite{key}
+content = re.sub(r'\[@([^\]]+)\]', r'\\\\cite{\\1}', content)
+with open('$temp_file', 'w') as f:
+    f.write(content)
+"
+            
+            # Convert with pandoc (no citeproc needed since we converted citations manually)
             
             if pandoc "$temp_file" \
                 -f markdown \
