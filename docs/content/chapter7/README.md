@@ -36,7 +36,9 @@ A diagram illustrating this three-axis taxonomy is shown in Figure 7.1.
 \end{figure}
 <!-- END_LATEX_ONLY -->
 
+<!-- GITBOOK_ONLY -->
 **Figure 7.1:** Conceptual placement of major theoretical families in a three-axis space. The three axes represent: (1) **Locus of Structural Adaptation** (X-axis): Fixed, generational, developmental, or in-lifetime; (2) **Origin of Objectives** (Y-axis): External loss, external reinforcement, replication fitness, or internal energy survival; (3) **Developmental Regime** (Z-axis): Static capacity, generationally expandable, biologically scaffolded, or self-expanding. Neosis occupies a distinct region characterized by in-lifetime self-modification, internal energy survival objectives, and open-ended developmental growth.
+<!-- END_GITBOOK_ONLY -->
 
 <!-- GITBOOK_ONLY -->
 | Theory Family | Structural Adaptation | Objective Source | Developmental Regime |
