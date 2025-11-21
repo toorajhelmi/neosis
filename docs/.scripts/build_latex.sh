@@ -87,7 +87,7 @@ with open(temp_file, 'w') as f:
                 -t latex \
                 --wrap=none \
                 -o "$tex_file" 2>&1; then
-                # Post-process to fix numbering and convert to chapters
+                # Post-process to fix numbering, convert to chapters, and fix tables
                 python3 -c "
 import re
 import sys
@@ -98,13 +98,50 @@ with open(tex_file, 'r') as f:
     content = f.read()
 
 # Convert \\section{Chapter X --- Title} to \\chapter{Title}
-content = re.sub(r'\\\\section\{Chapter \\d+ --- ([^}]+)\}', r'\\\\chapter{\\1}', content)
+content = re.sub(r'\\\\section\{Chapter \d+ --- ([^}]+)\}', r'\\\\chapter{\\1}', content)
 
 # Convert \\subsection{X.Y Title} to \\section{Title} (remove number prefix)
 content = re.sub(r'\\\\subsection\{[\\d.]+ ([^}]+)\}', r'\\\\section{\\1}', content)
 
 # Convert \\subsubsection{X.Y.Z Title} to \\subsection{Title} (remove number prefix)
 content = re.sub(r'\\\\subsubsection\{[\\d.]+ ([^}]+)\}', r'\\\\subsection{\\1}', content)
+
+# Fix longtable: Replace with proper booktabs table
+# Match the entire longtable structure
+longtable_start = content.find('{\\def\\LTcaptype')
+if longtable_start >= 0:
+    # Find the matching closing brace
+    brace_count = 0
+    i = longtable_start
+    while i < len(content):
+        if content[i] == '{':
+            brace_count += 1
+        elif content[i] == '}':
+            brace_count -= 1
+            if brace_count == 0:
+                longtable_end = i + 1
+                # Extract table rows (between \endlastfoot and \end{longtable})
+                table_section = content[longtable_start:longtable_end]
+                rows_match = re.search(r'\\\\endlastfoot(.*?)\\\\end\{longtable\}', table_section, re.DOTALL)
+                if rows_match:
+                    rows = rows_match.group(1).strip()
+                    # Clean up rows - remove extra formatting
+                    rows = re.sub(r'\\\\noalign\{\}', '', rows)
+                    # Build clean table
+                    clean_table = '''\\\\begin{table}[h]
+\\\\centering
+\\\\begin{tabular}{lccc}
+\\\\toprule
+\\\\textbf{Theory Family} & \\\\textbf{Structural Adaptation} & \\\\textbf{Objective Source} & \\\\textbf{Developmental Regime} \\\\\\\\
+\\\\midrule
+''' + rows + '''
+\\\\bottomrule
+\\\\end{tabular}
+\\\\caption{Comprehensive mapping of theoretical frameworks to the three categorical axes.}
+\\\\end{table}'''
+                    content = content[:longtable_start] + clean_table + content[longtable_end:]
+                break
+        i += 1
 
 with open(tex_file, 'w') as f:
     f.write(content)
