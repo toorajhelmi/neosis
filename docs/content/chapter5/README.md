@@ -1,125 +1,81 @@
-# Chapter 5 — Micro Analysis of a Single Neo
+# Chapter 5 — Expressive Power of a Neo
 
-## 5.1 Scope and Objectives
+## 5.1 Introduction
 
-This chapter analyzes the behavior of an individual Neo at the smallest structural scales. We focus on nodes, edges, Lex, stochasticity, energy transitions, mutation effects, and In-Life learning rules, independent of population-level dynamics.
+This chapter evaluates the representational and computational power of the Neo architecture. We show that finite Neos can emulate any deterministic or stochastic finite-state system, and evolving Neos can emulate any computable dynamical process.
 
-## 5.2 Minimal Neo Structures
+## 5.2 Deterministic Expressivity
 
-### 5.2.1 Zero-Node and Degenerate Cases
+### 5.2.1 Threshold Logic as a Universal Boolean Substrate
 
-**Purpose:** Characterize Neos with no internal nodes.
+**Purpose:** Relate Lex to classical threshold logic.
 
-**Expectation:** Show they have no representational capacity and follow trivial energy trajectories.
+**Expectation:** Use known results to show that any Boolean function can be represented by threshold units.
 
-### 5.2.2 Single-Node Neo
+### 5.2.2 Finite Deterministic Dynamical Systems
 
-**Purpose:** Analyze the simplest functional unit governed by Lex.
+**Purpose:** Connect recurrent threshold networks to dynamical system representation.
 
-**Expectation:** Evaluate deterministic, stochastic, and memory-like behavior for minimal structures.
+**Expectation:** Demonstrate that fixed-structure Neos can implement any finite deterministic transition function.
 
-### 5.2.3 Two-Node Neo
+## 5.3 Stochastic Expressivity
 
-**Purpose:** Introduce the simplest interacting system.
+### 5.3.1 Probabilistic Threshold Nodes
 
-**Expectation:** Demonstrate how feedforward, recurrent, and parallel pairs yield richer micro-dynamics.
+**Purpose:** Formalize Lex with stochastic input as a probabilistic threshold gate.
 
-### 5.2.4 Canonical Micro-Motifs
+**Expectation:** Show how Bernoulli-driven updates produce stochastic transitions.
 
-**Purpose:** Identify recurring low-level patterns.
+### 5.3.2 Representation of Markov and Stochastic Automata
 
-**Expectation:** Use chains, fan-in, fan-out, and loops as computational building blocks for larger Neos.
+**Purpose:** Relate Neo networks to finite probabilistic state machines.
 
-## 5.3 Lex and Local Computation
+**Expectation:** Show that such structures can implement any finite Markov chain or stochastic automaton.
 
-### 5.3.1 Lex Dynamics
+## 5.4 Computational Universality
 
-**Purpose:** Formalize deterministic and stochastic transitions induced by the Lex rule.
+### 5.4.1 Recurrent Threshold Networks as Universal Computers
 
-**Expectation:** Analyze the influence of weights, bias, and the stochastic term on node updates.
+**Purpose:** Connect Neo dynamics to known universality results.
 
-### 5.3.2 Effect of Stochasticity
+**Expectation:** Cite that recurrent threshold networks are Turing complete, implying universality for fixed topology.
 
-**Purpose:** Study how randomness modifies micro-scale behavior.
+### 5.4.2 Evolving Structure and Open-Ended Growth
 
-**Expectation:** Show variability, exploration, and divergence across identical initialized Neos.
+**Purpose:** Argue that mutation primitives allow construction of arbitrary computational graphs.
 
-### 5.3.3 Micro-Level Expressive Capacity
+**Expectation:** Show that structural evolution enables Neos to approximate any computable function over time.
 
-**Purpose:** Assess the representational power of small fixed structures.
+## 5.5 Continuous Parameters and Decision Surfaces
 
-**Expectation:** Describe the deterministic and stochastic input–output mappings achievable by one- and two-node Neos.
+### 5.5.1 Continuous Parameterization
 
-## 5.4 Energy Trajectories at Micro Scale
+**Purpose:** Highlight the role of real-valued parameters in sharpening representational capacity.
 
-### 5.4.1 Tick-Level Energy Flow
+**Expectation:** Show how continuous weights and biases create arbitrarily fine decision boundaries.
 
-**Purpose:** Examine energy changes during a single cycle.
+### 5.5.2 Refinement Through Mutation and In-Life Learning
 
-**Expectation:** Detail computation cost, reward acquisition, and the resulting energy update.
+**Purpose:** Connect parameter evolution to increasing precision.
 
-### 5.4.2 Lifetime and Vitality in Simple Structures
+**Expectation:** Describe how parametric adjustments refine decision functions.
 
-**Purpose:** Quantify survival properties of minimal Neos.
+## 5.6 Partial Observability and Internal Memory
 
-**Expectation:** Compare deterministic, stochastic, and recurrent motifs in terms of energy trajectories and survival.
+### 5.6.1 Perception via Projection
 
-## 5.5 Micro-Level Mutation Experiments
+**Purpose:** Address the fact that Neos only observe projected world states.
 
-### 5.5.1 Isolated Mutation Types
+**Expectation:** Explain how internal memory compensates for missing information.
 
-**Purpose:** Analyze the effect of each mutation primitive separately.
+### 5.6.2 Representing Predictive and Latent-Variable Models
 
-**Expectation:** Show structural and behavioral results for node$$^+$$, node$$^-$$, edge$$^+$$, edge$$^-$$, and param$$^f$$.
+**Purpose:** Illustrate how Neos can learn internal structures needed for prediction.
 
-### 5.5.2 Mutation Cost and Trade-Offs
+**Expectation:** Show that recurrent binary states provide sufficient latent capacity.
 
-**Purpose:** Relate mutation outcomes to energy budget.
+## 5.7 Summary of Expressive Power
 
-**Expectation:** Demonstrate scenarios where beneficial mutations fail due to cost and scenarios where small modifications outperform structural changes.
+**Purpose:** Consolidate expressivity results.
 
-### 5.5.3 Comparative Mutation Strategies
-
-**Purpose:** Compare alternative mutation strategies on identical initial conditions.
-
-**Expectation:** Identify strategies that maximize accuracy, stability, or survival at the micro scale.
-
-## 5.6 In-Life Learning at the Micro Level
-
-### 5.6.1 In-Life Learning vs Mutation
-
-**Purpose:** Clarify conceptual separation between In-Life learning rules and evolutionary mutation.
-
-**Expectation:** Show why In-Life learning must be pattern-triggered rather than error-driven.
-
-### 5.6.2 Minimal In-Life Learning Schemes
-
-**Purpose:** Introduce simple local In-Life learning mechanisms.
-
-**Expectation:** Propose conditional param adjustments and evaluate their behavior in one- and two-node systems.
-
-### 5.6.3 Effects of In-Life Learning on Micro Dynamics
-
-**Purpose:** Analyze situations where In-Life learning helps or harms.
-
-**Expectation:** Present simulations illustrating successful adaptation versus destabilizing drift.
-
-## 5.7 Role of Stochasticity in Micro Evolution
-
-### 5.7.1 Fixed-Structure Stochastic Behavior
-
-**Purpose:** Understand the influence of noise on stable structures.
-
-**Expectation:** Demonstrate divergence in predictions and internal states across runs.
-
-### 5.7.2 Stochasticity as Exploration Under Mutation
-
-**Purpose:** Show how noise facilitates discovery of structural variations.
-
-**Expectation:** Illustrate how stochasticity interacts with Evo to produce divergent evolutionary paths.
-
-## 5.8 Summary of Micro-Level Insights
-
-**Purpose:** Consolidate micro-scale results.
-
-**Expectation:** Summarize patterns in structural motifs, mutation tendencies, In-Life learning interactions, and the role of stochasticity.
+**Expectation:** Conclude that Neos form an evolving probabilistic recurrent threshold architecture capable of universal deterministic and stochastic computation.
