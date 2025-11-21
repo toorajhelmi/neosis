@@ -2,7 +2,6 @@ README.md
 gitbook/
 latex/
 scripts/
-assets/
 _build/
 *.pdf
 *.tex
