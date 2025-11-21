@@ -57,18 +57,17 @@ content = re.sub(
     flags=re.DOTALL
 )
 
-# Remove LaTeX-only markers but keep the content
+# Extract LaTeX code from code blocks (```latex ... ```) and replace with the LaTeX content
+def extract_latex_code_block(match):
+    latex_code = match.group(1)
+    return latex_code
+
+# Replace ```latex ... ``` code blocks with their content
 content = re.sub(
-    r'<!--\s*LATEX_ONLY\s*-->\s*',
-    '',
+    r'```latex\s*\n(.*?)```',
+    extract_latex_code_block,
     content,
-    flags=re.MULTILINE
-)
-content = re.sub(
-    r'\s*<!--\s*END_LATEX_ONLY\s*-->',
-    '',
-    content,
-    flags=re.MULTILINE
+    flags=re.DOTALL
 )
 
 # Convert inline $$ to $, but preserve display math blocks
