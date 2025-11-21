@@ -84,7 +84,7 @@ with open(temp_file, 'w') as f:
                 -t latex \
                 --wrap=none \
                 -o "$tex_file" 2>&1; then
-                # Post-process to fix numbering and convert to chapters
+                # Post-process to fix numbering, convert to chapters, and extract LaTeX from HTML comments
                 python3 -c "
 import re
 import sys
@@ -92,6 +92,26 @@ import sys
 tex_file = '$tex_file'
 with open(tex_file, 'r') as f:
     content = f.read()
+
+# Extract LaTeX code from HTML comments
+# Pattern: <!-- LaTeX ... --> followed by <!-- ... LaTeX code ... -->
+latex_blocks = []
+def extract_latex(match):
+    latex_code = match.group(1)
+    # Clean up the LaTeX code (remove leading/trailing whitespace)
+    latex_code = latex_code.strip()
+    latex_blocks.append(latex_code)
+    return 'LATEX_BLOCK_PLACEHOLDER_' + str(len(latex_blocks) - 1) + '_'
+
+# Find and replace HTML comments containing LaTeX
+# Match: <!-- LaTeX ... --> followed by <!-- ... --> with LaTeX code inside
+# This handles both figures and tables
+content = re.sub(
+    r'<!--\s*LaTeX\s+[^>]*?-->\s*<!--\s*(.*?)\s*-->',
+    extract_latex,
+    content,
+    flags=re.DOTALL
+)
 
 # Convert \\section{Chapter X --- Title} to \\chapter{Title}
 content = re.sub(r'\\\\section\{Chapter \d+ --- ([^}]+)\}', r'\\\\chapter{\\1}', content)
@@ -101,6 +121,11 @@ content = re.sub(r'\\\\subsection\{[\d.]+ ([^}]+)\}', r'\\\\section{\\1}', conte
 
 # Convert \\subsubsection{X.Y.Z Title} to \\subsection{Title} (remove number prefix)
 content = re.sub(r'\\\\subsubsection\{[\d.]+ ([^}]+)\}', r'\\\\subsection{\\1}', content)
+
+# Replace placeholders with actual LaTeX code
+for i, latex_code in enumerate(latex_blocks):
+    placeholder = 'LATEX_BLOCK_PLACEHOLDER_' + str(i) + '_'
+    content = content.replace(placeholder, latex_code)
 
 with open(tex_file, 'w') as f:
     f.write(content)
