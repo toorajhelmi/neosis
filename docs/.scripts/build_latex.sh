@@ -107,7 +107,7 @@ with open(tex_file, 'r') as f:
 content = re.sub(r'\\\\section\{Chapter \\d+ --- ([^}]+)\}', r'\\\\chapter{\\1}', content)
 
 # Convert \\subsection{X.Y Title} to \\section{Title} (remove number prefix)
-content = re.sub(r'\\\\subsection\{\d+\.\d+ ([^}]+)\}', r'\\\\section{\\1}', content)
+content = re.sub(r'\\\\subsection\{\\d+\\.\\d+ ([^}]+)\}', r'\\\\section{\\1}', content)
 
 # Convert \\subsubsection{X.Y.Z Title} to \\subsection{Title} (remove number prefix)
 content = re.sub(r'\\\\subsubsection\{[\\d.]+ ([^}]+)\}', r'\\\\subsection{\\1}', content)
