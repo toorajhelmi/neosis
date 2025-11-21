@@ -1,5 +1,6 @@
 # Summary
 
+* [Introduction](README.md)
 * [Chapter 1: Introduction and Motivation](chapter1/README.md)
 * [Chapter 2: Neosis Axioms and Formal Model](chapter2/README.md)
 * [Chapter 3: Neo's Learnability](chapter3/README.md)
