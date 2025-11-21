@@ -2,13 +2,7 @@
 
 **Author:** Tooraj Helmi
 
-**Date:** 2024
-
----
-
-This thesis presents Neosis, a computational framework for creating self-modifying digital organisms capable of open-ended cognitive evolution. Unlike traditional artificial neural networks with fixed architectures, Neos are living computational systems that can evolve their structure, learn from experience, and adapt to changing environments through energy-constrained mutation and local learning mechanisms.
-
----
+**Date:** 2025
 
 ## Abstract
 
@@ -20,7 +14,7 @@ This document develops the formal model of Neosis, analyzes its computational an
 
 ---
 
-**Copyright © 2024 Tooraj Helmi. All rights reserved.**
+**Copyright © 2025 Tooraj Helmi. All rights reserved.**
 
 This work is submitted in partial fulfillment of the requirements for the degree of Doctor of Philosophy.
 
