@@ -1,0 +1,57 @@
+<svg width="600" height="500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .cube-edge { stroke: #333; stroke-width: 2; fill: none; }
+      .axis-label { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; fill: #000; }
+      .theory-label { font-family: Arial, sans-serif; font-size: 10px; fill: #333; }
+      .neosis-label { font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; fill: #0066cc; }
+    </style>
+  </defs>
+  
+  <!-- 3D Cube representation (isometric projection) -->
+  <!-- Front face -->
+  <polygon class="cube-edge" points="150,200 350,200 350,300 150,300" fill="none"/>
+  <!-- Back face (offset) -->
+  <polygon class="cube-edge" points="200,150 400,150 400,250 200,250" fill="none"/>
+  <!-- Connecting edges -->
+  <line class="cube-edge" x1="150" y1="200" x2="200" y2="150"/>
+  <line class="cube-edge" x1="350" y1="200" x2="400" y2="150"/>
+  <line class="cube-edge" x1="350" y1="300" x2="400" y2="250"/>
+  <line class="cube-edge" x1="150" y1="300" x2="200" y2="250"/>
+  
+  <!-- Axis labels -->
+  <text class="axis-label" x="275" y="320" text-anchor="middle">Locus of Structural Adaptation</text>
+  <text class="axis-label" x="410" y="200" text-anchor="start">Origin of Objectives</text>
+  <text class="axis-label" x="175" y="140" text-anchor="middle">Developmental Regime</text>
+  
+  <!-- Theory positions (approximate 3D positions mapped to 2D) -->
+  <!-- ANN / SNN: Fixed, External loss, Static (near front-bottom-right) -->
+  <circle cx="320" cy="280" r="3" fill="#666"/>
+  <text class="theory-label" x="330" y="285">ANN / SNN</text>
+  
+  <!-- Neuroevolution: Generational, External task fitness, Generational (near front-top-right) -->
+  <circle cx="320" cy="220" r="3" fill="#666"/>
+  <text class="theory-label" x="330" y="225">Neuroevolution</text>
+  
+  <!-- ALife: Generational, Replication fitness, Generational (near front-top-left) -->
+  <circle cx="180" cy="220" r="3" fill="#666"/>
+  <text class="theory-label" x="140" y="225">ALife</text>
+  
+  <!-- CCS / DST: Developmental, Biological fitness, Scaffolding (near back-top-left) -->
+  <circle cx="230" cy="180" r="3" fill="#666"/>
+  <text class="theory-label" x="100" y="175">CCS / DST</text>
+  
+  <!-- Reservoir / NAS: Fixed/Generational, External training/loss, Static (near back-top-right) -->
+  <circle cx="370" cy="180" r="3" fill="#666"/>
+  <text class="theory-label" x="380" y="175">Reservoir / NAS</text>
+  
+  <!-- Neosis: In-lifetime self-modifying, Internal energy survival, Open-ended (center-top, highlighted) -->
+  <circle cx="275" cy="190" r="5" fill="#0066cc" stroke="#0066cc" stroke-width="2"/>
+  <text class="neosis-label" x="285" y="195">Neosis</text>
+  
+  <!-- Title -->
+  <text x="300" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+    Figure 7.1: Conceptual Placement of Theoretical Frameworks
+  </text>
+</svg>
+
