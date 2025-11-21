@@ -115,21 +115,6 @@ import sys
 
 tex_file = '$tex_file'
 
-# Read LaTeX blocks that were extracted before pandoc
-latex_blocks = []
-if os.path.exists(latex_info_file):
-    with open(latex_info_file, 'r') as f:
-        block_content = f.read()
-        # Extract blocks
-        block_pattern = r'BLOCK_(\d+)_START\n(.*?)BLOCK_\d+_END'
-        matches = re.finditer(block_pattern, block_content, re.DOTALL)
-        for match in matches:
-            idx = int(match.group(1))
-            block = match.group(2).strip()
-            while len(latex_blocks) <= idx:
-                latex_blocks.append('')
-            latex_blocks[idx] = block
-
 with open(tex_file, 'r') as f:
     content = f.read()
 
