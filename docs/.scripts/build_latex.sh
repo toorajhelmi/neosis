@@ -98,7 +98,7 @@ with open(tex_file, 'r') as f:
     content = f.read()
 
 # Convert \\section{Chapter X --- Title} to \\chapter{Title}
-content = re.sub(r'\\\\section\{Chapter \d+ --- ([^}]+)\}', r'\\\\chapter{\\1}', content)
+content = re.sub(r'\\\\section\{Chapter \\d+ --- ([^}]+)\}', r'\\\\chapter{\\1}', content)
 
 # Convert \\subsection{X.Y Title} to \\section{Title} (remove number prefix)
 content = re.sub(r'\\\\subsection\{[\\d.]+ ([^}]+)\}', r'\\\\section{\\1}', content)
