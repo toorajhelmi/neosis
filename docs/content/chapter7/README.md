@@ -1,4 +1,4 @@
-% Chapter 6
+% Chapter 7
 
 # Related Theories and Neosis in Context
 
