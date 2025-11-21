@@ -12,4 +12,5 @@
 * [Chapter 9: Advanced Macro Analysis of Neo Dynamics](chapter9/README.md)
 * [Chapter 10: Discussion and Interpretation](chapter10/README.md)
 * [Chapter 11: Conclusion and Future Work](chapter11/README.md)
+* [References](references/README.md)
 
