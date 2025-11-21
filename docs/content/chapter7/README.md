@@ -25,7 +25,7 @@ The following sections review major theoretical traditions that share conceptual
 
 ## 7.1 Artificial Neural Networks
 
-Artificial neural networks (ANNs) model computation as transformations over fixed graph structures trained through gradient-based optimization (Rumelhart et al., 1986; LeCun et al., 2015). They provide expressive supervised and unsupervised learning machinery, but architectures are static once chosen.
+Artificial neural networks (ANNs) model computation as transformations over fixed graph structures trained through gradient-based optimization [@rumelhart1986learning; @lecun2015deep]. They provide expressive supervised and unsupervised learning machinery, but architectures are static once chosen.
 
 **Relation to Neosis.** Both ANNs and Neosis process information on directed graphs with continuous parameters. The local Lex rule resembles threshold neurons with stochastic effects.
 
@@ -37,7 +37,7 @@ Artificial neural networks (ANNs) model computation as transformations over fixe
 
 ## 7.2 Reinforcement Learning
 
-Reinforcement learning (RL) models reward-driven behavior optimization (Sutton & Barto, 2018). Agents update policies or value functions to maximize expected cumulative reward.
+Reinforcement learning (RL) models reward-driven behavior optimization [@sutton2018reinforcement]. Agents update policies or value functions to maximize expected cumulative reward.
 
 **Relation to Neosis.** Neosis also receives reward signals (Sparks) based on predictive success.
 
@@ -49,7 +49,7 @@ Reinforcement learning (RL) models reward-driven behavior optimization (Sutton &
 
 ## 7.3 Evolutionary Computation and Genetic Programming
 
-Evolutionary computation explores solution spaces via mutation, selection, and crossover (Holland, 1975; Koza, 1992). Genetic programming evolves programs themselves.
+Evolutionary computation explores solution spaces via mutation, selection, and crossover [@holland1975adaption; @koza1992genetic]. Genetic programming evolves programs themselves.
 
 **Relation to Neosis.** Neosis adopts mutation and selection dynamics, including structural operators analogous to genetic primitives.
 
@@ -61,7 +61,7 @@ Evolutionary computation explores solution spaces via mutation, selection, and c
 
 ## 7.4 Neuroevolution
 
-Neuroevolution evolves neural architectures and weights (Stanley & Miikkulainen, 2002; Stanley et al., 2009). Techniques include NEAT and HyperNEAT.
+Neuroevolution evolves neural architectures and weights [@stanley2002evolving; @stanley2009hyperneat]. Techniques include NEAT and HyperNEAT.
 
 **Relation to Neosis.** Both explore topology–parameter spaces.
 
@@ -72,7 +72,7 @@ Neuroevolution evolves neural architectures and weights (Stanley & Miikkulainen,
 
 ## 7.5 Artificial Life and Digital Organisms
 
-Artificial Life (ALife) simulates digital organisms with mutation, self-replication, and competition (Ray, 1991; Adami, 1998). Systems such as Tierra and Avida define instruction-based organisms evolving under resource constraints.
+Artificial Life (ALife) simulates digital organisms with mutation, self-replication, and competition [@ray1991tierra; @adami1998introduction]. Systems such as Tierra and Avida define instruction-based organisms evolving under resource constraints.
 
 **Relation to Neosis.** Neosis shares core ALife concepts: resource-limited computation, mutation-driven variation, and survival-based selection.
 
@@ -84,7 +84,7 @@ Artificial Life (ALife) simulates digital organisms with mutation, self-replicat
 
 ## 7.6 Computational Cognitive Science
 
-Computational cognitive science (CCS) studies heterogeneous cognitive architectures, development, and multi-timescale adaptation (Anderson, 2007; Newell, 1994).
+Computational cognitive science (CCS) studies heterogeneous cognitive architectures, development, and multi-timescale adaptation [@anderson2007integrated; @newell1994unified].
 
 **Relation to Neosis.** Neosis is inspired by CCS: specialization, modularity, and adaptive heterogeneity arise naturally through structural mutation.
 
@@ -95,7 +95,7 @@ Computational cognitive science (CCS) studies heterogeneous cognitive architectu
 
 ## 7.7 Developmental and Dynamical Systems Theories
 
-Developmental systems theory emphasizes gene–environment interaction and emergent development (Oyama, 2000). Dynamical systems approaches to cognition treat mind–brain–environment coupling as continuous self-organization (Kelso, 1995).
+Developmental systems theory emphasizes gene–environment interaction and emergent development [@oyama2000ontogeny]. Dynamical systems approaches to cognition treat mind–brain–environment coupling as continuous self-organization [@kelso1995dynamic].
 
 **Relation to Neosis.** Neosis similarly couples structure and environment, with adaptive capacity emerging through interaction.
 
@@ -106,7 +106,7 @@ Developmental systems theory emphasizes gene–environment interaction and emerg
 
 ## 7.8 Reservoir Computing and Liquid State Machines
 
-Reservoir computing uses fixed recurrent networks with trainable readouts (Jaeger, 2001; Maass et al., 2002). The internal reservoir is rich but unmodifiable.
+Reservoir computing uses fixed recurrent networks with trainable readouts [@jaeger2001echo; @maass2002real]. The internal reservoir is rich but unmodifiable.
 
 **Relation to Neosis.** Neosis can evolve subgraphs with reservoir-like dynamics.
 
@@ -117,7 +117,7 @@ Reservoir computing uses fixed recurrent networks with trainable readouts (Jaege
 
 ## 7.9 Spiking Neural Networks
 
-Spiking neural networks (SNNs) model neurons as temporal spiking units (Gerstner & Kistler, 2002). They incorporate temporal coding and biological detail.
+Spiking neural networks (SNNs) model neurons as temporal spiking units [@gerstner2002spiking]. They incorporate temporal coding and biological detail.
 
 **Relation to Neosis.** Both operate with discrete events and dynamic internal states.
 
@@ -128,7 +128,7 @@ Spiking neural networks (SNNs) model neurons as temporal spiking units (Gerstner
 
 ## 7.10 Embodied Cognition and Enactivism
 
-Embodied cognition emphasizes the role of sensorimotor coupling and physical grounding (Varela et al., 1991; Clark, 1997).
+Embodied cognition emphasizes the role of sensorimotor coupling and physical grounding [@varela1991embodied; @clark1997being].
 
 **Relation to Neosis.** Neos perceive only through their projection $$\Phi_t$$ and act only through prediction, giving them an implicit minimal embodiment.
 
@@ -139,7 +139,7 @@ Embodied cognition emphasizes the role of sensorimotor coupling and physical gro
 
 ## 7.11 Free Energy Principle and Predictive Processing
 
-The Free Energy Principle (FEP) proposes that biological systems minimize variational free energy to maintain homeostasis (Friston, 2010). Predictive processing models cognition as hierarchical prediction-error minimization.
+The Free Energy Principle (FEP) proposes that biological systems minimize variational free energy to maintain homeostasis [@friston2010free]. Predictive processing models cognition as hierarchical prediction-error minimization.
 
 **Relation to Neosis.** Both involve prediction as a survival mechanism.
 

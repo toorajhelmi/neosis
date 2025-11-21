@@ -81,11 +81,17 @@ with open(temp_file, 'w') as f:
     f.write(''.join(result))
 "
             
-            # Convert with pandoc
+            # Convert with pandoc (with bibliography support if available)
+            BIB_OPTIONS=""
+            if [ -f "$LATEX_DIR/bibliography.bib" ] && command -v pandoc-citeproc &> /dev/null; then
+                BIB_OPTIONS="--filter pandoc-citeproc --bibliography=$LATEX_DIR/bibliography.bib"
+            fi
+            
             if pandoc "$temp_file" \
                 -f markdown \
                 -t latex \
                 --wrap=none \
+                $BIB_OPTIONS \
                 -o "$tex_file" 2>&1; then
                 # Post-process to fix numbering, convert to chapters, and fix tables
                 python3 -c "
@@ -101,10 +107,11 @@ with open(tex_file, 'r') as f:
 content = re.sub(r'\\\\section\{Chapter \\d+ --- ([^}]+)\}', r'\\\\chapter{\\1}', content)
 
 # Convert \\subsection{X.Y Title} to \\section{Title} (remove number prefix)
-content = re.sub(r'\\\\subsection\{[\\d.]+ ([^}]+)\}', r'\\\\section{\\1}', content)
+content = re.sub(r'\\\\subsection\{\d+\.\d+ ([^}]+)\}', r'\\\\section{\\1}', content)
 
 # Convert \\subsubsection{X.Y.Z Title} to \\subsection{Title} (remove number prefix)
 content = re.sub(r'\\\\subsubsection\{[\\d.]+ ([^}]+)\}', r'\\\\subsection{\\1}', content)
+
 
 # Fix longtable: Replace with proper booktabs table
 # Match the entire longtable structure
