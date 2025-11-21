@@ -7,8 +7,8 @@
 * [Chapter 5: Expressive Power of a Neo](chapter5/README.md)
 * [Chapter 6: Micro–Macro Correspondence](chapter6/README.md)
 * [Chapter 7: Related Theories and Neosis in Context](chapter7/README.md)
-* [Chapter 8: Macro Modelling of Neo Populations](chapter8/README.md)
-* [Chapter 9: Macro Simulations and Validation](chapter9/README.md)
+* [Chapter 8: Macro Analysis of Neo Dynamics](chapter8/README.md)
+* [Chapter 9: Advanced Macro Analysis of Neo Dynamics](chapter9/README.md)
 * [Chapter 10: Discussion and Interpretation](chapter10/README.md)
 * [Chapter 11: Conclusion and Future Work](chapter11/README.md)
 
