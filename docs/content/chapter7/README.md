@@ -33,7 +33,23 @@ A diagram illustrating this three-axis taxonomy is shown in Figure 7.1.
 \end{figure}
 -->
 
-**Figure 7.1:** A three-axis categorization of computational and cognitive frameworks, positioning Neosis among related theories. The three axes represent: (1) Locus of Structural Adaptation, (2) Origin of Objectives, and (3) Developmental Regime. Major theoretical families are positioned within this space, with Neosis occupying a distinct region characterized by in-lifetime self-modification, internal energy survival objectives, and open-ended developmental growth.
+> **Figure 7.1: Conceptual Placement of Theoretical Frameworks**
+> 
+> A three-axis categorization of computational and cognitive frameworks, positioning Neosis among related theories. The three axes represent:
+> 
+> 1. **Locus of Structural Adaptation** (X-axis): Fixed, generational, developmental, or in-lifetime
+> 2. **Origin of Objectives** (Y-axis): External loss, external reinforcement, replication fitness, or internal energy survival
+> 3. **Developmental Regime** (Z-axis): Static capacity, generationally expandable, biologically scaffolded, or self-expanding
+> 
+> Major theoretical families are positioned within this three-dimensional space:
+> - **ANN / SNN**: Fixed structure, external loss, static
+> - **Neuroevolution**: Generational structure, external task fitness, generational
+> - **ALife**: Generational structure, replication fitness, generational
+> - **CCS / DST**: Developmental structure, biological fitness, scaffolding
+> - **Reservoir / NAS**: Fixed/generational structure, external training/loss, static
+> - **Neosis** (highlighted): In-lifetime self-modifying, internal energy survival, open-ended
+> 
+> *Note: In the PDF version, this is rendered as a 3D cube diagram using TikZ. Neosis occupies a distinct region characterized by in-lifetime self-modification, internal energy survival objectives, and open-ended developmental growth.*
 
 <!-- LaTeX Table: Comprehensive mapping -->
 <!--
