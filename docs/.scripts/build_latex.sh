@@ -64,7 +64,7 @@ def extract_latex_code_block(match):
 
 # Replace ```latex ... ``` code blocks with their content
 content = re.sub(
-    r'```latex\s*\n(.*?)```',
+    r'```latex\n(.*?)```',
     extract_latex_code_block,
     content,
     flags=re.DOTALL
@@ -108,14 +108,12 @@ with open(temp_file, 'w') as f:
                 -t latex \
                 --wrap=none \
                 -o "$tex_file" 2>&1; then
-                # Post-process to fix numbering, convert to chapters, and replace placeholders with LaTeX
+                # Post-process to fix numbering and convert to chapters
                 python3 -c "
 import re
 import sys
-import os
 
 tex_file = '$tex_file'
-latex_info_file = '$temp_file.latex_blocks'
 
 # Read LaTeX blocks that were extracted before pandoc
 latex_blocks = []
@@ -135,90 +133,6 @@ if os.path.exists(latex_info_file):
 with open(tex_file, 'r') as f:
     content = f.read()
 
-# Replace placeholders with actual LaTeX code
-for i, block in enumerate(latex_blocks):
-    # Replace LATEX_FIGURE_PLACEHOLDER_X or LATEX_BLOCK_PLACEHOLDER_X
-    placeholder1 = 'LATEX_FIGURE_PLACEHOLDER_' + str(i)
-    placeholder2 = 'LATEX_BLOCK_PLACEHOLDER_' + str(i) + '_'
-    placeholder3 = 'LATEX\\\\_FIGURE\\\\_PLACEHOLDER\\\\_' + str(i)  # Pandoc escaped version
-    placeholder4 = 'LATEX\\\\_BLOCK\\\\_PLACEHOLDER\\\\_' + str(i) + '\\\\_'  # Pandoc escaped version
-    
-    if placeholder1 in content:
-        content = content.replace(placeholder1, block)
-    elif placeholder2 in content:
-        content = content.replace(placeholder2, block)
-    elif placeholder3 in content:
-        content = content.replace(placeholder3, block)
-    elif placeholder4 in content:
-        content = content.replace(placeholder4, block)
-
-# Remove duplicate table/figure starts that might have been created
-# Remove duplicate \begin{table}...\centering sequences
-content = re.sub(r'\\\\begin\{table\}\[h\]\s*\\\\centering\s*\\\\begin\{table\}', r'\\begin{table}', content)
-
-# Replace longtable with proper table (if we have a LaTeX table block)
-for block in latex_blocks:
-    if 'begin{table}' in block or 'toprule' in block:
-        # Find the entire longtable structure - match from opening brace to closing brace
-        # The pattern needs to handle nested braces properly
-        # Try matching the wrapper: {\def\LTcaptype...\end{longtable}}
-        start_idx = content.find('{\\def\\LTcaptype')
-        if start_idx >= 0:
-            # Find matching closing brace
-            brace_count = 0
-            i = start_idx
-            while i < len(content):
-                if content[i] == '{':
-                    brace_count += 1
-                elif content[i] == '}':
-                    brace_count -= 1
-                    if brace_count == 0:
-                        # Found the matching closing brace
-                        end_idx = i + 1
-                        # Replace this entire block
-                        content = content[:start_idx] + block + content[end_idx:]
-                        break
-                i += 1
-        else:
-            # Try matching just the longtable without wrapper
-            longtable_pattern = r'\\\\begin\{longtable\}.*?\\\\end\{longtable\}'
-            if re.search(longtable_pattern, content, re.DOTALL):
-                content = re.sub(longtable_pattern, block, content, count=1, flags=re.DOTALL)
-        break
-
-# Also replace pandoc-generated figure with TikZ figure (if not already replaced)
-if len(latex_blocks) > 0:
-    # Find pandoc-generated figure (usually starts with \begin{figure})
-    # and replace with our TikZ figure, but only if placeholders weren't already replaced
-    if 'LATEX' in content and 'PLACEHOLDER' in content:
-        pass  # Already handled above
-    else:
-        figure_pattern = r'\\\\begin\{figure\}.*?\\\\end\{figure\}'
-        def replace_figure(match):
-            for block in latex_blocks:
-                if 'begin{figure}' in block or 'tikzpicture' in block:
-                    return block
-            return match.group(0)
-        content = re.sub(figure_pattern, replace_figure, content, count=1, flags=re.DOTALL)
-
-# Replace pandoc-generated table with our LaTeX table (if available)
-# But only if placeholders weren't already replaced
-if 'LATEX' in content and 'PLACEHOLDER' in content:
-    pass  # Already handled above
-else:
-    table_found = False
-    for block in latex_blocks:
-        if 'begin{table}' in block or 'toprule' in block:
-            # Find pandoc-generated table (usually longtable or tabular)
-            # Also match the wrapper that pandoc might add
-            table_pattern = r'\{[^}]*\\def\\LTcaptype\{none\}.*?\\end\{longtable\}|\\\\begin\{longtable\}.*?\\\\end\{longtable\}|\\\\begin\{tabular\}.*?\\\\end\{tabular\}'
-            def replace_table(match):
-                return block
-            if re.search(table_pattern, content, re.DOTALL):
-                content = re.sub(table_pattern, replace_table, content, count=1, flags=re.DOTALL)
-                table_found = True
-                break
-
 # Convert \\section{Chapter X --- Title} to \\chapter{Title}
 content = re.sub(r'\\\\section\{Chapter \\d+ --- ([^}]+)\}', r'\\\\chapter{\\1}', content)
 
@@ -230,10 +144,6 @@ content = re.sub(r'\\\\subsubsection\{[\\d.]+ ([^}]+)\}', r'\\\\subsection{\\1}'
 
 with open(tex_file, 'w') as f:
     f.write(content)
-
-# Clean up
-if os.path.exists(latex_info_file):
-    os.remove(latex_info_file)
 "
                 echo "  ✓ Converted: $rel_path"
             else
