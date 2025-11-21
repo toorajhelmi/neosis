@@ -86,7 +86,9 @@ Hypernetworks / Meta-learning & Fixed meta-topology & External loss & Static \\
 \end{table}
 <!-- END_LATEX_ONLY -->
 
+<!-- GITBOOK_ONLY -->
 **Table 7.1:** Comprehensive mapping of theoretical frameworks to the three categorical axes.
+<!-- END_GITBOOK_ONLY -->
 
 The following sections review major theoretical traditions that share conceptual territory with Neosis. For each, we highlight connections, distinctions, and key insights that motivate the need for a unified, energy-based, self-modifying computational framework.
 
