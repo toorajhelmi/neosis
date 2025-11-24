@@ -1,12 +1,8 @@
 # Chapter 10 — Neosis Evolution
 
-This chapter formalizes how Neos evolve within the NeoVerse. Evolution in Neosis is not driven by a benevolent environment but emerges from the fact that accurate prediction confers energetic and survival advantages. Neos that build better internal models gain more Nex, mutate more effectively, and outcompete stagnant or low-performance Neos. This chapter defines the core evolutionary mechanisms, selection pressures, and population-level dynamics that govern open-ended cognitive growth.
+The central theme of Neosis evolution is the natural emergence of higher-order modal and conceptual representations as a means of survival. Neos that develop the ability to perceive, abstract, and organize environmental patterns at increasingly sophisticated levels gain a fundamental survival advantage. This advantage manifests through more accurate predictions, which yield greater energy (Nex) through Sparks, enabling further structural exploration and refinement.
 
-## Introduction
-
-Evolution in Neosis operates through a unified cycle linking prediction, energy, mutation, and survival. Unlike traditional evolutionary algorithms that optimize fixed fitness functions, Neosis evolution emerges naturally from the operational dynamics of individual Neos. When a Neo accurately predicts future percepts, it gains energy (Nex) through Sparks. This energy enables structural mutations that explore new computational configurations. Neos with better predictive strategies accumulate more energy, allowing more frequent and diverse mutations. Over time, this creates a population-level selection pressure favoring increasingly sophisticated internal models and computational structures.
-
-The evolutionary process in Neosis is continuous and open-ended. There is no predefined goal or external fitness function. Instead, evolution is driven by the intrinsic advantage of accurate prediction in a structured environment. As Neos evolve, they develop more complex internal representations, better memory systems, and more effective predictive strategies. This chapter examines the mechanisms that enable this evolutionary process and the population-level dynamics that emerge from individual Neo behavior.
+The evolutionary mechanisms that enable this process—predictive advantage, mutation, culling, and diversity pulses—operate continuously and without external guidance. There is no predefined fitness function or optimization target. Instead, evolution emerges naturally from the operational dynamics of individual Neos interacting with a structured environment. This chapter examines how these mechanisms collectively produce the open-ended evolution of increasingly sophisticated cognitive structures, with a particular focus on how modal and conceptual representations emerge as adaptive solutions to the fundamental challenge of survival through accurate prediction.
 
 ## 10.1 Predictive Advantage as Implicit Fitness
 
