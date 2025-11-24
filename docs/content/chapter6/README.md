@@ -12,7 +12,7 @@ To situate Neosis clearly, this chapter presents:
 
 1. A conceptual diagram mapping theoretical traditions into a three-axis space.  
 
-2. A categorical table comparing frameworks by structural adaptation, objectives, and development.  
+2. A categorical table comparing frameworks by objectives, and development.  
 
 3. A review of **theoretical frameworks**, organized into conceptual categories.  
 
