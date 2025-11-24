@@ -18,15 +18,11 @@ To situate Neosis clearly, this chapter presents:
 
 4. A review of **systems and projects**, organized into mechanistic categories.
 
----
-
 ## Conceptual Placement of Neosis
 
 **Figure 6.1 — Conceptual Cube Diagram (Placeholder)**  
 
 (A diagram to be inserted.)
-
----
 
 ## Table 6.1 — Three-Axis Mapping of Frameworks
 
@@ -47,13 +43,9 @@ To situate Neosis clearly, this chapter presents:
 | Hypernetworks / Meta-learning | Fixed meta-topology | External loss | Static |
 | **Neosis** | **In-lifetime self-modifying** | **Internal survival energy** | **Open-ended** |
 
----
-
 # 6.1 Theoretical Frameworks
 
 Theoretical traditions can be grouped into categories based on the **goal or approach** shaping each field. These categories clarify how each tradition attempts to answer a subset of the problem Neosis addresses.
-
----
 
 ## 6.1.1 Category A — **Learning-Based Theories**  
 ### *Goal: Improve performance through parameter adaptation while assuming a fixed architecture.*
@@ -64,16 +56,12 @@ Artificial neural networks [@rumelhart1986learning; @lecun2015deep] use gradient
 
 Despite their strengths, these learning-based theories rely on fixed structures and externally defined tasks. Their adaptation occurs exclusively through differentiable updates rather than through structural mutation. Because they do not couple prediction, reward, and structural change within a single organismal cycle, they lack the unified energy economy and continuous self-modification that characterize Neosis.
 
----
-
 ## 6.1.2 Category B — **Evolution-Based Theories**  
 ### *Goal: Discover functional structures through mutation and selection across generations.*
 
 Evolutionary computation [@holland1975adaption], genetic programming [@koza1992genetic], and neuroevolution methods such as NEAT and HyperNEAT [@stanley2002evolving; @stanley2009hyperneat] search vast design spaces through generational mutation and selection. Artificial Life environments such as Tierra and Avida [@ray1991tierra; @adami1998introduction] demonstrate open-ended population dynamics and developmental divergence.
 
 Although these systems generate novelty and support domain-general search, they do not allow *in-lifetime* structural change. Adaptation is tied to replication fitness rather than predictive survival. Internal cognitive complexity remains limited because there is no mechanism linking computation, reward, and structural modification inside the organism's operational cycle. Neosis unifies learning and evolution in a way these frameworks do not.
-
----
 
 ## 6.1.3 Category C — **Developmental and Cognitive Theories**  
 ### *Goal: Explain how cognition emerges from developmental processes, modularity, and environmental interaction.*
@@ -82,8 +70,6 @@ Computational cognitive science [@anderson2007integrated; @newell1994unified] mo
 
 These theories articulate powerful principles describing natural cognition, yet they are interpretive rather than constructive: they explain biological systems rather than define a minimal computational substrate for synthetic organisms. Because they lack explicit mutation mechanisms or survival-based internal objectives, they do not exhibit the energy-constrained structural evolution that Neosis supports.
 
----
-
 ## 6.1.4 Category D — **Self-Organizing and Dynamical Theories**  
 ### *Goal: Reveal how complex behavior emerges from simple local interactions and intrinsic system dynamics.*
 
@@ -91,13 +77,9 @@ Dynamical systems theory [@kelso1995dynamic] models cognition and behavior as tr
 
 Although these systems produce rich emergent dynamics, they provide no survival objective and no mechanism for energy-regulated mutation. Most operate on fixed architectures or predetermined update laws. Without a unified operational cycle linking prediction, reward, structural change, and survival, their adaptability remains fundamentally limited compared to Neosis.
 
----
-
 # 6.2 Systems and Projects
 
 Systems and projects differ from theoretical frameworks in that they implement working platforms. These can likewise be grouped into categories based on their underlying **mechanistic approach**.
-
----
 
 ## 6.2.1 Category E — **Evolutionary ALife Platforms**  
 ### *Approach: Create digital ecosystems where organisms mutate, replicate, and compete.*
@@ -106,8 +88,6 @@ Platforms such as Tierra [@ray1991tierra], Avida [@adami1998introduction], Polyw
 
 Yet despite their ecological richness, these systems rarely develop sophisticated internal predictive models or meaningful within-lifetime structural adaptation. Their objectives remain tied to replication rather than survival-based computation, and mutation affects only generational change, not continuous structural reorganization. Neosis's integration of prediction, energy, and mutation within a single organism sets it apart.
 
----
-
 ## 6.2.2 Category F — **Adaptive Neural Systems**  
 ### *Approach: Enhance neural models with auxiliary mechanisms for dynamic parameterization or meta-level adaptation.*
 
@@ -115,16 +95,12 @@ Hypernetworks [@ha2016hypernetworks], meta-learning architectures, differentiabl
 
 However, these systems maintain fixed meta-structures and rely on external, differentiable losses to govern adaptation. They do not incorporate intrinsic survival-based objectives or unified energy economies that regulate structural mutation. Consequently, they lack the open-ended structural growth that Neosis enables within a single lifetime.
 
----
-
 ## 6.2.3 Category G — **Self-Modifying Neural or Graph Systems**  
 ### *Approach: Allow networks to alter their topology or computation rules during operation.*
 
 Neural cellular automata [@mordvintsev2020growing], continual topology-adapting networks [@stanley2003continual], and modular neural architectures introduce forms of structural plasticity that operate during computation. These approaches explore the frontier between fixed computation graphs and flexible, evolving structures.
 
 Despite exploring structural change, these systems lack a survival-based internal energy model that ties structural mutation to adaptive success. Structural modifications are typically driven by heuristics, external training signals, or rule-based mechanisms rather than a unified organismal loop linking prediction, reward, and survival. As such, they do not achieve the open-ended cognitive development central to Neosis.
-
----
 
 # 6.3 Why These Comparisons Matter
 
@@ -137,8 +113,6 @@ The traditions reviewed above illuminate crucial aspects of adaptive behavior—
 3. The developmental regime (static, generational, scaffolded, open-ended).
 
 Neosis is distinguished by integrating all three dimensions: in-lifetime self-modification, survival-driven internal energy objectives, and open-ended representational expansion. This makes Neosis categorically distinct—not superior—from existing approaches.
-
----
 
 # 6.4 Summary
 

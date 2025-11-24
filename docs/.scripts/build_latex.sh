@@ -86,17 +86,18 @@ with open(temp_file, 'w') as f:
 "
             
             # Convert pandoc citations [@key] to LaTeX \cite{key} before pandoc
-            python3 -c "
+            python3 << PYEOF
 import re
-with open('$temp_file', 'r') as f:
+temp_file = '$temp_file'
+with open(temp_file, 'r') as f:
     content = f.read()
 # Convert [@key1; @key2] to \cite{key1,key2} (handle multiple citations first)
 content = re.sub(r'\[@([^;]+);\s*@([^\]]+)\]', r'\\\\cite{\\1,\\2}', content)
 # Convert single [@key] to \cite{key}
 content = re.sub(r'\[@([^\]]+)\]', r'\\\\cite{\\1}', content)
-with open('$temp_file', 'w') as f:
+with open(temp_file, 'w') as f:
     f.write(content)
-"
+PYEOF
             
             # Convert with pandoc (no citeproc needed since we converted citations manually)
             
