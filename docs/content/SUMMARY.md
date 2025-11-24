@@ -11,7 +11,7 @@
 * [Chapter 8: Macro Analysis of Neo Dynamics](chapter8/README.md)
 * [Chapter 9: Advanced Macro Analysis of Neo Dynamics](chapter9/README.md)
 * [Chapter 10: Neosis Evolution](chapter10/README.md)
-* [Chapter 12: Discussion and Interpretation](chapter12/README.md)
-* [Chapter 13: Conclusion and Future Work](chapter13/README.md)
+* [Chapter 11: Discussion and Interpretation](chapter11/README.md)
+* [Chapter 12: Conclusion and Future Work](chapter12/README.md)
 * [References](references/README.md)
 

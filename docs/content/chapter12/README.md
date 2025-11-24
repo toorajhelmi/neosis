@@ -1,3 +1,3 @@
-# Chapter 12 — Discussion and Interpretation
+# Chapter 12 — Conclusion and Future Work
 
-<!-- Interpretation of results, limitations, and philosophical implications of Neosis. -->
+<!-- Summary of contributions, open questions, and directions for future research. -->

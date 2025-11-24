@@ -1,7 +1,3 @@
-% Chapter 11
+# Chapter 11 — Discussion and Interpretation
 
-# Conclusion and Future Work
-
-<!-- Summary of contributions, open questions, and directions for future research. -->
-
-
+<!-- Interpretation of results, limitations, and philosophical implications of Neosis. -->
