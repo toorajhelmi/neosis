@@ -26,22 +26,22 @@ To situate Neosis clearly, this chapter presents:
 
 ## Table 6.1 — Three-Axis Mapping of Frameworks
 
-| Theory Family | Structural Adaptation | Objective Source | Developmental Regime |
-|---------------|----------------------|------------------|-----------------------|
-| Artificial Neural Networks | Fixed | External loss | Static |
-| Spiking Neural Networks | Fixed | External loss | Static |
-| Reinforcement Learning | Fixed | External reward | Static |
-| Neuroevolution | Generational | External task fitness | Generational |
-| Artificial Life (Tierra, Avida) | Generational | Replication fitness | Generational |
-| Predictive Processing / FEP | Fixed hierarchy | Free-energy minimization | Static |
-| Developmental Systems Theory | Developmental | Biological fitness | Scaffolded |
-| Dynamical Systems Theory | Fixed attractor landscape | Emergent | Continuous |
-| Embodied/Enactive Cognition | Structural coupling | Viability | Developmental |
-| Reservoir Computing | Fixed | External training | Static |
-| Neural Architecture Search | Generational/Meta | External loss | Static |
-| Neural Cellular Automata | Local rules | External constraints | Pattern-growth |
-| Hypernetworks / Meta-learning | Fixed meta-topology | External loss | Static |
-| **Neosis** | **In-lifetime self-modifying** | **Internal survival energy** | **Open-ended** |
+| Theory Family | Objective Source | Developmental Regime |
+|---------------|------------------|-----------------------|
+| Artificial Neural Networks | External loss | Static |
+| Spiking Neural Networks | External loss | Static |
+| Reinforcement Learning | External reward | Static |
+| Neuroevolution | External task fitness | Generational |
+| Artificial Life (Tierra, Avida) | Replication fitness | Generational |
+| Predictive Processing / FEP | Free-energy minimization | Static |
+| Developmental Systems Theory | Biological fitness | Scaffolded |
+| Dynamical Systems Theory | Emergent | Continuous |
+| Embodied/Enactive Cognition | Viability | Developmental |
+| Reservoir Computing | External training | Static |
+| Neural Architecture Search | External loss | Static |
+| Neural Cellular Automata | External constraints | Pattern-growth |
+| Hypernetworks / Meta-learning | External loss | Static |
+| **Neosis** | **Internal survival energy** | **Open-ended** |
 
 # 6.1 Theoretical Frameworks
 
@@ -102,17 +102,15 @@ Neural cellular automata [@mordvintsev2020growing], continual topology-adapting 
 
 Despite exploring structural change, these systems lack a survival-based internal energy model that ties structural mutation to adaptive success. Structural modifications are typically driven by heuristics, external training signals, or rule-based mechanisms rather than a unified organismal loop linking prediction, reward, and survival. As such, they do not achieve the open-ended cognitive development central to Neosis.
 
-# 6.3 Why These Comparisons Matter
+## 6.3 Lessons for Micro and Macro Neosis from Related Theories and Systems
 
-The traditions reviewed above illuminate crucial aspects of adaptive behavior—learning, mutation, development, ecological interaction, and self-organization. However, each occupies only a portion of a broader conceptual space defined by:
+### Micro-Neosis: Goal, Approach, and Design Lessons
 
-1. The locus of structural adaptation (fixed, generational, developmental, in-lifetime).  
+Micro-Neosis aims to define the fundamental computational laws governing a single Neo: how binary nodes update, how energy is spent, how prediction is computed, and how structure modifies itself autonomously within a lifetime. Its approach is to treat each Neo as a minimal, nondifferentiable, energy-regulated graph whose dynamics arise entirely from local Lex rules, Evo mutation primitives, and the internal economy of Nex. From related work, Micro-Neosis can meaningfully adopt concepts such as local state-update stability from dynamical systems, noise-aware computation from neural and stochastic models, mutation operators from evolutionary computation, and multi-timescale adaptation principles from developmental theory. At the same time, it must avoid the limiting assumptions that caused prior systems to stagnate: fixed architectures as in ANN and RL; evolution tied purely to replication rather than cognition as in ALife; structural plasticity that is unconstrained or purposeless as in many self-organizing systems; and reliance on differentiability, which restricts open-ended modification. The micro architecture succeeds precisely by integrating structural mutation, computation, and energy into one closed organismal loop—something earlier systems did not achieve.
 
-2. The origin of objectives (external loss, external reward, replication fitness, internal survival).  
+### Macro-Neosis: Goal, Approach, and Design Lessons
 
-3. The developmental regime (static, generational, scaffolded, open-ended).
-
-Neosis is distinguished by integrating all three dimensions: in-lifetime self-modification, survival-driven internal energy objectives, and open-ended representational expansion. This makes Neosis categorically distinct—not superior—from existing approaches.
+Macro-Neosis aims to construct a coarse-grained mathematical representation of a Neo that captures its global input–output behavior, stability properties, specialization tendencies, and emergent cognitive structure without simulating individual nodes. Its approach uses linearization, stochastic perturbation theory, controllability/observability concepts, and filtering-based abstractions to compress high-dimensional micro dynamics into tractable macro equations. From related work, Macro-Neosis can draw heavily on control theory for stability analysis, on nonlinear filtering for representing aggregated noise from micro-level stochasticity, on reservoir-style approximations for dimensionality reduction, and on developmental and cognitive theories for understanding functional specialization. Yet it must avoid the pitfalls common in these traditions: reliance on smooth differentiable models that fail under discrete stochastic updates; macro abstractions disconnected from evolving structure; the absence of grounding in an explicit micro substrate; and dependence on brute-force simulation, which plagued many ALife projects. Macro-Neosis retains the strengths of these fields but overcomes their weaknesses by ensuring that its coarse models remain dynamically consistent with micro-level Lex, Evo, and Nex dynamics.
 
 # 6.4 Summary
 
