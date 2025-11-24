@@ -1,4 +1,4 @@
-# Chapter 7 — Related Theories and Neosis in Context
+# Chapter 7 — From Micro to Macro: Rationale and Transition
 
 Over the past fifty years, multiple scientific communities have attempted to construct systems capable of evolving their computational structure, adapting to their environment, and developing new capabilities over time. Early work in the 1970s and 1980s explored evolutionary algorithms and genetic programming as mechanisms for open-ended problem solving [@holland1975adaption]. These systems demonstrated that mutation and selection could navigate immense design spaces, but the resulting artifacts were static: once deployed, their structures no longer changed within their lifetime.
 
