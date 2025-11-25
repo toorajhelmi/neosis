@@ -6,8 +6,6 @@ This chapter analyzes the behavior of an individual Neo at the smallest structur
 
 ## 4.2 Minimal Neo Structures
 
-## 4.2 Overview and Motivation for Minimal Neo Structures
-
 Before analyzing general Neo behavior or introducing simulation-based and macro-level analytical tools, it is essential to understand the smallest possible Neo configurations in full mathematical detail. These minimal structures allow us to introduce the exact formal treatment used throughout this chapter—state evolution, transition matrices, and stationary distributions—while also revealing the fundamental building blocks of Neo dynamics. Even the simplest Neos already display the core mechanisms of computation, stochasticity, memory, and stability that will later reappear in more complex systems.
 
 The goal of this section is twofold. First, we provide concrete numerical examples that make the Lex update rule, noise-driven stochasticity, and state transitions completely explicit. Second, by deriving transition matrices and stationary distributions for each small case, we establish the analytical vocabulary that will be necessary for larger-scale reasoning. These elementary analyses form the conceptual bridge between the micro-level Neo defined earlier and the simulation- or macro-level treatments that follow in later chapters.
