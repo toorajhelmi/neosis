@@ -24,9 +24,7 @@ This equation expresses the idea that the distribution does not change over time
 
 With these foundations, the next subsection analyzes a two-node recurrent Neo structure in detail, including a numerical example, the complete derivation of transition probabilities, the full transition matrix, and the stationary distribution. Additional minimal Neo cases (zero-node, single-node, and other two-node topologies) are provided in Appendix A.
 
----
-
-### 4.2.1 Two-Node Recurrent Neo (Feedback: Node1 ↔ Node2)
+### 4.2.1 Two-Node Recurrent Neo
 
 We now analyze a minimal recurrent Neo consisting of two binary nodes that feed back into each other while both receive the same external input bit. This gives the simplest nontrivial closed micro-dynamics that can already exhibit stability, oscillation, and noise-driven switching, and it will later serve as a canonical building block for larger Neos. The construction here is consistent with the general Neo definition given in Chapter 2 of the main document.
 
@@ -241,7 +239,7 @@ $$\boxed{\pi_{00} = 0, \quad \pi_{01} = \frac{1}{2}, \quad \pi_{10} = 0, \quad \
 
 In other words, in the long run the Neo spends half of its time in the partially active configuration $$(0, 1)$$ and half of its time fully active in $$(1, 1)$$. The OFF–OFF and mixed $$(1, 0)$$ states are only visited transiently, on the way into this two-state attractor. Even this minimal recurrent Neo therefore exhibits a nontrivial equilibrium structure: sustained stochastic switching between a "semi-on" and a "fully-on" configuration, shaped jointly by feedback and local noise. This equilibrium behavior will later connect directly to macro-level notions such as stationary distributions over larger Neo populations and the emergence of stable computational motifs.
 
----
+Although this explicit transition-matrix analysis is useful for understanding the micro-dynamics of very small Neos, it becomes rapidly impractical for larger topologies. A Neo with only ten binary nodes already has a state space of size $$2^{10} = 1024$$, and the full transition matrix has $$2^{20}$$ entries, making exact computation infeasible. In fact, determining stationary distributions or attractors in general recurrent Boolean systems is NP-hard, even without stochasticity. When noise, weighted inputs, and structural asymmetries are included—as they necessarily are in realistic Neos—the combinatorial explosion becomes even more severe. For this reason, while the analysis above is valuable for intuition, we cannot rely on brute-force enumeration for larger structures. In later sections, we therefore shift to more scalable analytical tools such as probabilistic Boolean networks, mean-field approximations, and Ising-model-based energy formulations. These methods allow us to characterize stability, entropy flow, and emergent motifs in larger Neos without computing full exponential-scale transition dynamics.
 
 ### 4.2.2 Canonical Micro-Motifs
 
