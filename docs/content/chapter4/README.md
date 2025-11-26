@@ -22,30 +22,6 @@ $$\pi P = \pi, \quad \sum_i \pi_i = 1.$$
 
 This equation expresses the idea that the distribution does not change over time when the system is already in its long-run regime. If the Markov chain is irreducible (all states eventually communicate) and aperiodic, the stationary distribution is unique and describes the asymptotic behavior of the Neo independent of its initial condition. In simple configurations, the stationary distribution reveals whether the Neo stabilizes on a particular state, oscillates between several states, or continuously explores the entire state space.
 
-Understanding transition matrices and stationary distributions at the micro-level is important for three reasons. First, these quantities provide exact insight into how Lex, stochasticity, and basic topology produce deterministic or probabilistic behaviors. Second, they allow us to characterize stability and long-run predictability of small Neo motifs before introducing more complex structures. Third, they form the analytical template we will later generalize using simulation, approximation, and macro-level mathematical tools, especially when direct computation becomes infeasible due to the exponential size of the state space.
-
-Before diving into the detailed cases, a few conceptual points should be kept in mind:
-
-1. **Minimal Neos are not trivial.**  
-
-   Even a single node can exhibit stochastic switching, memory, and asymmetric transition behavior. Two-node networks can display feedforward computation, parallel processing, and recurrent feedback loops.
-
-2. **Stochasticity is inherent, not optional.**  
-
-   The Rademacher noise term $$\eta(t)\in\{-1,+1\}$$ plays a critical role in creating probabilistic transitions. Later chapters will relate this to exploration, robustness, and evolutionary variability.
-
-3. **Topology matters dramatically.**  
-
-   Feedforward, parallel, and feedback structures behave fundamentally differently, even in their minimal 2-node forms. Studying these prototypes builds intuition for larger Neo graphs.
-
-4. **Transition matrices grow exponentially.**  
-
-   A Neo with $$N$$ binary nodes has $$2^N$$ possible states. By explicitly analyzing the smallest cases, we understand why analytical solutions rapidly become infeasible and why simulation and macro analysis are required later.
-
-5. **Stationary distributions compress long-term behavior.**  
-
-   Although individual transitions may be noisy, the stationary distribution summarizes the global tendencies of a Neo. It reveals absorbing states, dominant motifs, or persistent stochastic wandering—all of which matter for energy dynamics, representational power, and evolutionary fitness.
-
 With these foundations, the next subsection analyzes a two-node recurrent Neo structure in detail, including a numerical example, the complete derivation of transition probabilities, the full transition matrix, and the stationary distribution. Additional minimal Neo cases (zero-node, single-node, and other two-node topologies) are provided in Appendix A.
 
 ---
