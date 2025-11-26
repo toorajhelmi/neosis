@@ -241,7 +241,73 @@ In other words, in the long run the Neo spends half of its time in the partially
 
 Although this explicit transition-matrix analysis is useful for understanding the micro-dynamics of very small Neos, it becomes rapidly impractical for larger topologies. A Neo with only ten binary nodes already has a state space of size $$2^{10} = 1024$$, and the full transition matrix has $$2^{20}$$ entries, making exact computation infeasible. In fact, determining stationary distributions or attractors in general recurrent Boolean systems is NP-hard, even without stochasticity. When noise, weighted inputs, and structural asymmetries are included—as they necessarily are in realistic Neos—the combinatorial explosion becomes even more severe. For this reason, while the analysis above is valuable for intuition, we cannot rely on brute-force enumeration for larger structures. In later sections, we therefore shift to more scalable analytical tools such as probabilistic Boolean networks, mean-field approximations, and Ising-model-based energy formulations. These methods allow us to characterize stability, entropy flow, and emergent motifs in larger Neos without computing full exponential-scale transition dynamics.
 
-### 4.2.2 Canonical Micro-Motifs
+### 4.2.2 Scalable Analytical Tools for Larger Neos
+
+This section introduces three analytical frameworks—Probabilistic Boolean Networks, Mean-Field Analysis, and Ising-Model Energy Formulations—that allow us to study Neo dynamics beyond the regime of exact enumeration.
+
+#### Probabilistic Boolean Networks (PBNs)
+
+A Neo with binary nodes and stochastic activations can be naturally viewed as a probabilistic Boolean network [@shmulevich2002probabilistic]. In the PBN framework, each node $$i$$ updates according to a Boolean function $$f_i$$ that is chosen probabilistically from a finite family. In Neosis, the stochasticity arises not from switching among Boolean functions but from noise inside each node's activation rule. Nevertheless, the effective update rule can be written in the PBN form
+
+$$P(V_{t+1}(i) = 1 \mid V_t = x) = F_i(x),$$
+
+where the function
+
+$$F_i(x) = P(a_i(t) \geq 0 \mid z_i(t) = x[\text{inputs}(i)])$$
+
+plays the role of a probabilistic Boolean function. For a threshold node with noise amplitude $$\alpha_i$$, we can express this as
+
+$$F_i(x) = \begin{cases} 1, & s_i(x) \geq \alpha_i, \\ 0, & s_i(x) \leq -\alpha_i, \\ \frac{1}{2}, & -\alpha_i < s_i(x) < \alpha_i, \end{cases}$$
+
+where
+
+$$s_i(x) = w_i^\top z_i(x) + b_i.$$
+
+In larger Neos, this allows us to treat the global dynamics as a Markov chain specified by the collection of local probabilistic rules $$F_i$$. Transition probabilities remain exponentially large in principle, but PBN theory provides tools for analyzing long-term behavior through structure-based reductions, such as dependency graphs and influence measures [@shmulevich2002gene]. These allow us to identify stable motifs, absorbing sets, and highly influential nodes without enumerating the entire state space. This will be essential when analyzing medium-sized Neos (5–20 nodes), where exact methods are impossible but local dependency patterns still convey meaningful structure.
+
+#### Mean-Field Analysis (MFA)
+
+For even larger Neos, local dependency structures are insufficient, and we instead approximate node variables as weakly correlated random variables [@opper2001advanced]. The mean-field approach replaces the exact binary node values by their expectations. Let
+
+$$m_i(t) = \mathbb{E}[V_t(i)] \in [0,1]$$
+
+denote the probability that node $$i$$ is ON at tick $$t$$. Under mean-field assumptions, the expected update satisfies
+
+$$m_i(t+1) = \mathbb{E}[F_i(V_t)] \approx F_i(m_1(t), m_2(t), \ldots, m_n(t)),$$
+
+where the input vector to $$F_i$$ is replaced by the vector of marginal activation probabilities. For a weighted threshold node, this approximation yields
+
+$$m_i(t+1) \approx \Phi\left(\frac{w_i^\top m(t) + b_i}{\alpha_i}\right),$$
+
+where $$\Phi$$ is a smoothed Heaviside-like transfer function induced by the noise. In the Neosis case with uniform Bernoulli noise, $$\Phi$$ reduces to a clipped linear segment:
+
+$$\Phi(x) = \begin{cases} 1, & x \geq 1, \\ 0, & x \leq -1, \\ \frac{x+1}{2}, & -1 < x < 1. \end{cases}$$
+
+The mean-field map
+
+$$m(t+1) = M(m(t))$$
+
+defines a low-dimensional dynamical system on $$[0,1]^n$$. Fixed points of this map approximate stationary distributions of the original high-dimensional Neo. Stability of these fixed points provides insight into whether the Neo sustains persistent activation, converges to quiescence, or supports multiple attractors. While mean-field approximations ignore correlations between nodes, they provide tractable approximations for networks with tens or even hundreds of nodes, especially when connections are dense or exhibit weak pairwise correlations.
+
+#### Ising-Model Energy Formulations
+
+When a Neo's weighted interactions are mostly symmetric—i.e., $$w_{ij} \approx w_{ji}$$—the dynamics resemble those of an Ising system [@hopfield1982neural; @amit1989modeling]. By mapping node states to spins via
+
+$$\sigma_i = 2V_t(i) - 1 \in \{-1, +1\},$$
+
+we can define an effective energy function
+
+$$E(\sigma) = -\sum_{i < j} J_{ij} \sigma_i \sigma_j - \sum_i h_i \sigma_i,$$
+
+where the couplings $$J_{ij}$$ approximate the symmetric part of the weight matrix and the fields $$h_i$$ reflect biases and input effects. In the presence of stochasticity at each node, the Neo performs a noisy relaxation on this energy landscape. The probability of a configuration $$\sigma$$ under a stationary distribution often takes a Boltzmann-like form
+
+$$\pi(\sigma) \propto \exp\left(-\frac{E(\sigma)}{T}\right),$$
+
+where the effective temperature $$T$$ is related to the noise amplitudes $$\alpha_i$$. This mapping is not exact unless weights are symmetric and noise is small, but even in approximate form it provides a powerful tool for analyzing phase transitions, stable modes, and metastable attractors in large Neos. Energy minima correspond to stable motifs, while the barrier heights determine the switching dynamics induced by noise. In later sections, we will use Ising-style approximations to analyze specific structured Neo topologies such as chains, rings, stars, and locally modular subgraphs.
+
+---
+
+### 4.2.3 Canonical Micro-Motifs
 
 **Purpose:** Identify recurring low-level patterns.
 
