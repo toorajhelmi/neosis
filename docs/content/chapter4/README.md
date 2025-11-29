@@ -100,7 +100,7 @@ So far we have treated the Neo in full generality, expressing survivability $$\X
 
 We start with one of the simplest—and most revealing—motifs: a "copy Neo" interacting with an $$m$$-bit Markov NeoVerse projection. Despite its simplicity, this setup already exhibits clear trade-offs between environmental noise, task dimensionality, and reward structure. We will derive closed forms for $$\Xi$$ under two reward regimes: one where Sparks are granted only when the entire prediction vector is correct, and one where Sparks are proportional to the fraction of correctly predicted bits. In the second case, the Neo retains the last $$L$$ percepts, producing an $$L$$-dimensional internal state that evolves as a shift register. Its stationary distribution becomes non-trivial, reflecting the joint structure induced by noise, temporal aggregation, and the Lex update rule.
 
-### 4.3.1 m-Bit Markov NeoVerse and the Copy Neo (SD-Based Derivation)
+### 4.3.1 m-Bit Markov NeoVerse and the Copy Neo 
 
 We consider an $$m$$-bit NeoVerse (NV) projection $$U_t = (U_t(1), \ldots, U_t(m)) \in \{0,1\}^m$$, where each coordinate evolves as an independent binary Markov chain with flip probability $$\alpha \in [0,1]$$:
 
@@ -202,3 +202,135 @@ and otherwise
 
 $$\Xi \approx 1 - \exp\left(-\frac{2\mu E_0}{\sigma^2}\right) = 1 - \exp\left(-\frac{2E_0}{r^2 (1-\alpha)^m [1 - (1-\alpha)^m]} (r(1-\alpha)^m - c_\ell)\right).$$
 
+### 4.3.2 Majority-over-3 Neo
+
+We now consider a Neo whose internal state consists of the last three observations of a 1-bit NeoVerse (NV). The NV is a symmetric binary Markov chain $$U_t \in \{0,1\}$$ with $$P(U_{t+1} \neq U_t) = \alpha$$ and $$P(U_{t+1} = U_t) = 1 - \alpha$$. In stationarity, $$P(U_t = 0) = P(U_t = 1) = \frac{1}{2}$$.
+
+The Neo stores the last three NV values $$X_t = (U_t, U_{t-1}, U_{t-2}) \in \{0,1\}^3$$, and outputs the majority of these three bits, $$Y_t = g(X_t) = \text{Maj}(X_t) \in \{0,1\}$$. As a predictor, the Neo uses the simple rule $$\hat{u}(Y_t) = Y_t$$, i.e., it predicts that the next NV bit $$U_{t+1}$$ will equal the majority of the last three observations.
+
+#### Joint Stationary Distribution $$\pi(x, u)$$
+
+We analyze the joint process $$(X_t, U_t)$$ in its stationary regime. The joint stationary distribution is
+
+$$\pi(x, u) = \lim_{t \to \infty} P(X_t = x, \, U_t = u),$$
+
+with the constraint that the first coordinate of $$x$$ must equal the current NV state: $$x = (x_0, x_1, x_2)$$, $$x_0 = U_t = u$$. Hence $$\pi(x, u) = 0$$ if $$x_0 \neq u$$, and
+
+$$\pi(x, u) = \pi_3(x) \, \mathbb{1}\{x_0 = u\},$$
+
+where $$\pi_3(x) = P(X_t = x)$$ is the stationary distribution over 3-bit windows.
+
+To compute $$\pi_3(x)$$, interpret $$x_0 = U_t$$, $$x_1 = U_{t-1}$$, $$x_2 = U_{t-2}$$. In stationarity,
+
+$$\pi_3(x) = P(U_{t-2} = x_2) \, P(U_{t-1} = x_1 \mid U_{t-2} = x_2) \, P(U_t = x_0 \mid U_{t-1} = x_1).$$
+
+The base term is $$P(U_{t-2} = x_2) = \frac{1}{2}$$. The Markov transitions are
+
+$$P(U_{s+1} = a \mid U_s = b) = \begin{cases} 1-\alpha, & a = b, \\ \alpha, & a \neq b. \end{cases}$$
+
+Define the number of flips inside the 3-bit pattern
+
+$$\Delta(x) = \mathbb{1}\{x_1 \neq x_0\} + \mathbb{1}\{x_2 \neq x_1\} \in \{0,1,2\}.$$
+
+Then the number of non-flips is $$2 - \Delta(x)$$. The stationary probability of a given pattern is
+
+$$\pi_3(x) = \frac{1}{2} (1-\alpha)^{2-\Delta(x)} \alpha^{\Delta(x)}.$$
+
+Thus the joint SD is
+
+$$\pi(x, u) = \frac{1}{2} (1-\alpha)^{2-\Delta(x)} \alpha^{\Delta(x)} \, \mathbb{1}\{x_0 = u\}.$$
+
+#### Accuracy of the Majority-3 Predictor
+
+We now compute the prediction accuracy
+
+$$\text{Acc}_3 = P(\hat{u}(Y_t) = U_{t+1}) = P(Y_t = U_{t+1}).$$
+
+Because $$Y_t = g(X_t) = \text{Maj}(X_t)$$ and $$U_{t+1}$$ depends only on $$U_t = x_0$$, we can write
+
+$$\text{Acc}_3 = \sum_{x, u} \pi(x, u) \, P(U_{t+1} = g(x) \mid U_t = u).$$
+
+Using $$\pi(x, u) = \pi_3(x) \, \mathbb{1}\{x_0 = u\}$$,
+
+$$\text{Acc}_3 = \sum_x \pi_3(x) \, P(U_{t+1} = \text{Maj}(x) \mid U_t = x_0).$$
+
+The NV transition rule gives
+
+$$P(U_{t+1} = \text{Maj}(x) \mid U_t = x_0) = \begin{cases} 1-\alpha, & \text{Maj}(x) = x_0, \\ \alpha, & \text{Maj}(x) \neq x_0. \end{cases}$$
+
+Define $$m(x) = \text{Maj}(x)$$, $$A = \{x : m(x) = x_0\}$$. Then
+
+$$\text{Acc}_3 = \sum_{x \in A} \pi_3(x) (1-\alpha) + \sum_{x \notin A} \pi_3(x) \alpha = (1-\alpha) \sum_{x \in A} \pi_3(x) + \alpha \left(1 - \sum_{x \in A} \pi_3(x)\right).$$
+
+Let
+
+$$q_3 := \sum_{x \in A} \pi_3(x) = P(m(X_t) = U_t),$$
+
+the probability that the majority of the last three bits agrees with the current bit. Then
+
+$$\text{Acc}_3 = \alpha + (1-2\alpha) q_3.$$
+
+It remains to compute $$q_3$$ under $$\pi_3$$. We enumerate the eight patterns $$x = (x_0, x_1, x_2) \in \{0,1\}^3$$, their $$\Delta(x)$$, and whether $$m(x) = x_0$$:
+
+- **000**: $$\Delta = 0$$, $$m(x) = 0 = x_0$$ (in $$A$$).
+- **001**: $$\Delta = 1$$, $$m(x) = 0 = x_0$$ (in $$A$$).
+- **010**: $$\Delta = 2$$, $$m(x) = 0 = x_0$$ (in $$A$$).
+- **011**: $$\Delta = 1$$, $$m(x) = 1 \neq x_0$$ (not in $$A$$).
+- **100**: $$\Delta = 1$$, $$m(x) = 0 \neq x_0$$ (not in $$A$$).
+- **101**: $$\Delta = 2$$, $$m(x) = 1 = x_0$$ (in $$A$$).
+- **110**: $$\Delta = 1$$, $$m(x) = 1 = x_0$$ (in $$A$$).
+- **111**: $$\Delta = 0$$, $$m(x) = 1 = x_0$$ (in $$A$$).
+
+So the patterns in $$A$$ are: **000, 001, 010, 101, 110, 111**.
+
+Using $$\pi_3(x) = \frac{1}{2} (1-\alpha)^{2-\Delta(x)} \alpha^{\Delta(x)}$$, group them by $$\Delta(x)$$:
+
+- **$$\Delta = 0$$**: patterns **000, 111**: contribution $$2 \cdot \frac{1}{2} (1-\alpha)^2 = (1-\alpha)^2$$.
+- **$$\Delta = 1$$**: patterns **001, 110**: contribution $$2 \cdot \frac{1}{2} (1-\alpha)\alpha = (1-\alpha)\alpha$$.
+- **$$\Delta = 2$$**: patterns **010, 101**: contribution $$2 \cdot \frac{1}{2} \alpha^2 = \alpha^2$$.
+
+Thus
+
+$$q_3 = (1-\alpha)^2 + (1-\alpha)\alpha + \alpha^2.$$
+
+Expanding, $$(1-\alpha)^2 = 1 - 2\alpha + \alpha^2$$, so
+
+$$q_3 = 1 - 2\alpha + \alpha^2 + \alpha - \alpha^2 + \alpha^2 = 1 - \alpha + \alpha^2.$$
+
+Hence $$q_3 = 1 - \alpha + \alpha^2$$.
+
+Substituting into $$\text{Acc}_3 = \alpha + (1-2\alpha) q_3$$ and simplifying,
+
+$$\text{Acc}_3 = \alpha + (1-2\alpha)(1-\alpha+\alpha^2) = 1 - 2\alpha + 3\alpha^2 - 2\alpha^3.$$
+
+Thus the prediction accuracy of the majority-over-3 Neo is
+
+$$\text{Acc}_3 = 1 - 2\alpha + 3\alpha^2 - 2\alpha^3.$$
+
+#### Energy Drift, Variance, and Survivability
+
+As before, let the Neo gain $$r > 0$$ Nex units when the prediction is correct and pay a living cost $$c_\ell > 0$$ every tick. The per-tick energy increment is
+
+$$\Delta E_t = r \, \mathbb{1}\{\hat{u}(Y_t) = U_{t+1}\} - c_\ell.$$
+
+Under stationarity, correctness is Bernoulli with success probability $$\text{Acc}_3$$. Therefore
+
+$$\mu = \mathbb{E}[\Delta E_t] = r \, \text{Acc}_3 - c_\ell = r(1-2\alpha+3\alpha^2-2\alpha^3) - c_\ell,$$
+
+$$\sigma^2 = \text{Var}(\Delta E_t) = r^2 \text{Acc}_3 (1 - \text{Acc}_3) = r^2 (1-2\alpha+3\alpha^2-2\alpha^3) [1 - (1-2\alpha+3\alpha^2-2\alpha^3)].$$
+
+Let $$E_t$$ evolve as
+
+$$E_{t+1} = E_t + \Delta E_t, \quad E_0 > 0,$$
+
+with absorption at $$E_t = 0$$. Using the same diffusion approximation as before, the survivability $$\Xi_3$$ satisfies
+
+$$\Xi_3 = 0 \quad \text{if } r \, \text{Acc}_3 \leq c_\ell,$$
+
+and when $$r \, \text{Acc}_3 > c_\ell$$,
+
+$$\Xi_3 \approx 1 - \exp\left(-\frac{2(r \, \text{Acc}_3 - c_\ell) E_0}{r^2 \text{Acc}_3 (1 - \text{Acc}_3)}\right),$$
+
+with $$\text{Acc}_3 = 1 - 2\alpha + 3\alpha^2 - 2\alpha^3$$.
+
+This completes the SD-based derivation of the majority-over-3 Neo.
