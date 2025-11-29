@@ -14,6 +14,8 @@ echo "Setting up git hooks..."
 cat > "$HOOKS_DIR/pre-push" << 'EOF'
 #!/bin/bash
 # Git pre-push hook: automatically update chapter numbers before pushing
+# Replaces {CH} placeholders with actual numbers for the commit
+# Then restores placeholders in local files after staging
 
 # Get the repository root
 REPO_ROOT="$(git rev-parse --show-toplevel)"
@@ -26,19 +28,22 @@ if [ -f "$SCRIPT_PATH" ]; then
         if [ "$local_sha" != "0000000000000000000000000000000000000000" ]; then
             # Check if docs files are being pushed
             if git diff --name-only "$remote_sha" "$local_sha" | grep -q "^docs/content/chapter"; then
-                echo "Updating chapter numbers before push..."
+                echo "Updating chapter numbers before push (replacing {CH} with actual numbers)..."
                 "$SCRIPT_PATH"
                 
                 # Stage the updated files
                 git add docs/content/chapter*/README.md 2>/dev/null || true
                 
-                # If files were updated, we need to amend or create a new commit
+                # If files were updated, amend the commit
                 if ! git diff --cached --quiet; then
-                    echo "Chapter numbers updated. Files have been staged."
-                    echo "You may want to commit these changes:"
-                    echo "  git commit --amend --no-edit"
-                    echo "  (or create a new commit if you prefer)"
+                    echo "Chapter numbers updated. Amending commit..."
+                    git commit --amend --no-edit --no-verify
                 fi
+                
+                # Restore placeholders in local working directory (not in git)
+                echo "Restoring {CH} placeholders in local files..."
+                "$SCRIPT_PATH" --restore
+                
                 break
             fi
         fi
