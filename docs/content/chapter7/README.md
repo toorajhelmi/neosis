@@ -20,11 +20,11 @@ To situate Neosis clearly, this chapter presents:
 
 ## Conceptual Placement of Neosis
 
-**Figure {CH}.1 — Conceptual Cube Diagram (Placeholder)**  
+**Figure 7.1 — Conceptual Cube Diagram (Placeholder)**  
 
 (A diagram to be inserted.)
 
-## Table {CH}.1 — Three-Axis Mapping of Frameworks
+## Table 7.1 — Three-Axis Mapping of Frameworks
 
 | Theory Family | Objective Source | Developmental Regime |
 |---------------|------------------|-----------------------|

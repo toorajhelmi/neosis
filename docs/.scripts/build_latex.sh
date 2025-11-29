@@ -11,14 +11,42 @@ DOCS_DIR="$(dirname "$SCRIPT_DIR")"
 LATEX_DIR="$DOCS_DIR/.latex"
 BUILD_DIR="$DOCS_DIR/_build/latex"
 
-# Update chapter numbers from placeholders before building
-echo "Updating chapter numbers..."
-"$SCRIPT_DIR/update_chapter_numbers.sh"
-
 echo "Building LaTeX documentation..."
 
 # Create build directory
 mkdir -p "$BUILD_DIR"
+
+# Create temporary directory for processed content
+TEMP_CONTENT_DIR=$(mktemp -d)
+trap "rm -rf $TEMP_CONTENT_DIR" EXIT
+
+# Copy content to temp directory
+echo "Copying content files..."
+cp -r "$CONTENT_DIR"/* "$TEMP_CONTENT_DIR/" 2>/dev/null || true
+
+# Update chapter numbers in temp copies (not source files)
+echo "Updating chapter numbers in temporary copies..."
+for chapter_dir in "$TEMP_CONTENT_DIR"/chapter[0-9]*/; do
+    if [ -d "$chapter_dir" ]; then
+        chapter_name=$(basename "$chapter_dir")
+        if [[ "$chapter_name" =~ chapter([0-9]+) ]]; then
+            chapter_num="${BASH_REMATCH[1]}"
+            readme_file="$chapter_dir/README.md"
+            if [ -f "$readme_file" ]; then
+                # Replace {CH} with actual number in temp copy
+                sed -E \
+                    -e "s/# Chapter \{CH\} —/# Chapter $chapter_num —/g" \
+                    -e "s/## \{CH\}\./## $chapter_num./g" \
+                    -e "s/### \{CH\}\./### $chapter_num./g" \
+                    -e "s/#### \{CH\}\./#### $chapter_num./g" \
+                    -e "s/##### \{CH\}\./##### $chapter_num./g" \
+                    -e "s/Figure \{CH\}\./Figure $chapter_num./g" \
+                    -e "s/Table \{CH\}\./Table $chapter_num./g" \
+                    "$readme_file" > "$readme_file.tmp" && mv "$readme_file.tmp" "$readme_file"
+            fi
+        fi
+    fi
+done
 
 # Copy LaTeX files
 echo "Copying LaTeX files..."
@@ -39,10 +67,10 @@ if command -v pandoc &> /dev/null; then
         CITEPROC_OPTIONS="--filter pandoc-citeproc"
     fi
     
-    # Convert each content file
-    for md_file in "$DOCS_DIR"/content/**/*.md; do
+    # Convert each content file from temp directory
+    for md_file in "$TEMP_CONTENT_DIR"/**/*.md; do
         if [ -f "$md_file" ]; then
-            rel_path="${md_file#$DOCS_DIR/content/}"
+            rel_path="${md_file#$TEMP_CONTENT_DIR/}"
             tex_file="$BUILD_DIR/chapters/${rel_path%.md}.tex"
             mkdir -p "$(dirname "$tex_file")"
             
