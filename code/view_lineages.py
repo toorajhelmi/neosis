@@ -9,9 +9,9 @@ from code.simulations.run import print_lineage_tree, print_lineage_summary
 
 def load_latest_results():
     """Load the most recent simulation results."""
-    log_files = glob.glob("code/logs/*_results.json")
+    log_files = glob.glob("logs/*_results.json")
     if not log_files:
-        print("No log files found in code/logs/ directory")
+        print("No log files found in logs/ directory")
         print("Run 'python -m simulations.run' first to generate results")
         return None, None
     
