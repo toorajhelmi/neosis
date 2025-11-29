@@ -20,11 +20,11 @@ To situate Neosis clearly, this chapter presents:
 
 ## Conceptual Placement of Neosis
 
-**Figure 6.1 — Conceptual Cube Diagram (Placeholder)**  
+**Figure {CH}.1 — Conceptual Cube Diagram (Placeholder)**  
 
 (A diagram to be inserted.)
 
-## Table 6.1 — Three-Axis Mapping of Frameworks
+## Table {CH}.1 — Three-Axis Mapping of Frameworks
 
 | Theory Family | Objective Source | Developmental Regime |
 |---------------|------------------|-----------------------|
@@ -43,7 +43,7 @@ To situate Neosis clearly, this chapter presents:
 | Hypernetworks / Meta-learning | External loss | Static |
 | **Neosis** | **Internal survival energy** | **Open-ended** |
 
-# 6.1 Theoretical Frameworks
+## {CH}.1 Theoretical Frameworks
 
 Theoretical traditions can be grouped into categories based on the **goal or approach** shaping each field. These categories clarify how each tradition attempts to answer a subset of the problem Neosis addresses.
 
@@ -77,7 +77,7 @@ Dynamical systems theory [@kelso1995dynamic] models cognition and behavior as tr
 
 Although these systems produce rich emergent dynamics, they provide no survival objective and no mechanism for energy-regulated mutation. Most operate on fixed architectures or predetermined update laws. Without a unified operational cycle linking prediction, reward, structural change, and survival, their adaptability remains fundamentally limited compared to Neosis.
 
-# 6.2 Systems and Projects
+## {CH}.2 Systems and Projects
 
 Systems and projects differ from theoretical frameworks in that they implement working platforms. These can likewise be grouped into categories based on their underlying **mechanistic approach**.
 
@@ -112,6 +112,6 @@ Micro-Neosis aims to define the fundamental computational laws governing a singl
 
 Macro-Neosis aims to construct a coarse-grained mathematical representation of a Neo that captures its global input–output behavior, stability properties, specialization tendencies, and emergent cognitive structure without simulating individual nodes. Its approach uses linearization, stochastic perturbation theory, controllability/observability concepts, and filtering-based abstractions to compress high-dimensional micro dynamics into tractable macro equations. From related work, Macro-Neosis can draw heavily on control theory for stability analysis, on nonlinear filtering for representing aggregated noise from micro-level stochasticity, on reservoir-style approximations for dimensionality reduction, and on developmental and cognitive theories for understanding functional specialization. Yet it must avoid the pitfalls common in these traditions: reliance on smooth differentiable models that fail under discrete stochastic updates; macro abstractions disconnected from evolving structure; the absence of grounding in an explicit micro substrate; and dependence on brute-force simulation, which plagued many ALife projects. Macro-Neosis retains the strengths of these fields but overcomes their weaknesses by ensuring that its coarse models remain dynamically consistent with micro-level Lex, Evo, and Nex dynamics.
 
-# 6.4 Summary
+## {CH}.4 Summary
 
 Neosis draws from decades of research in neural computation, Artificial Life, evolutionary algorithms, cognitive science, and self-organizing systems. Prior efforts focused on learning without structural evolution, evolution without cognition, or development without energy constraints. Neosis unifies these principles into a single minimal computational framework linking prediction, energy, structure, and survival. This positions Neosis not as an incremental extension of prior systems, but as a foundation for open-ended, self-modifying digital organisms.
