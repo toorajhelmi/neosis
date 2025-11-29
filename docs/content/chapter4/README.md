@@ -99,3 +99,137 @@ The stationary distribution $$\pi(x, u)$$ encodes how the Neo's internal state c
 So far we have treated the Neo in full generality, expressing survivability $$\Xi$$ in terms of its stationary interaction with the NeoVerse projection. In practice, however, it is rarely possible to write down the stationary distribution $$\pi(x, u)$$ in closed form for an arbitrary topology. To make progress, we analyze Neo motifs: small, structurally simple Neos embedded in simple but nontrivial NeoVerse models. These motifs give us concrete, interpretable examples where we can compute both the stationary behavior and the resulting survivability analytically.
 
 We start with one of the simplest—and most revealing—motifs: a "copy Neo" interacting with an $$m$$-bit Markov NeoVerse projection. Despite its simplicity, this setup already exhibits clear trade-offs between environmental noise, task dimensionality, and reward structure. We will derive closed forms for $$\Xi$$ under two reward regimes: one where Sparks are granted only when the entire prediction vector is correct, and one where Sparks are proportional to the fraction of correctly predicted bits. In the second case, the Neo retains the last $$L$$ percepts, producing an $$L$$-dimensional internal state that evolves as a shift register. Its stationary distribution becomes non-trivial, reflecting the joint structure induced by noise, temporal aggregation, and the Lex update rule.
+
+### 4.3.1 m-Bit Markov NeoVerse and the Copy Neo
+
+We consider an $$m$$-bit NeoVerse projection
+
+$$U_t = (U_t(1), \ldots, U_t(m)) \in \{0,1\}^m,$$
+
+where each bit evolves as an independent binary Markov chain with flip probability $$\alpha \in [0,1]$$:
+
+$$P(U_{t+1}(j) \neq U_t(j)) = \alpha, \quad P(U_{t+1}(j) = U_t(j)) = 1 - \alpha.$$
+
+Each coordinate is a symmetric two-state Markov chain with transition matrix
+
+$$P = \begin{pmatrix} 1-\alpha & \alpha \\ \alpha & 1-\alpha \end{pmatrix}.$$
+
+The stationary distribution $$\pi = (\pi(0), \pi(1))$$ satisfies $$\pi P = \pi$$. Thus
+
+$$\pi(0) = \pi(0)(1-\alpha) + \pi(1)\alpha,$$
+
+and using $$\pi(1) = 1 - \pi(0)$$ gives
+
+$$\pi(0) = (1-\alpha)\pi(0) + \alpha(1-\pi(0)) = \pi(0) - \alpha\pi(0) + \alpha - \alpha\pi(0).$$
+
+Solving,
+
+$$2\alpha \pi(0) = \alpha \Rightarrow \pi(0) = \frac{1}{2}.$$
+
+Therefore
+
+$$\pi(0) = \pi(1) = \frac{1}{2}.$$
+
+Because all $$m$$ bits evolve independently, the joint stationary distribution for the $$m$$-bit vector is the product measure:
+
+$$\pi_{\text{NV}}(x) = 2^{-m} \quad \text{for all } x \in \{0,1\}^m.$$
+
+This is the Stationary Distribution (SD) of the NeoVerse that the Neo experiences at its input.
+
+The Neo motif we study is a **copy Neo**. It reads the NV projection perfectly and outputs it directly:
+
+$$Y_t = U_t.$$
+
+As a predictor, it uses the simple rule
+
+$$\hat{u}(Y_t) = Y_t,$$
+
+i.e., it predicts that each bit at the next step will equal its current value. For this Markov NV, this is the optimal predictor: each bit is more likely to stay the same than to flip as long as $$\alpha \leq \frac{1}{2}$$.
+
+#### 4.3.2 Exact-Vector Reward: Sparks Only If All Bits Are Correct
+
+We first assume that the Neo receives a Spark only when it predicts the entire $$m$$-bit vector correctly. Let
+
+$$U^+ = U_{t+1}$$
+
+and define accuracy
+
+$$\text{Acc} = P(\hat{u}(Y_t) = U^+).$$
+
+For a single bit, the probability of being correct is
+
+$$P(U_{t+1}(j) = \hat{u}^{(j)}(Y_t)) = P(U_{t+1}(j) = U_t(j)) = 1 - \alpha.$$
+
+Because bits are independent, the probability that all $$m$$ bits are predicted correctly is
+
+$$p := \text{Acc} = (1-\alpha)^m.$$
+
+Let $$r > 0$$ be the Nex gained when the Neo receives a Spark, and let $$c_\ell > 0$$ be the per-tick living cost. The per-tick Nex change is
+
+$$\Delta E_t = r \, \mathbb{1}\{\hat{u}(Y_t) = U^+\} - c_\ell,$$
+
+so in the stationary regime
+
+$$\Delta E_t = \begin{cases} r - c_\ell, & \text{with probability } p, \\ -c_\ell, & \text{with probability } 1 - p. \end{cases}$$
+
+The mean drift is
+
+$$\mu = \mathbb{E}[\Delta E_t] = r p - c_\ell = r(1-\alpha)^m - c_\ell,$$
+
+and the variance is
+
+$$\sigma^2 = \text{Var}(\Delta E_t) = r^2 p(1-p) = r^2 (1-\alpha)^m [1 - (1-\alpha)^m].$$
+
+Let $$E_t$$ denote the Neo's Nex at tick $$t$$, starting from $$E_0 > 0$$ and evolving as
+
+$$E_{t+1} = E_t + \Delta E_t,$$
+
+with absorption at $$E_t = 0$$. Approximating this biased random walk by a diffusion with drift $$\mu$$ and variance $$\sigma^2$$, the survivability $$\Xi$$ satisfies
+
+$$\Xi \approx 0 \quad \text{if } \mu \leq 0,$$
+
+and
+
+$$\Xi \approx 1 - \exp\left(-\frac{2\mu E_0}{\sigma^2}\right) \quad \text{if } \mu > 0.$$
+
+Substituting $$\mu$$ and $$\sigma^2$$ yields
+
+$$\Xi(\alpha, m, r, c_\ell, E_0) \approx \begin{cases} 0, & r(1-\alpha)^m \leq c_\ell, \\ 1 - \exp\left(-\frac{2E_0}{r^2 (1-\alpha)^m [1 - (1-\alpha)^m]} (r(1-\alpha)^m - c_\ell)\right), & r(1-\alpha)^m > c_\ell. \end{cases}$$
+
+In this regime, effective accuracy decays as $$(1-\alpha)^m$$, so even modest noise levels $$\alpha$$ become catastrophic as the prediction dimension $$m$$ grows: the Neo quickly falls below the survival threshold unless rewards or costs are adjusted.
+
+#### 4.3.3 Proportional Reward: Sparks Per Correct Bit
+
+We now consider a more graded reward scheme: the Neo receives Sparks proportional to the fraction of correctly predicted bits. Let
+
+$$K_t = \text{number of correctly predicted bits at tick } t.$$
+
+Given the same copy Neo and NV dynamics, each bit is correct with probability $$q = 1 - \alpha$$, independent across bits, so
+
+$$K_t \sim \text{Binomial}(m, q), \quad q = 1 - \alpha.$$
+
+If a fully correct prediction yields reward $$r$$, then a fractionally correct prediction yields
+
+$$R_t = r \cdot \frac{K_t}{m},$$
+
+and the Nex change per tick is
+
+$$\Delta E_t = R_t - c_\ell = r \frac{K_t}{m} - c_\ell.$$
+
+The mean drift is
+
+$$\mu = \mathbb{E}[\Delta E_t] = r \frac{\mathbb{E}[K_t]}{m} - c_\ell = r \frac{mq}{m} - c_\ell = r(1-\alpha) - c_\ell.$$
+
+The variance is
+
+$$\sigma^2 = \text{Var}(\Delta E_t) = \left(\frac{r}{m}\right)^2 \text{Var}(K_t) = \left(\frac{r}{m}\right)^2 mq(1-q) = r^2 (1-\alpha)\alpha / m.$$
+
+Again approximating $$E_t$$ by a diffusion with drift $$\mu$$ and variance $$\sigma^2$$, survivability is
+
+$$\Xi \approx 0 \quad \text{if } \mu \leq 0,$$
+
+$$\Xi \approx 1 - \exp\left(-\frac{2\mu E_0}{\sigma^2}\right) \quad \text{if } \mu > 0.$$
+
+Substituting $$\mu$$ and $$\sigma^2$$ gives
+
+$$\Xi(\alpha, m, r, c_\ell, E_0) \approx \begin{cases} 0, & r(1-\alpha) \leq c_\ell, \\ 1 - \exp\left(-\frac{2E_0 m}{r^2 (1-\alpha)\alpha} (r(1-\alpha) - c_\ell)\right), & r(1-\alpha) > c_\ell. \end{cases}$$
