@@ -335,8 +335,28 @@ with $$\text{Acc}_3 = 1 - 2\alpha + 3\alpha^2 - 2\alpha^3$$.
 
 This completes the SD-based derivation of the majority-over-3 Neo.
 
-### 4.3.3 Structural Motif for Majority-over-3 Neo
+### 4.3.3 Memory Chain for Temporal Storage
 
-The stationary distribution derived for the Majority-over-3 Neo is not arbitrary: it is a direct mathematical consequence of a specific Neo structure capable of representing a temporal window of recent inputs and applying a deterministic majority Lex transformation over that window. It is therefore important to understand what minimal structural motif yields such a stationary process.
+To produce a temporal-majority output, the Neo must internally maintain the recent NV history. Because the Neo only receives the current bit $$X_t$$, past values $$X_{t-1}$$ and $$X_{t-2}$$ must be reconstructed through its internal nodes. A simple solution is a memory chain in which each node copies the value of its predecessor with a one-tick delay.
 
-The central requirement is that the Neo must internally store the previous values of the NeoVerse (NV) input $$X_t \in \{0,1\}$$, so that its output at tick $$t$$ can compute $$\text{Maj}(X_t, X_{t-1}, X_{t-2})$$. Since a Neo does not have direct access to past values of $$X_t$$, the temporal window must be constructed inside the Neo's internal state through its Lex updates. This is achieved by a simple chain of memory nodes that act as a shift register, automatically producing the internal state whose stationary distribution we derived earlier.
+Let the Neo's input channel satisfy $$U_t[1] = X_t$$. The first memory node $$M(1)$$ receives only this input and uses a Lex function with weight $$1$$, bias $$-0.5$$, and no stochastic term. Its update
+
+$$M(1)_{t+1} = H(X_t - 0.5)$$
+
+ensures that $$M(1)$$ simply stores the previous input bit: $$M(1)_t = X_{t-1}$$. The second memory node $$M(2)$$ applies the same Lex rule but takes $$M(1)$$ as its input:
+
+$$M(2)_{t+1} = H(M(1)_t - 0.5) = M(1)_t,$$
+
+so $$M(2)_t = X_{t-2}$$. Thus the Neo's internal state at time $$t$$ is
+
+$$(X_t, \, X_{t-1}, \, X_{t-2}) = (U_t[1], \, M(1)_t, \, M(2)_t),$$
+
+exactly the three-step temporal buffer required for majority computation.
+
+This construction extends immediately to longer windows: a chain of $$L-1$$ nodes, each copying the previous one using the same Lex parameters, yields
+
+$$(X_t, X_{t-1}, \ldots, X_{t-L+1}).$$
+
+Because the updates are deterministic and noise-free, this chain produces the precise memory structure that gives rise to the stationary distribution $$\pi_L(x)$$ used in the accuracy and survivability analysis.
+
+
