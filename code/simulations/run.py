@@ -13,8 +13,8 @@ except ImportError:
     HAS_MATPLOTLIB = False
     MaxNLocator = None
 
-from src.simulation import SimulationResult, NeoLineage, run_simulations_from_configs
-from src.config import SimulationConfig
+from code.src.simulation import SimulationResult, NeoLineage, run_simulations_from_configs
+from code.src.config import SimulationConfig
 from .configs import get_example_simulation_configs
 
 

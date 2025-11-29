@@ -4,8 +4,8 @@
 import json
 import glob
 import os
-from src.simulation import SimulationResult, NeoLineage
-from simulations.run import print_lineage_tree, print_lineage_summary
+from code.src.simulation import SimulationResult, NeoLineage
+from code.simulations.run import print_lineage_tree, print_lineage_summary
 
 def load_latest_results():
     """Load the most recent simulation results."""

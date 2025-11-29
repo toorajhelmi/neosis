@@ -6,13 +6,13 @@ Each config can optionally include a neo_factory function to customize
 the Neo structure.
 """
 
-from src.config import (
+from code.src.config import (
     SimulationConfig, NeoConfig, NeoVerseConfig, 
     LioConfig, EvoConfig, NeoVerseType
 )
-from src.global_config import GlobalConfig
-from src.lio import Lio
-from src.types import Node, NodeType, Edge, Lex, MutationType
+from code.src.global_config import GlobalConfig
+from code.src.lio import Lio
+from code.src.types import Node, NodeType, Edge, Lex, MutationType
 
 
 def _create_minimal_lio_structure(lio: Lio) -> Lio:

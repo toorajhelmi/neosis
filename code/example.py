@@ -1,8 +1,8 @@
 """Simple example of using Neosis framework."""
 
-from src.neo import Neo
-from src.neoverse import AlternatingNeoVerse
-from src.simulation import NeoCycle
+from code.src.neo import Neo
+from code.src.neoverse import AlternatingNeoVerse
+from code.src.simulation import NeoCycle
 
 def main():
     """Run a simple example simulation."""
