@@ -1,20 +1,20 @@
-# Chapter 2 — Neosis Axioms and Formal Model
+# Chapter {CH} — Neosis Axioms and Formal Model
 
-## 2.1 Primitive Ingredients and State
+## {CH}.1 Primitive Ingredients and State
 
 Neosis is defined on top of a small collection of primitive ingredients that will be reused throughout the chapter. In this section, the goal is not to describe the full internal structure of a Neo, but to fix the basic objects and types—time, binary state, energy, and continuous parameters—that later sections will assemble into a complete formal model.
 
-### 2.1.1 Time
+### {CH}.1.1 Time
 
 All dynamics unfold in discrete time. We index ticks by
 $$t \in \mathbb{N} = \{0,1,2,\dots\}$$,
 with $$t = 0$$ denoting the initial configuration of the system. Each application of the update rules (perception, internal computation, reward, and mutation) advances the system from tick $$t$$ to tick $$t+1$$. Throughout the chapter, we will describe the behavior of Neos and the NeoVerse by specifying how relevant quantities change as a function of this tick index.
 
-### 2.1.2 Binary State Substrate
+### {CH}.1.2 Binary State Substrate
 
 The underlying state substrate of Neosis is binary. We write $$\mathbb{B} = \{0,1\}$$ for individual bits, and $$\mathbb{B}^n$$ for length-$$n$$ bit vectors. At any tick $$t$$, the internal memory of a Neo, its perceptual input, and its output will all be represented as elements of $$\mathbb{B}^n$$ for some finite $$n$$. The dimensionality $$n$$ is not fixed once and for all: it may change over time as the Neo gains or loses nodes through structural mutation. This choice keeps the local state space simple, while still allowing the overall system to grow in representational capacity.
 
-### 2.1.3 Energy (Nex)
+### {CH}.1.3 Energy (Nex)
 
 Each Neo maintains an energy budget, called Nex, which constrains its computation and evolution. At tick $$t$$, the energy of a given Neo is denoted by
 $$
@@ -26,7 +26,7 @@ N_{t+1} = N_t + \text{(reward at } t\text{)} - \text{(cost at } t\text{)}.
 $$
 Once $$N_t$$ reaches zero, the Neo becomes inert: it can no longer perform internal computation or apply mutations, and its trajectory effectively terminates.
 
-### 2.1.4 Continuous Parameters and Discrete Structure
+### {CH}.1.4 Continuous Parameters and Discrete Structure
 
 A central modeling choice in Neosis is to separate *structure* from *parameters*. The structure of a Neo—its set of nodes, edges, and connectivity pattern—will be discrete and graph-like. However, each structural unit carries continuous parameters. For node $$i$$, we write
 $$
@@ -36,7 +36,7 @@ where $$k_i$$ is the parameter dimensionality associated with that node. These p
 
 This separation between discrete structure (which nodes exist and how they are connected) and continuous parameters $$\theta_i$$ (how each node computes) is deliberate. It allows Neos to evolve by changing their topology in a combinatorial way, while still supporting rich, smooth families of local computations at each node. Later sections will make this distinction explicit when we define the internal graph of a Neo and the node-local update functions.
 
-### 2.1.5 Global State at Tick $$t$$
+### {CH}.1.5 Global State at Tick $$t$$
 
 At each tick $$t$$, we conceptually distinguish between the internal state of a Neo and the state of the surrounding world. We write
 $$
@@ -48,7 +48,7 @@ $$
 $$
 for the complete internal state of a single Neo at the same tick, including its binary memory, graph structure, parameters, and energy. In this chapter we will focus on formalizing $$\text{Neo}_t$$; the NeoVerse state $$\text{World}_t$$ will be treated abstractly and will be accessed only through a projection function introduced in Section 2.2.
 
-## 2.2 The NeoVerse and Perception
+## {CH}.2 The NeoVerse and Perception
 
 Neos do not exist in isolation. They operate inside an external world, called the NeoVerse, whose dynamics generate the signals that Neos attempt to predict. In this section we keep the NeoVerse deliberately abstract. The aim is not to model the entire environment in detail, but to specify how it interfaces with a Neo through perception.
 
@@ -72,7 +72,7 @@ In the simplest cases, $$\mathbf{U}_t$$ may consist of a single bit, expressing 
 
 This view makes the Neo's situation explicitly partially observable. The Neo must form internal representations and predictions on the basis of $$\mathbf{U}_t$$ rather than on the full underlying state $$\text{World}_t$$. In later sections, we will define the output $$\mathbf{Y}_t$$ of a Neo as a prediction about future percepts $$\mathbf{U}_{t+1}$$, and we will use the accuracy of these predictions to determine the Neo's energy gain or loss.
 
-## 2.3 The Neo: Internal Structure
+## {CH}.3 The Neo: Internal Structure
 
 We now turn from the external NeoVerse to the internal organization of a Neo. At a high level, the state of a single Neo at tick $$t$$ consists of two coupled subsystems:
 
@@ -87,7 +87,7 @@ $$
 $$
 where $$N_t$$ is the energy (Nex) introduced in Section 2.1.
 
-### 2.3.1 Lio as an Evolving Binary Graph
+### {CH}.3.1 Lio as an Evolving Binary Graph
 
 Lio contains all components directly involved in perception, internal computation, and prediction. At tick $$t$$, we represent it as
 $$
@@ -132,7 +132,7 @@ where $$O_t$$ is the set of output node indices stored in $$\text{Lio}_t$$. Sinc
 
 In summary, Lio at tick $$t$$ is an evolving binary graph with continuous parameters, equipped with a binary input interface. The pair $$(E_t,\ \Theta_t)$$ specifies *what* computational structure exists, while $$(\mathbf{V}_t,\ \mathbf{U}_t)$$ specifies the current binary activity flowing through that structure. The output $$\mathbf{Y}_t$$ is derived from $$\mathbf{V}_t$$ via the output index set $$O_t$$.
 
-### 2.3.2 Evo as a Meta-Level Mutation Controller
+### {CH}.3.2 Evo as a Meta-Level Mutation Controller
 
 Evo operates at a meta level: it does not directly process percepts from the NeoVerse, but instead governs how Lio’s structure and parameters change over time. At tick $$t$$, we keep Evo abstract and write
 $$
@@ -148,7 +148,7 @@ Conceptually, the mutation policy $$\Xi_t$$ is a rule that can inspect the curre
 
 This separation between Lio (which computes and predicts) and Evo (which decides how Lio itself should change) is central to Neosis. It mirrors the distinction, in biological systems, between fast neural dynamics and slower evolutionary or developmental processes that shape the underlying circuitry.
 
-### 2.4.1 Node Inputs
+### {CH}.4.1 Node Inputs
 
 At tick $$t$$, the internal state of the Neo is
 $$
@@ -177,7 +177,7 @@ $$
 $$
 independent across nodes and ticks unless otherwise specified. This random bit allows local computations to be intrinsically stochastic even when $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ are fixed.
 
-### 2.4.2 Parametric Local Update Rule (Stochastic Lex)
+### {CH}.4.2 Parametric Local Update Rule (Stochastic Lex)
 
 Each node $$i$$ carries a continuous parameter vector
 $$
@@ -220,7 +220,7 @@ This definition preserves the properties we want:
 
 Snapshot semantics remain as before: all nodes read $$\mathbf{V}_t$$, $$\mathbf{U}_t$$, and their own $$\eta_i(t)$$ at the beginning of tick $$t$$, then update in parallel to produce $$\mathbf{V}_{t+1}$$.
 
-## 2.5 Mutation Primitives and Structural Updates
+## {CH}.5 Mutation Primitives and Structural Updates
 
 A defining property of a Neo is that its internal structure is not fixed. Both the topology of
 its computational graph and the interpretation of its outputs may change over time through
@@ -250,7 +250,7 @@ $$
 $$
 and produce an updated structure consistent with the rules of the Neo's internal graph.
 
-### 2.5.1 Node Mutation 
+### {CH}.5.1 Node Mutation 
 
 Node mutations modify the number of internal nodes. A node mutation consists of either
 adding a new node or removing an existing one.
@@ -291,7 +291,7 @@ from the output set.
 
 Node removal may disconnect the graph; the result is still considered valid.
 
-### 2.5.2 Edge Mutation 
+### {CH}.5.2 Edge Mutation 
 
 Edge mutations change information flow by adding or removing directed edges.
 
@@ -316,7 +316,7 @@ $$
 
 The corresponding coordinate is removed from $$w_k$$, decreasing its input dimensionality.
 
-### 2.5.3 Parameter Perturbation 
+### {CH}.5.3 Parameter Perturbation 
 
 A parameter-perturbation mutation updates the continuous parameters of a single node
 without altering the graph structure. For a selected node $$i$$:
@@ -330,7 +330,7 @@ $$\mathbb{R}^{k_i+2}$$. All other nodes and edges remain unchanged.
 
 This primitive enables exploration of local computational behaviors.
 
-### 2.5.4 Output Mutation 
+### {CH}.5.4 Output Mutation 
 
 Output mutations allow the Neo to change which internal nodes contribute to its prediction
 vector $$\mathbf{Y}_t = \mathbf{V}_t[O_t]$$. The output index set at tick $$t$$ is
@@ -370,7 +370,7 @@ Together the unified mutation setprovides a minimal but expressive basis for evo
 affordable at tick $$t$$, Evo must balance exploration against the Neo's available energy,
 embedding evolutionary pressure directly into the organism's survival dynamics.
 
-## 2.6 The Cycle: Operational Semantics
+## {CH}.6 The Cycle: Operational Semantics
 
 We now describe how a Neo evolves from tick $$t$$ to tick $$t+1$$. The Cycle specifies the order in which perception, internal computation, reward, energy update, and mutation occur. All quantities are understood to be conditioned on the current internal state
 $$
@@ -380,7 +380,7 @@ and the external world state $$\text{World}_t$$.
 
 For readability, we keep the description at a single-Neo level; in later chapters, populations of Neos will be handled by applying the same rules to each individual.
 
-### 2.6.1 Perception
+### {CH}.6.1 Perception
 
 At the beginning of tick $$t$$, the Neo perceives the NeoVerse through the projection function introduced in Section 2.2. The world is in state $$\text{World}_t$$, and the percept is
 $$
@@ -393,7 +393,7 @@ $$
 $$
 with $$\mathbf{U}_t$$ matching the current projection of the NeoVerse.
 
-### 2.6.2 Internal Computation and Output
+### {CH}.6.2 Internal Computation and Output
 
 Given $$\mathbf{V}_t$$, $$\mathbf{U}_t$$, the edge set $$E_t$$, and parameters $$\Theta_t$$, Lio updates its internal state and produces an output.
 
@@ -432,7 +432,7 @@ $$
 
 Thus at tick $$t$$, the Neo produces a prediction $$\mathbf{Y}_t$$ based on its internal state and the current percept, while its internal memory is updated to $$\mathbf{V}_{t+1}$$ for use at the next tick.
 
-### 2.6.3 Running Cost and Energy Deduction
+### {CH}.6.3 Running Cost and Energy Deduction
 
 Executing the internal computation incurs a running cost that depends on the size of the Neo’s active structure. We introduce a cost function
 $$
@@ -450,7 +450,7 @@ $$
 
 If $$N_t' \le 0$$, the Neo has exhausted its energy and becomes inert; its trajectory terminates, and no further computation or mutation occurs.
 
-### 2.6.4 Reward (Spark) and Energy Update
+### {CH}.6.4 Reward (Spark) and Energy Update
 
 After Lio has produced $$\mathbf{Y}_t$$ and updated its internal state, the NeoVerse advances to the next tick. The world transitions to $$\text{World}_{t+1}$$ according to its own dynamics, and the Neo receives a new percept
 $$
@@ -472,7 +472,7 @@ $$
 
 The specific form of $$R$$ can vary with the environment; in many examples it will reward accurate prediction of selected components of $$\mathbf{U}_{t+1}$$ and penalize systematic errors. For the formal model, it is enough to assume that $$R$$ is well-defined and can be evaluated from $$\mathbf{Y}_t$$ and $$\mathbf{U}_{t+1}$$.
 
-### 2.6.5 Mutation Phase
+### {CH}.6.5 Mutation Phase
 
 If $$N_t'' > 0$$, Evo may attempt to modify Lio’s structure or parameters. At tick $$t$$, Evo’s policy $$\Xi_t$$ can inspect the current internal state and energy
 $$
@@ -510,7 +510,7 @@ $$
 $$
 where $$\mathbf{Y}_{t+1}$$ will be derived from $$\mathbf{V}_{t+1}$$ via $$O_{t+1}$$ at the next computation step.
 
-### 2.6.6 Summary of One Cycle
+### {CH}.6.6 Summary of One Cycle
 
 Putting the pieces together, one full Cycle from tick $$t$$ to tick $$t+1$$ consists of:
 
@@ -523,7 +523,7 @@ Putting the pieces together, one full Cycle from tick $$t$$ to tick $$t+1$$ cons
 
 This operational definition provides a complete, minimal description of how a single Neo interacts with the NeoVerse, computes, earns or loses energy, and modifies its own structure over time. In the next section, we introduce a performance measure that summarizes how efficiently a Neo converts structure and energy into predictive success.
 
-## 2.7 Performance Measures: Lifetime and Vitality
+## {CH}.7 Performance Measures: Lifetime and Vitality
 
 The formal model of Neosis defines a complete energy trajectory
 $$
@@ -531,7 +531,7 @@ N_0, N_1, N_2, \dots
 $$
 for each Neo interacting with a given NeoVerse. This trajectory already combines prediction rewards and structural costs, so we do not introduce an additional ratio of “reward over cost.” Instead, we summarize performance with two simple quantities that capture how long a Neo remains alive and how much energy it manages to accumulate during its existence.
 
-### 2.7.1 Lifetime
+### {CH}.7.1 Lifetime
 
 A Neo is considered alive at tick $$t$$ if its energy is strictly positive, $$N_t > 0$$. Once its energy reaches zero, it becomes inert and can no longer compute or mutate. We define the **lifetime**
 $$
@@ -539,7 +539,7 @@ $$
 $$
 as the last tick at which the Neo is still alive. A longer lifetime indicates that the Neo is better at maintaining a positive energy budget in the given environment, either by predicting well, using a frugal structure, or both.
 
-### 2.7.2 Vitality
+### {CH}.7.2 Vitality
 
 While lifetime measures how long a Neo survives, we also want to quantify how energetically “alive” it becomes during that period. We define the **Vitality** of a Neo as the maximum energy it attains over its lifetime:
 $$
@@ -549,11 +549,11 @@ A high Vitality means that the Neo was able to build up a substantial energy res
 
 In most analyses, we will consider the pair $$(\tau,\ \text{Vitality})$$ as the basic summary of a Neo’s performance in a given environment. This pair captures both endurance (how long the Neo survives) and energetic strength (how “alive” it becomes) without introducing additional normalizations or heuristic ratios. More refined metrics can be derived from the full trajectory $$\{N_t\}$$ when needed in later chapters, but lifetime and Vitality are sufficient for the core formal model developed here.
 
-## 2.8 Rationale for the Neo Structure
+## {CH}.8 Rationale for the Neo Structure
 
 The formal model above makes a specific set of design choices: a Neo is an evolving directed graph over binary node states, with continuous local parameters, one stochastic bit per node, and an explicit separation between fast computation (Lio) and slower structural change (Evo). In this section we briefly justify these choices and relate them to both artificial neural networks and biological synapses.
 
-### 2.8.1 Relation to Neurons and Synapses
+### {CH}.8.1 Relation to Neurons and Synapses
 
 At the level of a single node, the update rule
 $$
@@ -570,7 +570,7 @@ The key differences from a standard artificial neuron are:
 
 This makes each node loosely analogous to a neuron with a discrete firing state and continuously tunable synaptic efficacy, while Evo provides a separate mechanism more reminiscent of developmental or evolutionary processes acting on circuitry over longer timescales.
 
-### 2.8.2 Why Stochasticity at Each Node?
+### {CH}.8.2 Why Stochasticity at Each Node?
 
 The inclusion of a stochastic bit $$\eta_i(t) \sim \text{Bernoulli}(0.5)$$ per node is intentional rather than cosmetic. Even with binary inputs $$\mathbf{z}_i(t)$$ fixed, the activation
 $$
@@ -586,7 +586,7 @@ This local randomness serves several purposes:
 
 Crucially, the stochasticity is added in the simplest possible way: a single Bernoulli bit enters linearly with weight $$\alpha_i$$. This keeps the local rule analytically tractable while still providing a source of randomness that can be up- or down-weighted by evolution (through changes in $$\alpha_i$$).
 
-### 2.8.3 Minimality and Extensibility
+### {CH}.8.3 Minimality and Extensibility
 
 The overall structure of a Neo is chosen to be minimal but extensible:
 
