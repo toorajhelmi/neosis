@@ -11,6 +11,10 @@ DOCS_DIR="$(dirname "$SCRIPT_DIR")"
 LATEX_DIR="$DOCS_DIR/.latex"
 BUILD_DIR="$DOCS_DIR/_build/latex"
 
+# Update chapter numbers from placeholders before building
+echo "Updating chapter numbers..."
+"$SCRIPT_DIR/update_chapter_numbers.sh"
+
 echo "Building LaTeX documentation..."
 
 # Create build directory
