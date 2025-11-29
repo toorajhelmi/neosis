@@ -1,4 +1,4 @@
-# Chapter {CH} — Micro Static Analysis of a Single Neo
+# Chapter 4 — Micro Static Analysis of a Single Neo
 
 A Neo survives by predicting the NeoVerse (NV). At every tick, it receives a small snapshot of the world—$$m$$ binary inputs $$U_t \in \{0,1\}^m$$—and updates its internal state according to the Lex rule. From this updated state it produces an output vector $$Y_t$$, interpreted as its prediction of the next NV state $$U_{t+1}$$. Correct predictions generate Sparks, which increase the Neo's Nex. Regardless of correctness, each update consumes a fixed amount of Nex simply to remain alive.
 
@@ -8,7 +8,7 @@ Because the computation is fixed, the Neo eventually settles into a long-run sta
 
 The purpose of this chapter is to determine how much predictive ability a fixed Neo possesses purely from its stationary behavior. By characterizing how its stationary output relates to the NV's stationary dynamics, we can determine its expected Nex gain, its expected Nex loss, and ultimately whether it will survive.
 
-## {CH}.1 Neo as a Predictive System
+## 4.1 Neo as a Predictive System
 
 Prediction is only meaningful when the environment exhibits stable statistical structure. If the NeoVerse changed its distribution over time—drifting, aging, or altering its transition rules—then a static Neo could not maintain predictive accuracy. Even though learning-capable Neos will be treated later, the static Neo analyzed here can only exploit whatever statistical regularities are already present. Its predictive power depends entirely on whether the relationship between $$U_t$$ and $$U_{t+1}$$ remains consistent over time.
 
@@ -24,7 +24,7 @@ converges to a well-defined stationary distribution. All predictive properties o
 
 A stationary NV therefore makes micro analysis possible: it ensures that a fixed Neo has a well-defined, time-invariant predictive relationship with the environment.
 
-## {CH}.2 Neo's Survivability
+## 4.2 Neo's Survivability
 
 Once the Neo and the perceived NeoVerse (NV) projection settle into their joint stationary regime, their long-run behavior is captured by the stationary distribution
 
@@ -94,13 +94,13 @@ $$\Xi = \Xi(\pi(x, u), \, g, \, P(U^+ \mid U), \, r, \, c_\ell, \, E_0).$$
 
 The stationary distribution $$\pi(x, u)$$ encodes how the Neo's internal state co-varies with its perceived environment; the output mapping $$g$$ and NV dynamics $$P(U^+ \mid U)$$ determine prediction accuracy; and the Spark reward $$r$$, living cost $$c_\ell$$, and initial Nex $$E_0$$ translate predictive performance into a concrete survival probability.
 
-## {CH}.3 Neo Motifs and Analytical Examples
+## 4.3 Neo Motifs and Analytical Examples
 
 So far we have treated the Neo in full generality, expressing survivability $$\Xi$$ in terms of its stationary interaction with the NeoVerse projection. In practice, however, it is rarely possible to write down the stationary distribution $$\pi(x, u)$$ in closed form for an arbitrary topology. To make progress, we analyze Neo motifs: small, structurally simple Neos embedded in simple but nontrivial NeoVerse models. These motifs give us concrete, interpretable examples where we can compute both the stationary behavior and the resulting survivability analytically.
 
 We start with one of the simplest—and most revealing—motifs: a "copy Neo" interacting with an $$m$$-bit Markov NeoVerse projection. Despite its simplicity, this setup already exhibits clear trade-offs between environmental noise, task dimensionality, and reward structure. We will derive closed forms for $$\Xi$$ under two reward regimes: one where Sparks are granted only when the entire prediction vector is correct, and one where Sparks are proportional to the fraction of correctly predicted bits. In the second case, the Neo retains the last $$L$$ percepts, producing an $$L$$-dimensional internal state that evolves as a shift register. Its stationary distribution becomes non-trivial, reflecting the joint structure induced by noise, temporal aggregation, and the Lex update rule.
 
-### {CH}.3.1 m-Bit Markov NeoVerse and the Copy Neo (SD-Based Derivation)
+### 4.3.1 m-Bit Markov NeoVerse and the Copy Neo (SD-Based Derivation)
 
 We consider an $$m$$-bit NeoVerse (NV) projection $$U_t = (U_t(1), \ldots, U_t(m)) \in \{0,1\}^m$$, where each coordinate evolves as an independent binary Markov chain with flip probability $$\alpha \in [0,1]$$:
 
