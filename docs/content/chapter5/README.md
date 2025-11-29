@@ -1,10 +1,10 @@
-# Chapter {CH} — Micro Analysis of a Single Neo
+# Chapter 5 — Micro Analysis of a Single Neo
 
-## {CH}.1 Scope and Objectives
+## 5.1 Scope and Objectives
 
 This chapter analyzes the behavior of an individual Neo at the smallest structural scales. We focus on nodes, edges, Lex, stochasticity, energy transitions, mutation effects, and In-Life learning rules, independent of population-level dynamics.
 
-## {CH}.2 Minimal Neo Structures
+## 5.2 Minimal Neo Structures
 
 Before analyzing general Neo behavior or introducing simulation-based and macro-level analytical tools, it is essential to understand the smallest possible Neo configurations in full mathematical detail. These minimal structures allow us to introduce the exact formal treatment used throughout this chapter—state evolution, transition matrices, and stationary distributions—while also revealing the fundamental building blocks of Neo dynamics. Even the simplest Neos already display the core mechanisms of computation, stochasticity, memory, and stability that will later reappear in more complex systems.
 
@@ -24,7 +24,7 @@ This equation expresses the idea that the distribution does not change over time
 
 With these foundations, the next subsection analyzes a two-node recurrent Neo structure in detail, including a numerical example, the complete derivation of transition probabilities, the full transition matrix, and the stationary distribution. Additional minimal Neo cases (zero-node, single-node, and other two-node topologies) are provided in Appendix A.
 
-### {CH}.2.1 Two-Node Recurrent Neo
+### 5.2.1 Two-Node Recurrent Neo
 
 We now analyze a minimal recurrent Neo consisting of two binary nodes that feed back into each other while both receive the same external input bit. This gives the simplest nontrivial closed micro-dynamics that can already exhibit stability, oscillation, and noise-driven switching, and it will later serve as a canonical building block for larger Neos. The construction here is consistent with the general Neo definition given in Chapter 2 of the main document.
 
@@ -81,7 +81,7 @@ $$p_2(u, v_1) = \begin{cases} 1, & s_2 \geq \alpha_2, \\ 0, & s_2 \leq -\alpha_2
 
 where $$s_1$$ and $$s_2$$ are evaluated at the corresponding inputs.
 
-#### {CH}.2.1.1 Dynamics with Concrete Parameters
+#### 5.2.1.1 Dynamics with Concrete Parameters
 
 To make these abstract rules concrete, we now choose explicit parameters and examine how the two-node Neo behaves step by step. Let the weight vectors and biases be
 
@@ -127,7 +127,7 @@ $$X_{t+1} = (V_{t+1}(1), V_{t+1}(2)) = (1, 1),$$
 
 with randomness playing a decisive role only for Node 1 through the positive noise spike. As we now show, once the parameters are fixed we can summarize all such updates by a four-state Markov chain and compute its stationary distribution.
 
-#### {CH}.2.1.2 Computing Transition Probabilities
+#### 5.2.1.2 Computing Transition Probabilities
 
 We now fix the external input permanently to $$U_t = 1$$ for all $$t$$. Under this assumption, the system becomes a homogeneous Markov chain on the four states
 
@@ -177,7 +177,7 @@ $$P(X_{t+1} = (0, 0) \mid v_1, v_2) = (1 - p_1(1, v_2)) \cdot (1 - p_2(1, v_1)).
 
 With the numeric values for $$p_1$$ and $$p_2$$, we can now write the full transition matrix.
 
-#### {CH}.2.1.3 The 4×4 Transition Matrix
+#### 5.2.1.3 The 4×4 Transition Matrix
 
 We order the states as $$00, 01, 10, 11$$. For each row, we plug the appropriate $$p_1(1, v_2)$$ and $$p_2(1, v_1)$$ into the expressions above.
 
@@ -211,7 +211,7 @@ $$P = \begin{pmatrix} 0 & 0 & 0 & 1 \\ 0 & 1/2 & 0 & 1/2 \\ 0 & 0 & 0 & 1 \\ 0 &
 
 States $$00$$ and $$10$$ are transient: both flow deterministically into $$11$$ and can never be revisited. The long-run behavior is confined to the two-state subsystem $$\{01, 11\}$$.
 
-#### {CH}.2.1.4 Stationary Distribution for Fixed Input
+#### 5.2.1.4 Stationary Distribution for Fixed Input
 
 The stationary distribution $$\pi$$ for this Markov chain satisfies
 
@@ -241,7 +241,7 @@ In other words, in the long run the Neo spends half of its time in the partially
 
 Although this explicit transition-matrix analysis is useful for understanding the micro-dynamics of very small Neos, it becomes rapidly impractical for larger topologies. A Neo with only ten binary nodes already has a state space of size $$2^{10} = 1024$$, and the full transition matrix has $$2^{20}$$ entries, making exact computation infeasible. In fact, determining stationary distributions or attractors in general recurrent Boolean systems is NP-hard, even without stochasticity. When noise, weighted inputs, and structural asymmetries are included—as they necessarily are in realistic Neos—the combinatorial explosion becomes even more severe. For this reason, while the analysis above is valuable for intuition, we cannot rely on brute-force enumeration for larger structures. In later sections, we therefore shift to more scalable analytical tools such as probabilistic Boolean networks, mean-field approximations, and Ising-model-based energy formulations. These methods allow us to characterize stability, entropy flow, and emergent motifs in larger Neos without computing full exponential-scale transition dynamics.
 
-### {CH}.2.2 Scalable Analytical Tools for Larger Neos
+### 5.2.2 Scalable Analytical Tools for Larger Neos
 
 This section introduces three analytical frameworks—Probabilistic Boolean Networks, Mean-Field Analysis, and Ising-Model Energy Formulations—that allow us to study Neo dynamics beyond the regime of exact enumeration.
 
@@ -307,101 +307,101 @@ where the effective temperature $$T$$ is related to the noise amplitudes $$\alph
 
 ---
 
-### {CH}.2.3 Canonical Micro-Motifs
+### 5.2.3 Canonical Micro-Motifs
 
 **Purpose:** Identify recurring low-level patterns.
 
 **Expectation:** Use chains, fan-in, fan-out, and loops as computational building blocks for larger Neos.
 
-## {CH}.3 Lex and Local Computation
+## 5.3 Lex and Local Computation
 
-### {CH}.3.1 Lex Dynamics
+### 5.3.1 Lex Dynamics
 
 **Purpose:** Formalize deterministic and stochastic transitions induced by the Lex rule.
 
 **Expectation:** Analyze the influence of weights, bias, and the stochastic term on node updates.
 
-### {CH}.3.2 Effect of Stochasticity
+### 5.3.2 Effect of Stochasticity
 
 **Purpose:** Study how randomness modifies micro-scale behavior.
 
 **Expectation:** Show variability, exploration, and divergence across identical initialized Neos.
 
-### {CH}.3.3 Micro-Level Expressive Capacity
+### 5.3.3 Micro-Level Expressive Capacity
 
 **Purpose:** Assess the representational power of small fixed structures.
 
 **Expectation:** Describe the deterministic and stochastic input–output mappings achievable by one- and two-node Neos.
 
-## {CH}.4 Energy Trajectories at Micro Scale
+## 5.4 Energy Trajectories at Micro Scale
 
-### {CH}.4.1 Tick-Level Energy Flow
+### 5.4.1 Tick-Level Energy Flow
 
 **Purpose:** Examine energy changes during a single cycle.
 
 **Expectation:** Detail computation cost, reward acquisition, and the resulting energy update.
 
-### {CH}.4.2 Lifetime and Vitality in Simple Structures
+### 5.4.2 Lifetime and Vitality in Simple Structures
 
 **Purpose:** Quantify survival properties of minimal Neos.
 
 **Expectation:** Compare deterministic, stochastic, and recurrent motifs in terms of energy trajectories and survival.
 
-## {CH}.5 Micro-Level Mutation Experiments
+## 5.5 Micro-Level Mutation Experiments
 
-### {CH}.5.1 Isolated Mutation Types
+### 5.5.1 Isolated Mutation Types
 
 **Purpose:** Analyze the effect of each mutation primitive separately.
 
 **Expectation:** Show structural and behavioral results for node$$^+$$, node$$^-$$, edge$$^+$$, edge$$^-$$, and param$$^f$$.
 
-### {CH}.5.2 Mutation Cost and Trade-Offs
+### 5.5.2 Mutation Cost and Trade-Offs
 
 **Purpose:** Relate mutation outcomes to energy budget.
 
 **Expectation:** Demonstrate scenarios where beneficial mutations fail due to cost and scenarios where small modifications outperform structural changes.
 
-### {CH}.5.3 Comparative Mutation Strategies
+### 5.5.3 Comparative Mutation Strategies
 
 **Purpose:** Compare alternative mutation strategies on identical initial conditions.
 
 **Expectation:** Identify strategies that maximize accuracy, stability, or survival at the micro scale.
 
-## {CH}.6 In-Life Learning at the Micro Level
+## 5.6 In-Life Learning at the Micro Level
 
-### {CH}.6.1 In-Life Learning vs Mutation
+### 5.6.1 In-Life Learning vs Mutation
 
 **Purpose:** Clarify conceptual separation between In-Life learning rules and evolutionary mutation.
 
 **Expectation:** Show why In-Life learning must be pattern-triggered rather than error-driven.
 
-### {CH}.6.2 Minimal In-Life Learning Schemes
+### 5.6.2 Minimal In-Life Learning Schemes
 
 **Purpose:** Introduce simple local In-Life learning mechanisms.
 
 **Expectation:** Propose conditional param adjustments and evaluate their behavior in one- and two-node systems.
 
-### {CH}.6.3 Effects of In-Life Learning on Micro Dynamics
+### 5.6.3 Effects of In-Life Learning on Micro Dynamics
 
 **Purpose:** Analyze situations where In-Life learning helps or harms.
 
 **Expectation:** Present simulations illustrating successful adaptation versus destabilizing drift.
 
-## {CH}.7 Role of Stochasticity in Micro Evolution
+## 5.7 Role of Stochasticity in Micro Evolution
 
-### {CH}.7.1 Fixed-Structure Stochastic Behavior
+### 5.7.1 Fixed-Structure Stochastic Behavior
 
 **Purpose:** Understand the influence of noise on stable structures.
 
 **Expectation:** Demonstrate divergence in predictions and internal states across runs.
 
-### {CH}.7.2 Stochasticity as Exploration Under Mutation
+### 5.7.2 Stochasticity as Exploration Under Mutation
 
 **Purpose:** Show how noise facilitates discovery of structural variations.
 
 **Expectation:** Illustrate how stochasticity interacts with Evo to produce divergent evolutionary paths.
 
-## {CH}.8 Summary of Micro-Level Insights
+## 5.8 Summary of Micro-Level Insights
 
 **Purpose:** Consolidate micro-scale results.
 

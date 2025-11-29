@@ -1,4 +1,4 @@
-# Chapter {CH} — Micro Static Analysis of a Single Neo
+# Chapter 4 — Micro Static Analysis of a Single Neo
 
 A Neo survives by predicting the NeoVerse (NV). At every tick, it receives a small snapshot of the world—$$m$$ binary inputs $$U_t \in \{0,1\}^m$$—and updates its internal state according to the Lex rule. From this updated state it produces an output vector $$Y_t$$, interpreted as its prediction of the next NV state $$U_{t+1}$$. Correct predictions generate Sparks, which increase the Neo's Nex. Regardless of correctness, each update consumes a fixed amount of Nex simply to remain alive.
 
@@ -8,7 +8,7 @@ Because the computation is fixed, the Neo eventually settles into a long-run sta
 
 The purpose of this chapter is to determine how much predictive ability a fixed Neo possesses purely from its stationary behavior. By characterizing how its stationary output relates to the NV's stationary dynamics, we can determine its expected Nex gain, its expected Nex loss, and ultimately whether it will survive.
 
-## {CH}.1 Neo as a Predictive System
+## 4.1 Neo as a Predictive System
 
 Prediction is only meaningful when the environment exhibits stable statistical structure. If the NeoVerse changed its distribution over time—drifting, aging, or altering its transition rules—then a static Neo could not maintain predictive accuracy. Even though learning-capable Neos will be treated later, the static Neo analyzed here can only exploit whatever statistical regularities are already present. Its predictive power depends entirely on whether the relationship between $$U_t$$ and $$U_{t+1}$$ remains consistent over time.
 
@@ -24,7 +24,7 @@ converges to a well-defined stationary distribution. All predictive properties o
 
 A stationary NV therefore makes micro analysis possible: it ensures that a fixed Neo has a well-defined, time-invariant predictive relationship with the environment.
 
-## {CH}.2 Neo's Survivability
+## 4.2 Neo's Survivability
 
 Once the Neo and the perceived NeoVerse (NV) projection settle into their joint stationary regime, their long-run behavior is captured by the stationary distribution
 
