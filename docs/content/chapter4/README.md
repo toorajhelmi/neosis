@@ -116,13 +116,7 @@ $$P = \begin{pmatrix} 1-\alpha & \alpha \\ \alpha & 1-\alpha \end{pmatrix}.$$
 
 The stationary distribution $$\pi = (\pi(0), \pi(1))$$ satisfies $$\pi P = \pi$$. Thus
 
-$$\pi(0) = \pi(0)(1-\alpha) + \pi(1)\alpha,$$
-
-and using $$\pi(1) = 1 - \pi(0)$$ gives
-
-$$\pi(0) = (1-\alpha)\pi(0) + \alpha(1-\pi(0)) = \pi(0) - \alpha\pi(0) + \alpha - \alpha\pi(0).$$
-
-Solving, we obtain $$2\alpha \pi(0) = \alpha \Rightarrow \pi(0) = \frac{1}{2}$$, and therefore $$\pi(0) = \pi(1) = \frac{1}{2}$$.
+$$\pi(0) = \pi(0)(1-\alpha) + \pi(1)\alpha,$$ and $$\pi(1) = 1 - \pi(0)$$ Solving, we obtain $$2\alpha \pi(0) = \alpha \Rightarrow \pi(0) = \frac{1}{2}$$, and therefore $$\pi(0) = \pi(1) = \frac{1}{2}$$.
 
 Because all $$m$$ bits evolve independently, the joint stationary distribution for the $$m$$-bit vector is the product measure:
 
