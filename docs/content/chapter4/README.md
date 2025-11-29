@@ -334,3 +334,9 @@ $$\Xi_3 \approx 1 - \exp\left(-\frac{2(r \, \text{Acc}_3 - c_\ell) E_0}{r^2 \tex
 with $$\text{Acc}_3 = 1 - 2\alpha + 3\alpha^2 - 2\alpha^3$$.
 
 This completes the SD-based derivation of the majority-over-3 Neo.
+
+### 4.3.3 Structural Motif for Majority-over-3 Neo
+
+The stationary distribution derived for the Majority-over-3 Neo is not arbitrary: it is a direct mathematical consequence of a specific Neo structure capable of representing a temporal window of recent inputs and applying a deterministic majority Lex transformation over that window. It is therefore important to understand what minimal structural motif yields such a stationary process.
+
+The central requirement is that the Neo must internally store the previous values of the NeoVerse (NV) input $$X_t \in \{0,1\}$$, so that its output at tick $$t$$ can compute $$\text{Maj}(X_t, X_{t-1}, X_{t-2})$$. Since a Neo does not have direct access to past values of $$X_t$$, the temporal window must be constructed inside the Neo's internal state through its Lex updates. This is achieved by a simple chain of memory nodes that act as a shift register, automatically producing the internal state whose stationary distribution we derived earlier.
