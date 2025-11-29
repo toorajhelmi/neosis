@@ -1,4 +1,4 @@
-# Chapter 1 — Introduction and Motivation
+# Chapter {CH} — Introduction and Motivation
 
 Artificial neural networks (ANNs) have expanded rapidly, especially with the advent of large multimodal models (LMMs). Their growing scale suggests accelerating progress toward human-level cognition. But beneath this progress lies a defining structural limitation: modern ANNs are *homogeneous, static architectures*. They possess a fixed set of layers, fixed connectivity patterns, and a fixed functional form. Training adjusts weights, but the computational **structure itself never develops**. When the training process ends, the system becomes a static artifact.
 
