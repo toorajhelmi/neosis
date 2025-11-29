@@ -4,147 +4,102 @@ This documentation uses a placeholder-based system for chapter numbers to make r
 
 ## How It Works
 
+**Your local source files always use `{CH}` placeholders** - this makes it easy to move/renumber chapters. The placeholders are automatically replaced with actual numbers only when:
+- Generating LaTeX PDF (uses temporary copies)
+- Pushing to git (replaces in place, commits, then restores placeholders locally)
+
 Instead of hardcoding chapter numbers like `# Chapter 4 — Title` or `## 4.1 Section`, we use placeholders:
 
 - `# Chapter {CH} — Title`
 - `## {CH}.1 Section`
 - `### {CH}.2.1 Subsection`
+- `Figure {CH}.1 — Title`
+- `Table {CH}.1 — Title`
 - etc.
 
 The `{CH}` placeholder is automatically replaced with the actual chapter number based on the directory name (e.g., `chapter4/` → `4`).
-
-## Automatic Updates
-
-### Before LaTeX Generation
-
-The LaTeX build script (`build_latex.sh`) **automatically** runs `update_chapter_numbers.sh` before building, so chapter numbers are always correct in the PDF.
-
-**Usage:**
-```bash
-./docs/.scripts/build_latex.sh
-```
-
-### Before Git Push
-
-You have two options:
-
-#### Option 1: Manual (Recommended)
-
-Run the update script before pushing:
-
-```bash
-./docs/.scripts/update_chapter_numbers.sh
-git add -A
-git commit -m "Your message"
-git push
-```
-
-Or use the convenience script:
-
-```bash
-./docs/.scripts/pre_push.sh
-git add -A
-git commit -m "Your message"
-git push
-```
-
-#### Option 2: Automatic Git Hook
-
-Set up a git hook to automatically update chapter numbers before every push:
-
-```bash
-./docs/.scripts/setup_git_hooks.sh
-```
-
-This will:
-- Automatically update chapter numbers before pushing
-- Stage the updated files
-- Prompt you to commit if changes were made
-
-**Note:** The git hook will update numbers and stage files, but you'll still need to commit them if they changed.
-
-## Scripts
-
-### `update_chapter_numbers.sh`
-
-**Purpose:** Replaces `{CH}` placeholders with actual chapter numbers.
-
-**When to run:**
-- Before pushing to git (if not using git hook)
-- Before generating LaTeX PDF (already automatic)
-- After renumbering chapters
-
-**Usage:**
-```bash
-./docs/.scripts/update_chapter_numbers.sh
-```
-
-This script:
-1. Scans all `chapter*/README.md` files in `docs/content/`
-2. Extracts chapter number from directory name (e.g., `chapter4` → `4`)
-3. Replaces all `{CH}` placeholders with the actual number
-
-### `convert_all_to_placeholders.sh`
-
-**Purpose:** One-time conversion of hardcoded numbers to placeholders.
-
-**When to run:**
-- When first setting up the system
-- After manually editing files with hardcoded numbers
-
-**Usage:**
-```bash
-./docs/.scripts/convert_all_to_placeholders.sh
-```
-
-### `pre_push.sh`
-
-**Purpose:** Convenience script that updates chapter numbers before git operations.
-
-**Usage:**
-```bash
-./docs/.scripts/pre_push.sh
-# Then: git add -A && git commit -m "..." && git push
-```
-
-### `setup_git_hooks.sh`
-
-**Purpose:** Sets up automatic git hooks for chapter number updates.
-
-**Usage:**
-```bash
-./docs/.scripts/setup_git_hooks.sh
-```
 
 ## Workflow
 
 ### Normal Editing
 
-1. Edit chapter files using `{CH}` placeholders
-2. When ready to push or build:
-   ```bash
-   ./docs/.scripts/update_chapter_numbers.sh
-   git add -A
-   git commit -m "Your message"
-   git push
-   ```
-
-### Renumbering Chapters
-
-1. Rename chapter directories (e.g., `mv chapter4 chapter5`)
-2. Run the update script:
-   ```bash
-   ./docs/.scripts/update_chapter_numbers.sh
-   ```
-3. All chapter numbers will be automatically updated!
+1. **Edit files with `{CH}` placeholders** - your local files always keep placeholders
+2. **Push to git** - the git hook automatically:
+   - Replaces `{CH}` with actual numbers
+   - Commits the changes
+   - Pushes to remote
+   - Restores `{CH}` placeholders in your local files
 
 ### Generating LaTeX PDF
 
-Just run the build script - it handles everything automatically:
+The build script automatically:
+- Creates temporary copies of your files
+- Replaces `{CH}` placeholders in the copies
+- Builds LaTeX from the copies
+- Your source files remain unchanged with placeholders
 
 ```bash
 ./docs/.scripts/build_latex.sh
 ```
+
+### Renumbering Chapters
+
+1. **Rename directories**: `mv chapter4 chapter5`
+2. **That's it!** Your files already use `{CH}` placeholders, so they'll automatically get the correct numbers when you push or build LaTeX
+
+## Scripts
+
+### `update_chapter_numbers.sh`
+
+**Purpose:** Replaces `{CH}` placeholders with actual chapter numbers (or restores them).
+
+**Usage:**
+```bash
+# Replace placeholders with numbers
+./docs/.scripts/update_chapter_numbers.sh
+
+# Restore placeholders from numbers
+./docs/.scripts/update_chapter_numbers.sh --restore
+```
+
+**Note:** You typically don't need to run this manually - the git hooks and LaTeX build handle it automatically.
+
+### `build_latex.sh`
+
+**Purpose:** Builds LaTeX PDF from Markdown sources.
+
+**How it works:**
+- Creates temporary copies of content files
+- Replaces `{CH}` placeholders in the copies
+- Builds LaTeX from the copies
+- Your source files remain unchanged
+
+**Usage:**
+```bash
+./docs/.scripts/build_latex.sh
+```
+
+## Git Hooks
+
+### Pre-Push Hook
+
+Automatically runs before `git push`:
+1. Detects if chapter files are being pushed
+2. Replaces `{CH}` placeholders with actual numbers
+3. Stages and amends the commit
+4. Pushes with actual numbers
+
+### Post-Push Hook
+
+Automatically runs after `git push`:
+1. Restores `{CH}` placeholders in your local files
+2. Keeps your working directory with placeholders for easy editing
+
+### Post-Merge Hook
+
+Automatically runs after `git pull` or `git merge`:
+1. Converts actual numbers back to `{CH}` placeholders
+2. Ensures your local files always use placeholders
 
 ## Examples
 
@@ -152,30 +107,45 @@ Just run the build script - it handles everything automatically:
 ```markdown
 # Chapter {CH} — Micro Static Analysis of a Single Neo
 ```
-Becomes: `# Chapter 4 — Micro Static Analysis of a Single Neo`
+In git/LaTeX: `# Chapter 4 — Micro Static Analysis of a Single Neo`  
+In your local file: Always `# Chapter {CH} — Micro Static Analysis of a Single Neo`
 
 ### Section Header
 ```markdown
 ## {CH}.1 Neo as a Predictive System
 ```
-Becomes: `## 4.1 Neo as a Predictive System`
-
-### Subsection Header
-```markdown
-### {CH}.2.1 Dynamics with Concrete Parameters
-```
-Becomes: `### 4.2.1 Dynamics with Concrete Parameters`
+In git/LaTeX: `## 4.1 Neo as a Predictive System`  
+In your local file: Always `## {CH}.1 Neo as a Predictive System`
 
 ### Figure/Table References
 ```markdown
 **Figure {CH}.1 — Conceptual Cube Diagram**
 ## Table {CH}.1 — Three-Axis Mapping
 ```
-Becomes: `**Figure 7.1 — Conceptual Cube Diagram**` and `## Table 7.1 — Three-Axis Mapping`
+In git/LaTeX: `**Figure 7.1 — Conceptual Cube Diagram**`  
+In your local file: Always `**Figure {CH}.1 — Conceptual Cube Diagram**`
 
-## Notes
+## Important Notes
 
-- The placeholder system only affects chapter and section numbers
+- **Your local files always use `{CH}` placeholders** - this makes renumbering easy
+- **Git repository has actual numbers** - so GitBook and other tools display correctly
+- **LaTeX builds use temporary copies** - your source files are never modified
+- **Git hooks handle everything automatically** - you just edit with placeholders and push/build normally
 - References to other chapters in text should still use actual numbers (e.g., "as discussed in Chapter 2")
-- The scripts preserve all other content exactly as written
-- Files are edited in-place, so make sure to commit your work before running conversion scripts
+
+## Troubleshooting
+
+If placeholders aren't being restored after push:
+```bash
+./docs/.scripts/update_chapter_numbers.sh --restore
+```
+
+If you want to manually update numbers (not recommended):
+```bash
+./docs/.scripts/update_chapter_numbers.sh
+```
+
+If you want to manually restore placeholders:
+```bash
+./docs/.scripts/update_chapter_numbers.sh --restore
+```
