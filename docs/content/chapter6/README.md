@@ -1,117 +1,81 @@
-# Chapter 6 — Related Theories and Neosis in Context
+# Chapter 5 — Expressive Power of a Neo
 
-Over the past fifty years, multiple scientific communities have attempted to construct systems capable of evolving their computational structure, adapting to their environment, and developing new capabilities over time. Early work in the 1970s and 1980s explored evolutionary algorithms and genetic programming as mechanisms for open-ended problem solving [@holland1975adaption]. These systems demonstrated that mutation and selection could navigate immense design spaces, but the resulting artifacts were static: once deployed, their structures no longer changed within their lifetime.
+## 5.1 Introduction
 
-During the 1990s and 2000s, Artificial Life (ALife) platforms such as Tierra and Avida [@ray1991tierra; @adami1998introduction] produced digital organisms that replicated, competed, and diversified under evolutionary pressures. These environments achieved open-ended population dynamics but failed to produce agents with rich internal models or capacity for structural reorganization within a lifetime. Evolution optimized replication, not adaptive cognition.
+This chapter evaluates the representational and computational power of the Neo architecture. We show that finite Neos can emulate any deterministic or stochastic finite-state system, and evolving Neos can emulate any computable dynamical process.
 
-Parallel developments in neural networks and reinforcement learning [@lecun2015deep; @sutton2018reinforcement] yielded powerful functional systems operating over fixed network architectures. Neuroevolution methods such as NEAT and HyperNEAT [@stanley2002evolving; @stanley2009hyperneat] introduced structural evolution, but only across generations, not as part of an individual agent's adaptive cycle.
+## 5.2 Deterministic Expressivity
 
-Recent work—neural cellular automata [@mordvintsev2020growing], hypernetworks [@ha2016hypernetworks], meta-learning, and developmental cognitive architectures—introduces forms of plasticity and structure manipulation. Yet none unifies *in-lifetime* structural change, *survival-based* objectives, and *energy-constrained* mutation into a single organismal model. Neosis aims to fill precisely this gap.
+### 5.2.1 Threshold Logic as a Universal Boolean Substrate
 
-To situate Neosis clearly, this chapter presents:
+**Purpose:** Relate Lex to classical threshold logic.
 
-1. A conceptual diagram mapping theoretical traditions into a three-axis space.  
+**Expectation:** Use known results to show that any Boolean function can be represented by threshold units.
 
-2. A categorical table comparing frameworks by objectives, and development.  
+### 5.2.2 Finite Deterministic Dynamical Systems
 
-3. A review of **theoretical frameworks**, organized into conceptual categories.  
+**Purpose:** Connect recurrent threshold networks to dynamical system representation.
 
-4. A review of **systems and projects**, organized into mechanistic categories.
+**Expectation:** Demonstrate that fixed-structure Neos can implement any finite deterministic transition function.
 
-## Conceptual Placement of Neosis
+## 5.3 Stochastic Expressivity
 
-**Figure 6.1 — Conceptual Cube Diagram (Placeholder)**  
+### 5.3.1 Probabilistic Threshold Nodes
 
-(A diagram to be inserted.)
+**Purpose:** Formalize Lex with stochastic input as a probabilistic threshold gate.
 
-## Table 6.1 — Three-Axis Mapping of Frameworks
+**Expectation:** Show how Bernoulli-driven updates produce stochastic transitions.
 
-| Theory Family | Objective Source | Developmental Regime |
-|---------------|------------------|-----------------------|
-| Artificial Neural Networks | External loss | Static |
-| Spiking Neural Networks | External loss | Static |
-| Reinforcement Learning | External reward | Static |
-| Neuroevolution | External task fitness | Generational |
-| Artificial Life (Tierra, Avida) | Replication fitness | Generational |
-| Predictive Processing / FEP | Free-energy minimization | Static |
-| Developmental Systems Theory | Biological fitness | Scaffolded |
-| Dynamical Systems Theory | Emergent | Continuous |
-| Embodied/Enactive Cognition | Viability | Developmental |
-| Reservoir Computing | External training | Static |
-| Neural Architecture Search | External loss | Static |
-| Neural Cellular Automata | External constraints | Pattern-growth |
-| Hypernetworks / Meta-learning | External loss | Static |
-| **Neosis** | **Internal survival energy** | **Open-ended** |
+### 5.3.2 Representation of Markov and Stochastic Automata
 
-# 6.1 Theoretical Frameworks
+**Purpose:** Relate Neo networks to finite probabilistic state machines.
 
-Theoretical traditions can be grouped into categories based on the **goal or approach** shaping each field. These categories clarify how each tradition attempts to answer a subset of the problem Neosis addresses.
+**Expectation:** Show that such structures can implement any finite Markov chain or stochastic automaton.
 
-## 6.1.1 Category A — **Learning-Based Theories**  
-### *Goal: Improve performance through parameter adaptation while assuming a fixed architecture.*
+## 5.4 Computational Universality
 
-This category includes artificial neural networks, reinforcement learning, and predictive processing.  
+### 5.4.1 Recurrent Threshold Networks as Universal Computers
 
-Artificial neural networks [@rumelhart1986learning; @lecun2015deep] use gradient-based updates to refine numerical parameters on static computation graphs. Reinforcement learning [@sutton2018reinforcement] optimizes expected reward by adjusting policy or value function parameters based on experience. Predictive processing and the Free Energy Principle [@friston2010free] treat cognition as hierarchical prediction-error minimization.
+**Purpose:** Connect Neo dynamics to known universality results.
 
-Despite their strengths, these learning-based theories rely on fixed structures and externally defined tasks. Their adaptation occurs exclusively through differentiable updates rather than through structural mutation. Because they do not couple prediction, reward, and structural change within a single organismal cycle, they lack the unified energy economy and continuous self-modification that characterize Neosis.
+**Expectation:** Cite that recurrent threshold networks are Turing complete, implying universality for fixed topology.
 
-## 6.1.2 Category B — **Evolution-Based Theories**  
-### *Goal: Discover functional structures through mutation and selection across generations.*
+### 5.4.2 Evolving Structure and Open-Ended Growth
 
-Evolutionary computation [@holland1975adaption], genetic programming [@koza1992genetic], and neuroevolution methods such as NEAT and HyperNEAT [@stanley2002evolving; @stanley2009hyperneat] search vast design spaces through generational mutation and selection. Artificial Life environments such as Tierra and Avida [@ray1991tierra; @adami1998introduction] demonstrate open-ended population dynamics and developmental divergence.
+**Purpose:** Argue that mutation primitives allow construction of arbitrary computational graphs.
 
-Although these systems generate novelty and support domain-general search, they do not allow *in-lifetime* structural change. Adaptation is tied to replication fitness rather than predictive survival. Internal cognitive complexity remains limited because there is no mechanism linking computation, reward, and structural modification inside the organism's operational cycle. Neosis unifies learning and evolution in a way these frameworks do not.
+**Expectation:** Show that structural evolution enables Neos to approximate any computable function over time.
 
-## 6.1.3 Category C — **Developmental and Cognitive Theories**  
-### *Goal: Explain how cognition emerges from developmental processes, modularity, and environmental interaction.*
+## 5.5 Continuous Parameters and Decision Surfaces
 
-Computational cognitive science [@anderson2007integrated; @newell1994unified] models cognition through specialized modules and multi-timescale adaptation. Developmental systems theory [@oyama2000ontogeny] emphasizes gene–environment coupling and emergent developmental trajectories. Embodied and enactive cognition [@varela1991embodied; @clark1997being] argue that cognition arises from tight coupling between organism and environment.
+### 5.5.1 Continuous Parameterization
 
-These theories articulate powerful principles describing natural cognition, yet they are interpretive rather than constructive: they explain biological systems rather than define a minimal computational substrate for synthetic organisms. Because they lack explicit mutation mechanisms or survival-based internal objectives, they do not exhibit the energy-constrained structural evolution that Neosis supports.
+**Purpose:** Highlight the role of real-valued parameters in sharpening representational capacity.
 
-## 6.1.4 Category D — **Self-Organizing and Dynamical Theories**  
-### *Goal: Reveal how complex behavior emerges from simple local interactions and intrinsic system dynamics.*
+**Expectation:** Show how continuous weights and biases create arbitrarily fine decision boundaries.
 
-Dynamical systems theory [@kelso1995dynamic] models cognition and behavior as trajectories through attractor landscapes shaped by system interactions. Reservoir computing [@jaeger2001echo] uses fixed recurrent dynamics to produce rich transformations, relying on trained readouts. Neural cellular automata [@mordvintsev2020growing] demonstrate pattern formation and self-repair based on local update rules.
+### 5.5.2 Refinement Through Mutation and In-Life Learning
 
-Although these systems produce rich emergent dynamics, they provide no survival objective and no mechanism for energy-regulated mutation. Most operate on fixed architectures or predetermined update laws. Without a unified operational cycle linking prediction, reward, structural change, and survival, their adaptability remains fundamentally limited compared to Neosis.
+**Purpose:** Connect parameter evolution to increasing precision.
 
-# 6.2 Systems and Projects
+**Expectation:** Describe how parametric adjustments refine decision functions.
 
-Systems and projects differ from theoretical frameworks in that they implement working platforms. These can likewise be grouped into categories based on their underlying **mechanistic approach**.
+## 5.6 Partial Observability and Internal Memory
 
-## 6.2.1 Category E — **Evolutionary ALife Platforms**  
-### *Approach: Create digital ecosystems where organisms mutate, replicate, and compete.*
+### 5.6.1 Perception via Projection
 
-Platforms such as Tierra [@ray1991tierra], Avida [@adami1998introduction], Polyworld [@yaeger1994computational], and Lenia [@chan2019lenia] explore ecological competition, mutation, and population-level adaptation. These systems showcase open-ended dynamics, spontaneous diversification, and ecosystem-level complexity.
+**Purpose:** Address the fact that Neos only observe projected world states.
 
-Yet despite their ecological richness, these systems rarely develop sophisticated internal predictive models or meaningful within-lifetime structural adaptation. Their objectives remain tied to replication rather than survival-based computation, and mutation affects only generational change, not continuous structural reorganization. Neosis's integration of prediction, energy, and mutation within a single organism sets it apart.
+**Expectation:** Explain how internal memory compensates for missing information.
 
-## 6.2.2 Category F — **Adaptive Neural Systems**  
-### *Approach: Enhance neural models with auxiliary mechanisms for dynamic parameterization or meta-level adaptation.*
+### 5.6.2 Representing Predictive and Latent-Variable Models
 
-Hypernetworks [@ha2016hypernetworks], meta-learning architectures, differentiable architecture search, and morphological computation [@pfeifer2007self] provide additional flexibility beyond fixed neural parameters. They introduce mechanisms that generate weights dynamically or reconfigure computational pathways.
+**Purpose:** Illustrate how Neos can learn internal structures needed for prediction.
 
-However, these systems maintain fixed meta-structures and rely on external, differentiable losses to govern adaptation. They do not incorporate intrinsic survival-based objectives or unified energy economies that regulate structural mutation. Consequently, they lack the open-ended structural growth that Neosis enables within a single lifetime.
+**Expectation:** Show that recurrent binary states provide sufficient latent capacity.
 
-## 6.2.3 Category G — **Self-Modifying Neural or Graph Systems**  
-### *Approach: Allow networks to alter their topology or computation rules during operation.*
+## 5.7 Summary of Expressive Power
 
-Neural cellular automata [@mordvintsev2020growing], continual topology-adapting networks [@stanley2003continual], and modular neural architectures introduce forms of structural plasticity that operate during computation. These approaches explore the frontier between fixed computation graphs and flexible, evolving structures.
+**Purpose:** Consolidate expressivity results.
 
-Despite exploring structural change, these systems lack a survival-based internal energy model that ties structural mutation to adaptive success. Structural modifications are typically driven by heuristics, external training signals, or rule-based mechanisms rather than a unified organismal loop linking prediction, reward, and survival. As such, they do not achieve the open-ended cognitive development central to Neosis.
-
-## 6.3 Lessons for Micro and Macro Neosis from Related Theories and Systems
-
-### Micro-Neosis: Goal, Approach, and Design Lessons
-
-Micro-Neosis aims to define the fundamental computational laws governing a single Neo: how binary nodes update, how energy is spent, how prediction is computed, and how structure modifies itself autonomously within a lifetime. Its approach is to treat each Neo as a minimal, nondifferentiable, energy-regulated graph whose dynamics arise entirely from local Lex rules, Evo mutation primitives, and the internal economy of Nex. From related work, Micro-Neosis can meaningfully adopt concepts such as local state-update stability from dynamical systems, noise-aware computation from neural and stochastic models, mutation operators from evolutionary computation, and multi-timescale adaptation principles from developmental theory. At the same time, it must avoid the limiting assumptions that caused prior systems to stagnate: fixed architectures as in ANN and RL; evolution tied purely to replication rather than cognition as in ALife; structural plasticity that is unconstrained or purposeless as in many self-organizing systems; and reliance on differentiability, which restricts open-ended modification. The micro architecture succeeds precisely by integrating structural mutation, computation, and energy into one closed organismal loop—something earlier systems did not achieve.
-
-### Macro-Neosis: Goal, Approach, and Design Lessons
-
-Macro-Neosis aims to construct a coarse-grained mathematical representation of a Neo that captures its global input–output behavior, stability properties, specialization tendencies, and emergent cognitive structure without simulating individual nodes. Its approach uses linearization, stochastic perturbation theory, controllability/observability concepts, and filtering-based abstractions to compress high-dimensional micro dynamics into tractable macro equations. From related work, Macro-Neosis can draw heavily on control theory for stability analysis, on nonlinear filtering for representing aggregated noise from micro-level stochasticity, on reservoir-style approximations for dimensionality reduction, and on developmental and cognitive theories for understanding functional specialization. Yet it must avoid the pitfalls common in these traditions: reliance on smooth differentiable models that fail under discrete stochastic updates; macro abstractions disconnected from evolving structure; the absence of grounding in an explicit micro substrate; and dependence on brute-force simulation, which plagued many ALife projects. Macro-Neosis retains the strengths of these fields but overcomes their weaknesses by ensuring that its coarse models remain dynamically consistent with micro-level Lex, Evo, and Nex dynamics.
-
-# 6.4 Summary
-
-Neosis draws from decades of research in neural computation, Artificial Life, evolutionary algorithms, cognitive science, and self-organizing systems. Prior efforts focused on learning without structural evolution, evolution without cognition, or development without energy constraints. Neosis unifies these principles into a single minimal computational framework linking prediction, energy, structure, and survival. This positions Neosis not as an incremental extension of prior systems, but as a foundation for open-ended, self-modifying digital organisms.
+**Expectation:** Conclude that Neos form an evolving probabilistic recurrent threshold architecture capable of universal deterministic and stochastic computation.
