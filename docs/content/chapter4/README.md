@@ -120,46 +120,6 @@ and its output is
 
 $$Y_t = g(X_t) = X_t.$$
 
-#### Joint Stationary Distribution $$\pi(x, u)$$
-
-The Neo and NV settle into a joint stationary regime described by
-
-$$\pi(x, u) = \lim_{t \to \infty} P(X_t = x, \, U_t = u).$$
-
-Because $$X_t = U_t$$ deterministically, $$\pi(x, u) = 0$$ if $$x \neq u$$, and when $$x = u$$, $$\pi(u, u) = P(U_t = u)$$ in stationarity. Since the $$m$$ coordinates are independent and each has marginal $$(\frac{1}{2}, \frac{1}{2})$$, the stationary distribution of $$U_t$$ is uniform:
-
-$$P(U_t = u) = 2^{-m}, \quad u \in \{0,1\}^m.$$
-
-Thus,
-
-$$\pi(x, u) = 2^{-m} \, \mathbb{1}\{x = u\}.$$
-
-#### Output Distribution
-
-Marginalizing over $$\pi$$,
-
-$$P(Y = y) = \sum_{x, u} \pi(x, u) \, \mathbb{1}\{g(x) = y\} = \sum_u 2^{-m} \mathbb{1}\{u = y\} = 2^{-m}.$$
-
-Hence, $$P(Y = y) = 2^{-m}$$.
-
-#### Joint Law of $$(U^+, Y)$$
-
-Let $$U^+ = U_{t+1}$$. The stationary joint distribution is
-
-$$P(U^+ = u', \, Y = y) = \sum_{x, u} P(U^+ = u' \mid U = u) \, \pi(x, u) \, \mathbb{1}\{g(x) = y\}.$$
-
-Substituting $$\pi(x, u) = 2^{-m} \mathbb{1}\{x = u\}$$ and $$g(x) = x$$,
-
-$$P(U^+ = u', \, Y = y) = 2^{-m} \, P(U_{t+1} = u' \mid U_t = y).$$
-
-Because the NV transition kernel factorizes across bits,
-
-$$P(U_{t+1} = u' \mid U_t = y) = \prod_{j=1}^m \left[(1-\alpha) \mathbb{1}\{u'_j = y_j\} + \alpha \, \mathbb{1}\{u'_j \neq y_j\}\right].$$
-
-Thus,
-
-$$P(U^+ = u', \, Y = y) = 2^{-m} \prod_{j=1}^m \left[(1-\alpha) \mathbb{1}\{u'_j = y_j\} + \alpha \, \mathbb{1}\{u'_j \neq y_j\}\right].$$
-
 #### Conditional Prediction Law
 
 Since $$Y_t = U_t$$,
@@ -182,7 +142,9 @@ Each bit contributes either:
 - a factor $$1-\alpha$$ if we match the current bit $$y_j$$,
 - a factor $$\alpha$$ if we flip it.
 
-When $$\alpha < 0.5$$, matching gives the larger factor. Because bits are independent, maximizing the full product means maximizing each factor individually, giving
+When $$\alpha < 0.5$$, matching gives the larger factor.
+
+Because bits are independent, maximizing the full product means maximizing each factor individually, giving
 
 $$\hat{u}(y) = y.$$
 
@@ -242,11 +204,9 @@ and for $$r(1-\alpha)^m > c_\ell$$,
 
 $$\Xi \approx 1 - \exp\left(-\frac{2E_0 (r(1-\alpha)^m - c_\ell)}{r^2 (1-\alpha)^m [1 - (1-\alpha)^m]}\right).$$
 
-### 4.3.2 p-Estimator Neo: Full Derivation
+### 4.3.2 p-Estimator Neo
 
 We now consider a more complex case where the Neo contains internal feedback loops that create temporal dependencies. This requires computing the stationary distribution of the internal state Markov chain to determine prediction accuracy and survivability.
-
-#### 4.3.2.1 Setting and Goal
 
 The NeoVerse emits a binary percept stream
 
@@ -266,8 +226,6 @@ Because the stream is i.i.d. Bernoulli, the theoretical optimal predictor (with 
 $$\text{Acc}^*(p) = \max\{p, 1-p\}.$$
 
 So this Neo cannot ever reach 100% accuracy unless $$p \in \{0,1\}$$; the interesting question is how its architecture + feedback shape its stationary prediction accuracy and its implicit representation of $$p$$.
-
-#### 4.3.2.2 Architecture of the p-Estimator Neo
 
 The Neo has two internal nodes:
 
@@ -322,7 +280,7 @@ $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$
 
 in the stationary regime.
 
-#### 4.3.2.3 Markov Chain over Internal States
+#### 4.3.2.1 Markov Chain over Internal States
 
 Define the internal state:
 
@@ -543,7 +501,7 @@ For sanity checks:
 
 Note that $$\text{Acc}(p) \leq \max(p,1-p)$$ for all $$p \in (0,1)$$; the Neo does not reach the Bayes limit.
 
-#### 4.3.2.4 Simulation Results (Next-Bit Prediction)
+#### 4.3.2.2 Simulation Results (Next-Bit Prediction)
 
 We simulate the Neo for $$T = 200{,}000$$ ticks for each $$p \in \{0.2,0.5,0.8\}$$.
 
