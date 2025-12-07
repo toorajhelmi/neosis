@@ -104,105 +104,79 @@ We present two cases that illustrate these different analytical approaches. The 
 
 ### 4.3.1 m-Bit Markov NeoVerse and the Copy Neo
 
-We consider an $$m$$-bit NeoVerse (NV) projection
-
-$$U_t = (U_t(1), \ldots, U_t(m)) \in \{0,1\}^m,$$
-
-where each coordinate evolves as an independent binary Markov chain with flip probability $$\alpha \in [0,1]$$:
+We consider an $$m$$-bit NeoVerse (NV) projection $$U_t = (U_t(1), \ldots, U_t(m)) \in \{0,1\}^m$$, where each coordinate evolves as an independent binary Markov chain with flip probability $$\alpha \in [0,1]$$. The transition probabilities are
 
 $$P(U_{t+1}(j) \neq U_t(j)) = \alpha, \quad P(U_{t+1}(j) = U_t(j)) = 1 - \alpha.$$
 
-A copy Neo directly stores the current NV projection,
-
-$$X_t = U_t,$$
-
-and its output is
-
-$$Y_t = g(X_t) = X_t.$$
+A copy Neo directly stores the current NV projection, so $$X_t = U_t$$, and its output is simply $$Y_t = g(X_t) = X_t$$. This is the simplest possible Neo: it has no internal computation beyond storing the current input, and its output is an exact copy of what it sees.
 
 #### Conditional Prediction Law
 
-Since $$Y_t = U_t$$,
+Since the copy Neo's output equals the current NV state, $$Y_t = U_t$$, the conditional prediction law follows directly from the NV's transition probabilities:
 
 $$P(U_{t+1} = u' \mid Y_t = y) = P(U_{t+1} = u' \mid U_t = y).$$
 
-Each bit evolves independently, so
+Each bit evolves independently, so for each coordinate $$j$$ we have
 
 $$P(U_{t+1}(j) = u'_j \mid U_t(j) = y_j) = \begin{cases} 1-\alpha, & u'_j = y_j, \\ \alpha, & u'_j \neq y_j. \end{cases}$$
 
-Thus,
+Because the bits are independent, the full conditional distribution factors as a product:
 
 $$P(U_{t+1} = u' \mid Y_t = y) = \prod_{j=1}^m \left[(1-\alpha) \mathbb{1}\{u'_j = y_j\} + \alpha \, \mathbb{1}\{u'_j \neq y_j\}\right].$$
 
+This expression captures the fact that each bit either stays the same (with probability $$1-\alpha$$) or flips (with probability $$\alpha$$), independently of the others.
+
 #### Optimal Decoder
 
-To choose the most likely next vector $$u'$$, we maximize the above product over all $$u' \in \{0,1\}^m$$.
+To choose the most likely next vector $$u'$$, we maximize the above product over all $$u' \in \{0,1\}^m$$. Each bit contributes either a factor $$1-\alpha$$ if we match the current bit $$y_j$$, or a factor $$\alpha$$ if we flip it. When $$\alpha < 0.5$$, matching gives the larger factor, indicating that the environment is more stable than random.
 
-Each bit contributes either:
-- a factor $$1-\alpha$$ if we match the current bit $$y_j$$,
-- a factor $$\alpha$$ if we flip it.
-
-When $$\alpha < 0.5$$, matching gives the larger factor.
-
-Because bits are independent, maximizing the full product means maximizing each factor individually, giving
+Because bits are independent, maximizing the full product means maximizing each factor individually. This yields the optimal decoder
 
 $$\hat{u}(y) = y.$$
 
-(If $$\alpha > 0.5$$, the maximizing bitwise choice would be $$1-y$$; at $$\alpha = 0.5$$ all predictions are equally likely.)
+(If $$\alpha > 0.5$$, the maximizing bitwise choice would be $$1-y$$; at $$\alpha = 0.5$$ all predictions are equally likely, indicating a completely random environment.)
 
-In the predictive regime $$\alpha < 0.5$$, the optimal decoder is therefore
-
-$$\hat{u}(Y_t) = Y_t.$$
+In the predictive regime $$\alpha < 0.5$$, the optimal decoder is therefore simply to predict that the next state equals the current state: $$\hat{u}(Y_t) = Y_t$$. This makes intuitive sense: when the environment is relatively stable, the best guess for the next state is that it remains unchanged.
 
 #### Prediction Accuracy
 
-Accuracy is
+The prediction accuracy is the probability that the optimal decoder's prediction matches the actual next state:
 
 $$\text{Acc} = P(\hat{u}(Y_t) = U_{t+1}) = P(U_{t+1} = U_t).$$
 
-Since each bit stays the same with probability $$1-\alpha$$,
+Since each bit stays the same with probability $$1-\alpha$$, and the bits are independent, the probability that all $$m$$ bits remain unchanged is
 
 $$P(U_{t+1} = U_t) = (1-\alpha)^m.$$
 
-Thus
-
-$$\text{Acc} = (1-\alpha)^m.$$
+Thus the accuracy is $$\text{Acc} = (1-\alpha)^m$$. This decreases exponentially with the number of bits $$m$$, reflecting the fact that as the state space grows, it becomes increasingly unlikely that all bits remain unchanged simultaneously.
 
 #### Energy Drift and Variance
 
-Energy changes according to
+Energy changes according to $$\Delta E_t = r \, \mathbb{1}\{\hat{u}(Y_t) = U_{t+1}\} - c_\ell$$, where $$r > 0$$ is the reward for correct predictions and $$c_\ell > 0$$ is the living cost. Let $$Z_t = \mathbb{1}\{\hat{u}(Y_t) = U_{t+1}\}$$ denote the indicator of a correct prediction, so $$Z_t \sim \text{Bernoulli}(\text{Acc})$$.
 
-$$\Delta E_t = r \, \mathbb{1}\{\hat{u}(Y_t) = U_{t+1}\} - c_\ell.$$
-
-Let
-
-$$Z_t = \mathbb{1}\{\hat{u}(Y_t) = U_{t+1}\},$$
-
-so $$Z_t \sim \text{Bernoulli}(\text{Acc})$$.
-
-Mean drift:
+The mean energy drift is
 
 $$\mu = \mathbb{E}[\Delta E_t] = r(1-\alpha)^m - c_\ell.$$
 
-Variance:
+This is positive (indicating energy growth on average) when $$r(1-\alpha)^m > c_\ell$$, meaning the expected reward from correct predictions exceeds the living cost.
+
+The variance of the energy change is
 
 $$\sigma^2 = r^2 \, \text{Acc}(1 - \text{Acc}) = r^2 (1-\alpha)^m [1 - (1-\alpha)^m].$$
 
+This captures the stochasticity in the energy process: even when the mean drift is positive, individual ticks may result in energy loss due to prediction errors.
+
 #### Survivability
 
-Let
-
-$$E_{t+1} = E_t + \Delta E_t, \quad E_0 > 0,$$
-
-with absorption at $$E_t = 0$$.
-
-From the diffusion approximation:
+The Neo's energy evolves as $$E_{t+1} = E_t + \Delta E_t$$, starting from $$E_0 > 0$$, with absorption at $$E_t = 0$$ (death). Using the diffusion approximation for this biased random walk, the survivability $$\Xi$$ (the probability of never hitting zero energy) is:
 
 $$\Xi = 0 \quad \text{if } r(1-\alpha)^m \leq c_\ell,$$
 
 and for $$r(1-\alpha)^m > c_\ell$$,
 
 $$\Xi \approx 1 - \exp\left(-\frac{2E_0 (r(1-\alpha)^m - c_\ell)}{r^2 (1-\alpha)^m [1 - (1-\alpha)^m]}\right).$$
+
+When the mean drift is non-positive, the Neo will eventually die with probability one. When the drift is positive, survivability increases with initial energy $$E_0$$ and with the ratio of mean drift to variance, reflecting the balance between expected gains and the risk of stochastic fluctuations leading to death.
 
 ### 4.3.2 p-Estimator Neo
 
