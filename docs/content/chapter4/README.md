@@ -180,13 +180,11 @@ When the mean drift is non-positive, the Neo will eventually die with probabilit
 
 ### 4.3.2 p-Estimator Neo
 
-While the NeoVerse in this case is similar to what we had in case 1 (a binary stream), we would like to use a more complex Neo that can do better than a simple copy operation as it was in case 1. The NeoVerse emits a binary percept stream $$U_t \sim \text{Bernoulli}(p)$$, $$t = 0,1,2,\ldots$$, independently over time, with an unknown parameter $$p \in (0,1)$$. The Neo does not receive $$p$$; it only observes the bits $$U_t$$.
+In this case we consider a NeoVerse similar to what we had in case 1 (a binary stream), we would like to use a more complex Neo that can do better than a simple copy operation as it was in case 1. The NeoVerse emits a binary percept stream $$U_t \sim \text{Bernoulli}(p)$$, $$t = 0,1,2,\ldots$$, independently over time, with an unknown parameter $$p \in (0,1)$$. The Neo does not receive $$p$$; it only observes the bits $$U_t$$.
 
-The Neo will: (1) run its internal Lex dynamics driven by the input stream $$\{U_t\}$$, (2) produce a prediction for the next percept using node $$A$$: $$\hat{U}_{t+1} = A(t+1)$$, (3) achieve high next-bit prediction accuracy $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in the long run (stationary regime), and (4) use its internal stationary behavior as an implicit estimate of the bias $$p$$.
+The Neo in this case is designed to achieve high next-bit prediction accuracy $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in the long run (stationary regime) by using its internal stationary behavior as an implicit estimate of the bias $$p$$.
 
 Because the stream is i.i.d. Bernoulli, the theoretical optimal predictor (with true $$p$$) is "always predict the majority bit," with accuracy $$\text{Acc}^*(p) = \max\{p, 1-p\}$$. So this Neo cannot ever reach 100% accuracy unless $$p \in \{0,1\}$$; the interesting question is how its architecture and feedback shape its stationary prediction accuracy and its implicit representation of $$p$$.
-
-#### Architecture of the p-Estimator Neo
 
 The Neo has two internal nodes: **Node $$A$$** (the predictor node, whose state drives the output) and **Node $$B$$** (a memory node that tracks recent behavior of $$A$$). Node states are binary: $$A(t), B(t) \in \{0,1\}$$. We disable intrinsic node noise ($$\alpha_A = \alpha_B = 0$$) to isolate the effect of weights and feedback.
 
@@ -210,13 +208,11 @@ The Neo structure can be represented as:
 
 $$A(t+1) = H\big(2U_t + 1\cdot A(t) - 2\cdot B(t) - 1\big),$$
 
-where $$H(x) = 1$$ if $$x \geq 0$$ and $$0$$ otherwise.
-
 **Node $$B$$ (Memory)**: Inputs to $$B$$ are $$A(t)$$ (previous predictor state). The Lex update is $$B(t+1) = H\big(A(t) - 0.5\big)$$. So $$B(t+1) = 1$$ iff $$A(t) = 1$$; otherwise $$B(t+1) = 0$$. In words: $$B$$ copies $$A$$ with a one-tick delay, providing a crude memory of whether $$A$$ was recently active.
 
 **Prediction Rule**: At time $$t$$, the Neo observes $$U_t$$, updates $$A(t+1), B(t+1)$$ via the rules above, and uses $$\hat{U}_{t+1} = A(t+1)$$ as its prediction for the next percept $$U_{t+1}$$. We then measure $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in the stationary regime.
 
-#### 4.3.2.1 Markov Chain over Internal States
+#### 4.3.2.1 Anlytical Study 
 
 Define the internal state as $$S_t = (A(t), B(t)) \in \{0,1\}^2$$. There are four possible internal states: $$s_0 = (0,0)$$, $$s_1 = (0,1)$$, $$s_2 = (1,0)$$, and $$s_3 = (1,1)$$. At each tick, given $$S_t$$ and $$U_t$$, the next state $$S_{t+1} = (A(t+1), B(t+1))$$ is deterministically defined by the Lex rules. Since $$U_t$$ is random with $$P(U_t = 1) = p$$, the process $$\{S_t\}$$ is a 4-state Markov chain with transition probabilities depending on $$p$$.
 
@@ -274,55 +270,19 @@ Since the chain is stationary, this is also the distribution of $$A(t+1)$$, $$A(
 
 We now derive $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in closed form. Key points: $$U_{t+1}$$ is independent of $$(S_t, U_t)$$ and has distribution $$\text{Bernoulli}(p)$$. Under stationarity, the marginal distribution of $$A(t+1)$$ is the same as that of $$A(t)$$, i.e., $$P(A(t+1)=1) = P_\pi(A=1) = q(p) = \frac{p(2-p)}{D(p)}$$, so $$P(A(t+1)=0) = 1 - q(p)$$.
 
-Given these, we can write:
+Given these, we can write: $$\text{Acc}(p) = P(A(t+1)=1, U_{t+1}=1) + P(A(t+1)=0, U_{t+1}=0) = P(A(t+1)=1)\,P(U_{t+1}=1) + P(A(t+1)=0)\,P(U_{t+1}=0) = q(p)\cdot p + (1-q(p))\cdot (1-p)$$. Plugging $$q(p) = \dfrac{p(2-p)}{D(p)}$$ gives $$\text{Acc}(p) = \frac{p(2-p)}{D(p)}\cdot p + \left(1 - \frac{p(2-p)}{D(p)}\right)\cdot (1-p)$$. Using the alternative form: $$\text{Acc}(p) = (1-p) + (2p-1)\,q(p) = (1-p) + (2p-1)\frac{p(2-p)}{D(p)}$$.
 
-$$\begin{aligned} \text{Acc}(p) &= P(A(t+1)=1, U_{t+1}=1) + P(A(t+1)=0, U_{t+1}=0)\\ &= P(A(t+1)=1)\,P(U_{t+1}=1) + P(A(t+1)=0)\,P(U_{t+1}=0)\\ &= q(p)\cdot p + (1-q(p))\cdot (1-p). \end{aligned}$$
-
-Plug $$q(p) = \dfrac{p(2-p)}{D(p)}$$:
-
-$$\text{Acc}(p) = \frac{p(2-p)}{D(p)}\cdot p + \left(1 - \frac{p(2-p)}{D(p)}\right)\cdot (1-p).$$
-
-Using the alternative form:
-
-$$\text{Acc}(p) = (1-p) + (2p-1)\,q(p) = (1-p) + (2p-1)\frac{p(2-p)}{D(p)}.$$
-
-Computing the numerator explicitly:
-
-Let $$\text{Acc}(p) = \frac{N(p)}{D(p)}$$.
-
-Then
-
-$$N(p) = (1-p)D(p) + (2p-1)p(2-p).$$
-
-First term:
-
-$$(1-p)D(p) = (1-p)(1+2p-2p^2) = 1 + 2p - 2p^2 - p -2p^2 + 2p^3 = 1 + p - 4p^2 + 2p^3.$$
-
-Second term:
-
-$$(2p-1)p(2-p) = p(2p-1)(2-p).$$
-
-Compute $$(2p-1)(2-p)$$:
-
-$$(2p-1)(2-p) = 4p - 2p^2 - 2 + p = -2 + 5p - 2p^2.$$
-
-Multiply by $$p$$:
-
-$$(2p-1)p(2-p) = -2p + 5p^2 - 2p^3.$$
-
-Add both contributions:
+Computing the numerator explicitly: let $$\text{Acc}(p) = \frac{N(p)}{D(p)}$$, so $$N(p) = (1-p)D(p) + (2p-1)p(2-p)$$. The first term is $$(1-p)D(p) = (1-p)(1+2p-2p^2) = 1 + 2p - 2p^2 - p -2p^2 + 2p^3 = 1 + p - 4p^2 + 2p^3$$. The second term is $$(2p-1)p(2-p) = p(2p-1)(2-p)$$. Computing $$(2p-1)(2-p) = 4p - 2p^2 - 2 + p = -2 + 5p - 2p^2$$, and multiplying by $$p$$ gives $$(2p-1)p(2-p) = -2p + 5p^2 - 2p^3$$. Adding both contributions:
 
 $$\begin{aligned} N(p) &= \big(1 + p - 4p^2 + 2p^3\big) + \big(-2p + 5p^2 - 2p^3\big)\\ &= 1 + (p - 2p) + (-4p^2 + 5p^2) + (2p^3 - 2p^3)\\ &= 1 - p + p^2. \end{aligned}$$
 
-Therefore,
-
-$$\boxed{ \text{Acc}(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}. }$$
+Therefore, $$\boxed{ \text{Acc}(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}. }$$
 
 For sanity checks: $$p = 0.5$$ gives numerator $$= 1 - 0.5 + 0.25 = 0.75$$, denominator $$= 1 + 1 - 0.5 = 1.5$$, so $$\text{Acc}(0.5) = 0.75/1.5 = 0.5$$ (chance level, as expected). For $$p = 0.2$$: numerator $$= 1 - 0.2 + 0.04 = 0.84$$, denominator $$= 1 + 0.4 - 0.08 = 1.32$$, so $$\text{Acc}(0.2) \approx 0.636$$. For $$p = 0.8$$: numerator $$= 1 - 0.8 + 0.64 = 0.84$$, denominator $$= 1 + 1.6 - 1.28 = 1.32$$, so $$\text{Acc}(0.8) \approx 0.636$$.
 
 Note that $$\text{Acc}(p) \leq \max(p,1-p)$$ for all $$p \in (0,1)$$; the Neo does not reach the Bayes limit.
 
-#### 4.3.2.2 Simulation Results (Next-Bit Prediction)
+#### 4.3.2.2 Simulation Study
 
 We simulate the Neo for $$T = 200{,}000$$ ticks for each $$p \in \{0.2,0.5,0.8\}$$. The procedure is: (1) sample $$U_0, \dots, U_T$$ i.i.d. $$\text{Bernoulli}(p)$$, (2) initialize $$A(0)=B(0)=0$$, (3) for $$t = 0,\dots,T-1$$, update $$A(t+1),B(t+1)$$ using the Lex rules and use $$A(t+1)$$ as prediction for $$U_{t+1}$$, and (4) compute empirical accuracy $$\hat{\text{Acc}}(p) = \frac{1}{T}\sum_{t=0}^{T-1} \mathbf{1}\{A(t+1)=U_{t+1}\}$$.
 
