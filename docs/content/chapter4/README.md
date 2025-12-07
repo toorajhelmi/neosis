@@ -180,156 +180,65 @@ When the mean drift is non-positive, the Neo will eventually die with probabilit
 
 ### 4.3.2 p-Estimator Neo
 
-We now consider a more complex case where the Neo contains internal feedback loops that create temporal dependencies. This requires computing the stationary distribution of the internal state Markov chain to determine prediction accuracy and survivability.
+While the NeoVerse in this case is similar to what we had in case 1 (a binary stream), we would like to use a more complex Neo that can do better than a simple copy operation as it was in case 1. The NeoVerse emits a binary percept stream $$U_t \sim \text{Bernoulli}(p)$$, $$t = 0,1,2,\ldots$$, independently over time, with an unknown parameter $$p \in (0,1)$$. The Neo does not receive $$p$$; it only observes the bits $$U_t$$.
 
-The NeoVerse emits a binary percept stream
+The Neo will: (1) run its internal Lex dynamics driven by the input stream $$\{U_t\}$$, (2) produce a prediction for the next percept using node $$A$$: $$\hat{U}_{t+1} = A(t+1)$$, (3) achieve high next-bit prediction accuracy $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in the long run (stationary regime), and (4) use its internal stationary behavior as an implicit estimate of the bias $$p$$.
 
-$$U_t \sim \text{Bernoulli}(p), \quad t = 0,1,2,\ldots$$
+Because the stream is i.i.d. Bernoulli, the theoretical optimal predictor (with true $$p$$) is "always predict the majority bit," with accuracy $$\text{Acc}^*(p) = \max\{p, 1-p\}$$. So this Neo cannot ever reach 100% accuracy unless $$p \in \{0,1\}$$; the interesting question is how its architecture and feedback shape its stationary prediction accuracy and its implicit representation of $$p$$.
 
-independently over time, with an unknown parameter $$p \in (0,1)$$. The Neo does not receive $$p$$; it only observes the bits $$U_t$$.
+#### Architecture of the p-Estimator Neo
 
-We consider a small Neo whose job is to:
+The Neo has two internal nodes: **Node $$A$$** (the predictor node, whose state drives the output) and **Node $$B$$** (a memory node that tracks recent behavior of $$A$$). Node states are binary: $$A(t), B(t) \in \{0,1\}$$. We disable intrinsic node noise ($$\alpha_A = \alpha_B = 0$$) to isolate the effect of weights and feedback.
 
-1. Run its internal Lex dynamics driven by the input stream $$\{U_t\}$$.
-2. Produce a prediction for the next percept using node $$A$$: $$\hat{U}_{t+1} = A(t+1)$$.
-3. Achieve high next-bit prediction accuracy $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$, in the long run (stationary regime).
-4. Use its internal stationary behavior as an implicit estimate of the bias $$p$$.
+The Neo structure can be represented as:
 
-Because the stream is i.i.d. Bernoulli, the theoretical optimal predictor (with true $$p$$) is "always predict the majority bit," with accuracy
+```
+    U_t (input)
+      |
+      v
+    [ A ] <--+ (self-feedback)
+      |      |
+      |      |
+      v      |
+    [ B ] ---+ (memory feedback to A)
+      |
+      v
+   A(t+1) (output/prediction)
+```
 
-$$\text{Acc}^*(p) = \max\{p, 1-p\}.$$
-
-So this Neo cannot ever reach 100% accuracy unless $$p \in \{0,1\}$$; the interesting question is how its architecture + feedback shape its stationary prediction accuracy and its implicit representation of $$p$$.
-
-The Neo has two internal nodes:
-
-* **Node $$A$$** — the predictor node. Its state drives the output.
-* **Node $$B$$** — a memory node that tracks recent behavior of $$A$$.
-
-Node states are binary:
-
-$$A(t), B(t) \in \{0,1\}.$$
-
-We disable intrinsic node noise ($$\alpha_A = \alpha_B = 0$$) to isolate the effect of weights and feedback.
-
-**Node $$A$$ (Predictor)**
-
-Inputs to $$A$$:
-
-* $$U_t$$: current percept
-* $$A(t)$$: self-feedback
-* $$B(t)$$: input from memory node
-
-Lex update:
+**Node $$A$$ (Predictor)**: Inputs to $$A$$ are $$U_t$$ (current percept), $$A(t)$$ (self-feedback), and $$B(t)$$ (input from memory node). The Lex update is
 
 $$A(t+1) = H\big(2U_t + 1\cdot A(t) - 2\cdot B(t) - 1\big),$$
 
 where $$H(x) = 1$$ if $$x \geq 0$$ and $$0$$ otherwise.
 
-**Node $$B$$ (Memory)**
+**Node $$B$$ (Memory)**: Inputs to $$B$$ are $$A(t)$$ (previous predictor state). The Lex update is $$B(t+1) = H\big(A(t) - 0.5\big)$$. So $$B(t+1) = 1$$ iff $$A(t) = 1$$; otherwise $$B(t+1) = 0$$. In words: $$B$$ copies $$A$$ with a one-tick delay, providing a crude memory of whether $$A$$ was recently active.
 
-Inputs to $$B$$:
-
-* $$A(t)$$: previous predictor state
-
-Lex update:
-
-$$B(t+1) = H\big(A(t) - 0.5\big).$$
-
-So $$B(t+1) = 1$$ iff $$A(t) = 1$$; otherwise $$B(t+1) = 0$$.
-
-In words: $$B$$ copies $$A$$ with a one-tick delay, providing a crude memory of whether $$A$$ was recently active.
-
-**Prediction Rule**
-
-At time $$t$$:
-
-1. The Neo observes $$U_t$$.
-2. It updates $$A(t+1), B(t+1)$$ via the rules above.
-3. It uses $$\hat{U}_{t+1} = A(t+1)$$ as its prediction for the next percept $$U_{t+1}$$.
-
-We then measure
-
-$$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$
-
-in the stationary regime.
+**Prediction Rule**: At time $$t$$, the Neo observes $$U_t$$, updates $$A(t+1), B(t+1)$$ via the rules above, and uses $$\hat{U}_{t+1} = A(t+1)$$ as its prediction for the next percept $$U_{t+1}$$. We then measure $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in the stationary regime.
 
 #### 4.3.2.1 Markov Chain over Internal States
 
-Define the internal state:
+Define the internal state as $$S_t = (A(t), B(t)) \in \{0,1\}^2$$. There are four possible internal states: $$s_0 = (0,0)$$, $$s_1 = (0,1)$$, $$s_2 = (1,0)$$, and $$s_3 = (1,1)$$. At each tick, given $$S_t$$ and $$U_t$$, the next state $$S_{t+1} = (A(t+1), B(t+1))$$ is deterministically defined by the Lex rules. Since $$U_t$$ is random with $$P(U_t = 1) = p$$, the process $$\{S_t\}$$ is a 4-state Markov chain with transition probabilities depending on $$p$$.
 
-$$S_t = (A(t), B(t)) \in \{0,1\}^2.$$
-
-There are four possible internal states:
-
-$$s_0 = (0,0), \quad s_1 = (0,1), \quad s_2 = (1,0), \quad s_3 = (1,1).$$
-
-At each tick, given $$S_t$$ and $$U_t$$, the next state $$S_{t+1} = (A(t+1), B(t+1))$$ is deterministically defined by the Lex rules. Since $$U_t$$ is random with $$P(U_t = 1) = p$$, the process $$\{S_t\}$$ is a 4-state Markov chain with transition probabilities depending on $$p$$.
-
-We now derive:
-
-1. The state transition map $$(S_t, U_t) \mapsto S_{t+1}$$.
-2. The transition matrix $$P(p)$$ over the 4 states.
-3. The stationary distribution $$\pi(p)$$.
-4. From that, the prediction accuracy $$\text{Acc}(p)$$.
+We now derive: (1) the state transition map $$(S_t, U_t) \mapsto S_{t+1}$$, (2) the transition matrix $$P(p)$$ over the 4 states, (3) the stationary distribution $$\pi(p)$$, and (4) from that, the prediction accuracy $$\text{Acc}(p)$$.
 
 **Deterministic Next State for Each $$S_t$$ and $$U_t$$**
 
-We explicitly compute $$S_{t+1} = (A(t+1),B(t+1))$$ for all four states and both values of $$U_t$$.
-
-Recall:
+We explicitly compute $$S_{t+1} = (A(t+1),B(t+1))$$ for all four states and both values of $$U_t$$. Recall the update rules:
 
 $$\begin{aligned} A(t+1) &= H(2U_t + A(t) - 2B(t) - 1),\\ B(t+1) &= H(A(t) - 0.5). \end{aligned}$$
 
-**Case 1:** $$S_t = s_0 = (A,B)=(0,0)$$
+**Case 1:** $$S_t = s_0 = (A,B)=(0,0)$$. If $$U_t = 0$$: $$a_A = 2\cdot 0 + 0 - 2\cdot 0 - 1 = -1 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$, so $$S_{t+1} = (0,0) = s_0$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 0 - 1 = 1 \Rightarrow A(t+1)=1$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$, so $$S_{t+1} = (1,0) = s_2$$.
 
-* If $$U_t = 0$$: $$a_A = 2\cdot 0 + 0 - 2\cdot 0 - 1 = -1 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$. So $$S_{t+1} = (0,0) = s_0$$.
-* If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 0 - 1 = 1 \Rightarrow A(t+1)=1$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$. So $$S_{t+1} = (1,0) = s_2$$.
+**Case 2:** $$S_t = s_1 = (0,1)$$. If $$U_t = 0$$: $$a_A = 0 + 0 - 2\cdot 1 - 1 = -3 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$, so $$S_{t+1} = (0,0) = s_0$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 2\cdot 1 - 1 = -1 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$, so $$S_{t+1} = (0,0) = s_0$$. Thus from $$s_1$$ we always go to $$s_0$$, regardless of $$U_t$$.
 
-**Case 2:** $$S_t = s_1 = (0,1)$$
+**Case 3:** $$S_t = s_2 = (1,0)$$. If $$U_t = 0$$: $$a_A = 0 + 1 - 0 - 1 = 0 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 0 - 1 = 2 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. From $$s_2$$ we always go to $$s_3$$, regardless of $$U_t$$.
 
-* If $$U_t = 0$$: $$a_A = 0 + 0 - 2\cdot 1 - 1 = -3 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$. So $$S_{t+1} = (0,0) = s_0$$.
-* If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 2\cdot 1 - 1 = -1 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$. So $$S_{t+1} = (0,0) = s_0$$.
-
-Thus from $$s_1$$ we always go to $$s_0$$, regardless of $$U_t$$.
-
-**Case 3:** $$S_t = s_2 = (1,0)$$
-
-* If $$U_t = 0$$: $$a_A = 0 + 1 - 0 - 1 = 0 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$. So $$S_{t+1} = (1,1) = s_3$$.
-* If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 0 - 1 = 2 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$. So $$S_{t+1} = (1,1) = s_3$$.
-
-From $$s_2$$ we always go to $$s_3$$, regardless of $$U_t$$.
-
-**Case 4:** $$S_t = s_3 = (1,1)$$
-
-* If $$U_t = 0$$: $$a_A = 0 + 1 - 2\cdot 1 - 1 = -2 \Rightarrow A(t+1)=0$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$. So $$S_{t+1} = (0,1) = s_1$$.
-* If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 2\cdot 1 - 1 = 0 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$. So $$S_{t+1} = (1,1) = s_3$$.
-
-So from $$s_3$$: $$U_t = 0 \Rightarrow s_1$$; $$U_t = 1 \Rightarrow s_3$$.
+**Case 4:** $$S_t = s_3 = (1,1)$$. If $$U_t = 0$$: $$a_A = 0 + 1 - 2\cdot 1 - 1 = -2 \Rightarrow A(t+1)=0$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$, so $$S_{t+1} = (0,1) = s_1$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 2\cdot 1 - 1 = 0 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. So from $$s_3$$: $$U_t = 0 \Rightarrow s_1$$; $$U_t = 1 \Rightarrow s_3$$.
 
 **Transition Matrix $$P(p)$$**
 
-Now we incorporate the randomness of $$U_t$$. Since $$P(U_t = 1) = p$$, $$P(U_t = 0) = 1-p$$, we can compute the Markov transition probabilities between the 4 states.
-
-Label states in order $$(s_0,s_1,s_2,s_3)$$.
-
-* From $$s_0$$:
-    * $$U_t=0$$ (prob $$1-p$$) → $$s_0$$
-    * $$U_t=1$$ (prob $$p$$) → $$s_2$$
-* Row 0: $$P_{0\rightarrow\cdot} = \big(1-p,\;0,\;p,\;0\big)$$.
-
-* From $$s_1$$:
-    * Always goes to $$s_0$$
-* Row 1: $$P_{1\rightarrow\cdot} = \big(1,\;0,\;0,\;0\big)$$.
-
-* From $$s_2$$:
-    * Always goes to $$s_3$$
-* Row 2: $$P_{2\rightarrow\cdot} = \big(0,\;0,\;0,\;1\big)$$.
-
-* From $$s_3$$:
-    * $$U_t=0$$ (prob $$1-p$$) → $$s_1$$
-    * $$U_t=1$$ (prob $$p$$) → $$s_3$$
-* Row 3: $$P_{3\rightarrow\cdot} = \big(0,\;1-p,\;0,\;p\big)$$.
+Now we incorporate the randomness of $$U_t$$. Since $$P(U_t = 1) = p$$ and $$P(U_t = 0) = 1-p$$, we can compute the Markov transition probabilities between the 4 states. Label states in order $$(s_0,s_1,s_2,s_3)$$. From $$s_0$$: $$U_t=0$$ (prob $$1-p$$) → $$s_0$$, $$U_t=1$$ (prob $$p$$) → $$s_2$$, so row 0 is $$P_{0\rightarrow\cdot} = \big(1-p,\;0,\;p,\;0\big)$$. From $$s_1$$: always goes to $$s_0$$, so row 1 is $$P_{1\rightarrow\cdot} = \big(1,\;0,\;0,\;0\big)$$. From $$s_2$$: always goes to $$s_3$$, so row 2 is $$P_{2\rightarrow\cdot} = \big(0,\;0,\;0,\;1\big)$$. From $$s_3$$: $$U_t=0$$ (prob $$1-p$$) → $$s_1$$, $$U_t=1$$ (prob $$p$$) → $$s_3$$, so row 3 is $$P_{3\rightarrow\cdot} = \big(0,\;1-p,\;0,\;p\big)$$.
 
 Collecting everything, the transition matrix is
 
@@ -341,74 +250,21 @@ Let $$\pi(p) = (\pi_0,\pi_1,\pi_2,\pi_3)$$ be the stationary distribution over s
 
 $$\pi = \pi P(p), \quad \pi_0+\pi_1+\pi_2+\pi_3 = 1.$$
 
-From $$\pi = \pi P$$, we get:
+From $$\pi = \pi P$$, we get: (1) coordinate 0: $$\pi_0 = \pi_0(1-p) + \pi_1$$, (2) coordinate 1: $$\pi_1 = (1-p)\pi_3$$, (3) coordinate 2: $$\pi_2 = p\pi_0$$, and (4) coordinate 3: $$\pi_3 = \pi_2 + p\pi_3$$.
 
-1. Coordinate 0: $$\pi_0 = \pi_0(1-p) + \pi_1$$.
-2. Coordinate 1: $$\pi_1 = (1-p)\pi_3$$.
-3. Coordinate 2: $$\pi_2 = p\pi_0$$.
-4. Coordinate 3: $$\pi_3 = \pi_2 + p\pi_3$$.
+We now solve step by step. From (4): $$\pi_3 = \pi_2 + p\pi_3 \Rightarrow \pi_3(1-p) = \pi_2 \Rightarrow \pi_3 = \frac{\pi_2}{1-p}$$. From (3) we know $$\pi_2 = p\pi_0$$, so $$\pi_3 = \frac{p\pi_0}{1-p}$$. From (2): $$\pi_1 = (1-p)\pi_3 = (1-p)\cdot \frac{p\pi_0}{1-p} = p\pi_0$$. From (1): $$\pi_0 = (1-p)\pi_0 + \pi_1 \Rightarrow \pi_0 - (1-p)\pi_0 = \pi_1 \Rightarrow p\pi_0 = \pi_1$$, which is consistent with what we already got, so no new constraint.
 
-We now solve step by step.
+Now apply normalization: $$\pi_0 + \pi_1 + \pi_2 + \pi_3 = 1$$. Substitute $$\pi_1 = p\pi_0$$, $$\pi_2 = p\pi_0$$, and $$\pi_3 = \dfrac{p\pi_0}{1-p}$$: $$\pi_0 + p\pi_0 + p\pi_0 + \frac{p\pi_0}{1-p} = 1$$. Factor $$\pi_0$$: $$\pi_0\left(1 + 2p + \frac{p}{1-p}\right) = 1$$.
 
-From (4):
+Compute the bracket: $$1 + 2p + \frac{p}{1-p} = \frac{(1-p)(1+2p) + p}{1-p} = \frac{1 + 2p - p - 2p^2 + p}{1-p} = \frac{1 + 2p - 2p^2}{1-p}$$. Define $$D(p) = 1 + 2p - 2p^2$$. Then: $$\pi_0 \cdot \frac{D(p)}{1-p} = 1 \Rightarrow \pi_0 = \frac{1-p}{D(p)}$$.
 
-$$\pi_3 = \pi_2 + p\pi_3 \quad\Rightarrow\quad \pi_3(1-p) = \pi_2 \quad\Rightarrow\quad \pi_3 = \frac{\pi_2}{1-p}.$$
-
-From (3) we know $$\pi_2 = p\pi_0$$, so:
-
-$$\pi_3 = \frac{p\pi_0}{1-p}.$$
-
-From (2):
-
-$$\pi_1 = (1-p)\pi_3 = (1-p)\cdot \frac{p\pi_0}{1-p} = p\pi_0.$$
-
-From (1):
-
-$$\pi_0 = (1-p)\pi_0 + \pi_1 \quad\Rightarrow\quad \pi_0 - (1-p)\pi_0 = \pi_1 \quad\Rightarrow\quad p\pi_0 = \pi_1,$$
-
-which is consistent with what we already got, so no new constraint.
-
-Now apply normalization:
-
-$$\pi_0 + \pi_1 + \pi_2 + \pi_3 = 1.$$
-
-Substitute $$\pi_1 = p\pi_0$$, $$\pi_2 = p\pi_0$$, and $$\pi_3 = \dfrac{p\pi_0}{1-p}$$:
-
-$$\pi_0 + p\pi_0 + p\pi_0 + \frac{p\pi_0}{1-p} = 1.$$
-
-Factor $$\pi_0$$:
-
-$$\pi_0\left(1 + 2p + \frac{p}{1-p}\right) = 1.$$
-
-Compute the bracket:
-
-$$1 + 2p + \frac{p}{1-p} = \frac{(1-p)(1+2p) + p}{1-p} = \frac{1 + 2p - p - 2p^2 + p}{1-p} = \frac{1 + 2p - 2p^2}{1-p}.$$
-
-Define
-
-$$D(p) = 1 + 2p - 2p^2.$$
-
-Then:
-
-$$\pi_0 \cdot \frac{D(p)}{1-p} = 1 \quad\Rightarrow\quad \pi_0 = \frac{1-p}{D(p)}.$$
-
-And therefore:
-
-$$\begin{aligned} \pi_1 &= p \pi_0 = \frac{p(1-p)}{D(p)},\\[4pt] \pi_2 &= p \pi_0 = \frac{p(1-p)}{D(p)},\\[4pt] \pi_3 &= \frac{p}{1-p}\pi_0 = \frac{p}{1-p}\cdot \frac{1-p}{D(p)} = \frac{p}{D(p)}. \end{aligned}$$
-
-So the stationary distribution is:
+And therefore: $$\pi_1 = p \pi_0 = \frac{p(1-p)}{D(p)}$$, $$\pi_2 = p \pi_0 = \frac{p(1-p)}{D(p)}$$, and $$\pi_3 = \frac{p}{1-p}\pi_0 = \frac{p}{1-p}\cdot \frac{1-p}{D(p)} = \frac{p}{D(p)}$$. So the stationary distribution is:
 
 $$\boxed{ \pi(p) = \left( \frac{1-p}{1+2p-2p^2},\; \frac{p(1-p)}{1+2p-2p^2},\; \frac{p(1-p)}{1+2p-2p^2},\; \frac{p}{1+2p-2p^2} \right). }$$
 
 **Stationary Probability that $$A = 1$$**
 
-The prediction node $$A$$ is 1 in states $$s_2 = (1,0)$$ and $$s_3 = (1,1)$$. Thus:
-
-$$P_\pi(A(t) = 1) = \pi_2 + \pi_3 = \frac{p(1-p)}{D(p)} + \frac{p}{D(p)} = \frac{p(2-p)}{D(p)},$$
-
-where $$D(p) = 1 + 2p - 2p^2$$.
-
-So:
+The prediction node $$A$$ is 1 in states $$s_2 = (1,0)$$ and $$s_3 = (1,1)$$. Thus: $$P_\pi(A(t) = 1) = \pi_2 + \pi_3 = \frac{p(1-p)}{D(p)} + \frac{p}{D(p)} = \frac{p(2-p)}{D(p)}$$, where $$D(p) = 1 + 2p - 2p^2$$. So:
 
 $$\boxed{ P_\pi(A=1) = \frac{p(2-p)}{1+2p-2p^2}. }$$
 
@@ -416,12 +272,7 @@ Since the chain is stationary, this is also the distribution of $$A(t+1)$$, $$A(
 
 **Prediction Accuracy $$\text{Acc}(p)$$**
 
-We now derive $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in closed form.
-
-Key points:
-
-* $$U_{t+1}$$ is independent of $$(S_t, U_t)$$ and has distribution $$\text{Bernoulli}(p)$$.
-* Under stationarity, the marginal distribution of $$A(t+1)$$ is the same as that of $$A(t)$$, i.e., $$P(A(t+1)=1) = P_\pi(A=1) = q(p) = \frac{p(2-p)}{D(p)}$$. So $$P(A(t+1)=0) = 1 - q(p)$$.
+We now derive $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in closed form. Key points: $$U_{t+1}$$ is independent of $$(S_t, U_t)$$ and has distribution $$\text{Bernoulli}(p)$$. Under stationarity, the marginal distribution of $$A(t+1)$$ is the same as that of $$A(t)$$, i.e., $$P(A(t+1)=1) = P_\pi(A=1) = q(p) = \frac{p(2-p)}{D(p)}$$, so $$P(A(t+1)=0) = 1 - q(p)$$.
 
 Given these, we can write:
 
@@ -467,26 +318,13 @@ Therefore,
 
 $$\boxed{ \text{Acc}(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}. }$$
 
-For sanity checks:
-
-* $$p = 0.5$$: Numerator $$= 1 - 0.5 + 0.25 = 0.75$$, Denominator $$= 1 + 1 - 0.5 = 1.5$$, $$\text{Acc}(0.5) = 0.75/1.5 = 0.5$$ (chance level, as expected).
-* $$p = 0.2$$: Numerator $$= 1 - 0.2 + 0.04 = 0.84$$, Denominator $$= 1 + 0.4 - 0.08 = 1.32$$, $$\text{Acc}(0.2) \approx 0.636$$.
-* $$p = 0.8$$: Numerator $$= 1 - 0.8 + 0.64 = 0.84$$, Denominator $$= 1 + 1.6 - 1.28 = 1.32$$, $$\text{Acc}(0.8) \approx 0.636$$.
+For sanity checks: $$p = 0.5$$ gives numerator $$= 1 - 0.5 + 0.25 = 0.75$$, denominator $$= 1 + 1 - 0.5 = 1.5$$, so $$\text{Acc}(0.5) = 0.75/1.5 = 0.5$$ (chance level, as expected). For $$p = 0.2$$: numerator $$= 1 - 0.2 + 0.04 = 0.84$$, denominator $$= 1 + 0.4 - 0.08 = 1.32$$, so $$\text{Acc}(0.2) \approx 0.636$$. For $$p = 0.8$$: numerator $$= 1 - 0.8 + 0.64 = 0.84$$, denominator $$= 1 + 1.6 - 1.28 = 1.32$$, so $$\text{Acc}(0.8) \approx 0.636$$.
 
 Note that $$\text{Acc}(p) \leq \max(p,1-p)$$ for all $$p \in (0,1)$$; the Neo does not reach the Bayes limit.
 
 #### 4.3.2.2 Simulation Results (Next-Bit Prediction)
 
-We simulate the Neo for $$T = 200{,}000$$ ticks for each $$p \in \{0.2,0.5,0.8\}$$.
-
-Procedure:
-
-1. Sample $$U_0, \dots, U_T$$ i.i.d. $$\text{Bernoulli}(p)$$.
-2. Initialize $$A(0)=B(0)=0$$.
-3. For $$t = 0,\dots,T-1$$:
-    * Update $$A(t+1),B(t+1)$$ using the Lex rules.
-    * Use $$A(t+1)$$ as prediction for $$U_{t+1}$$.
-4. Compute empirical accuracy $$\hat{\text{Acc}}(p) = \frac{1}{T}\sum_{t=0}^{T-1} \mathbf{1}\{A(t+1)=U_{t+1}\}$$.
+We simulate the Neo for $$T = 200{,}000$$ ticks for each $$p \in \{0.2,0.5,0.8\}$$. The procedure is: (1) sample $$U_0, \dots, U_T$$ i.i.d. $$\text{Bernoulli}(p)$$, (2) initialize $$A(0)=B(0)=0$$, (3) for $$t = 0,\dots,T-1$$, update $$A(t+1),B(t+1)$$ using the Lex rules and use $$A(t+1)$$ as prediction for $$U_{t+1}$$, and (4) compute empirical accuracy $$\hat{\text{Acc}}(p) = \frac{1}{T}\sum_{t=0}^{T-1} \mathbf{1}\{A(t+1)=U_{t+1}\}$$.
 
 Sample outcomes ($$T$$ large):
 
