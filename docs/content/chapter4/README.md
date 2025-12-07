@@ -1,4 +1,4 @@
-# Chapter 4 — Micro Static Analysis of a Single Neo
+# Chapter {CH} — Micro Static Analysis of a Single Neo
 
 A Neo survives by predicting the NeoVerse (NV). At every tick, it receives a small snapshot of the world—$$m$$ binary inputs $$U_t \in \{0,1\}^m$$—and updates its internal state according to the Lex rule. From this updated state it produces an output vector $$Y_t$$, interpreted as its prediction of the next NV state $$U_{t+1}$$. Correct predictions generate Sparks, which increase the Neo's Nex. Regardless of correctness, each update consumes a fixed amount of Nex simply to remain alive.
 
@@ -8,7 +8,7 @@ Because the computation is fixed, the Neo eventually settles into a long-run sta
 
 The purpose of this chapter is to determine how much predictive ability a fixed Neo possesses purely from its stationary behavior. By characterizing how its stationary output relates to the NV's stationary dynamics, we can determine its expected Nex gain, its expected Nex loss, and ultimately whether it will survive.
 
-## 4.1 Neo as a Predictive System
+## {CH}.1 Neo as a Predictive System
 
 Prediction is only meaningful when the environment exhibits stable statistical structure. If the NeoVerse changed its distribution over time—drifting, aging, or altering its transition rules—then a static Neo could not maintain predictive accuracy. Even though learning-capable Neos will be treated later, the static Neo analyzed here can only exploit whatever statistical regularities are already present. Its predictive power depends entirely on whether the relationship between $$U_t$$ and $$U_{t+1}$$ remains consistent over time.
 
@@ -24,7 +24,7 @@ converges to a well-defined stationary distribution. All predictive properties o
 
 A stationary NV therefore makes micro analysis possible: it ensures that a fixed Neo has a well-defined, time-invariant predictive relationship with the environment.
 
-## 4.2 Neo's Survivability
+## {CH}.2 Neo's Survivability
 
 Once the Neo and the perceived NeoVerse (NV) projection settle into their joint stationary regime, their long-run behavior is captured by the stationary distribution
 
@@ -94,7 +94,7 @@ $$\Xi = \Xi(\pi(x, u), \, g, \, P(U^+ \mid U), \, r, \, c_\ell, \, E_0).$$
 
 The stationary distribution $$\pi(x, u)$$ encodes how the Neo's internal state co-varies with its perceived environment; the output mapping $$g$$ and NV dynamics $$P(U^+ \mid U)$$ determine prediction accuracy; and the Spark reward $$r$$, living cost $$c_\ell$$, and initial Nex $$E_0$$ translate predictive performance into a concrete survival probability.
 
-## 4.3 Neo Motifs and Analytical Examples
+## {CH}.3 Neo Motifs and Analytical Examples
 
 So far we have treated the Neo in full generality, expressing survivability $$\Xi$$ in terms of its stationary interaction with the NeoVerse projection. In practice, however, it is rarely possible to write down the stationary distribution $$\pi(x, u)$$ in closed form for an arbitrary topology. To make progress, we analyze Neo motifs: small, structurally simple Neos embedded in simple but nontrivial NeoVerse models. These motifs give us concrete, interpretable examples where we can compute both the stationary behavior and the resulting survivability analytically.
 
@@ -102,7 +102,7 @@ The analytical approach depends on the complexity of the Neo's internal dynamics
 
 We present two cases that illustrate these different analytical approaches. The first case considers a simple "copy Neo" that directly stores the current NeoVerse projection without internal feedback. This allows us to use maximum likelihood estimation to find the optimal decoder and compute accuracy directly. The second case examines a more complex "p-estimator Neo" with internal feedback loops that create memory and temporal dependencies. For this case, we must compute the stationary distribution of the internal state Markov chain to determine prediction accuracy and survivability.
 
-### 4.3.1 m-Bit Markov NeoVerse and the Copy Neo
+### {CH}.3.1 m-Bit Markov NeoVerse and the Copy Neo
 
 We consider an $$m$$-bit NeoVerse (NV) projection $$U_t = (U_t(1), \ldots, U_t(m)) \in \{0,1\}^m$$, where each coordinate evolves as an independent binary Markov chain with flip probability $$\alpha \in [0,1]$$. The transition probabilities are
 
@@ -178,7 +178,7 @@ $$\Xi \approx 1 - \exp\left(-\frac{2E_0 (r(1-\alpha)^m - c_\ell)}{r^2 (1-\alpha)
 
 When the mean drift is non-positive, the Neo will eventually die with probability one. When the drift is positive, survivability increases with initial energy $$E_0$$ and with the ratio of mean drift to variance, reflecting the balance between expected gains and the risk of stochastic fluctuations leading to death.
 
-### 4.3.2 p-Estimator Neo
+### {CH}.3.2 p-Estimator Neo
 
 While the NeoVerse in this case is similar to what we had in case 1 (a binary stream), we would like to use a more complex Neo that can do better than a simple copy operation as it was in case 1. The NeoVerse emits a binary percept stream $$U_t \sim \text{Bernoulli}(p)$$, $$t = 0,1,2,\ldots$$, independently over time, with an unknown parameter $$p \in (0,1)$$. The Neo does not receive $$p$$; it only observes the bits $$U_t$$.
 
@@ -216,7 +216,7 @@ where $$H(x) = 1$$ if $$x \geq 0$$ and $$0$$ otherwise.
 
 **Prediction Rule**: At time $$t$$, the Neo observes $$U_t$$, updates $$A(t+1), B(t+1)$$ via the rules above, and uses $$\hat{U}_{t+1} = A(t+1)$$ as its prediction for the next percept $$U_{t+1}$$. We then measure $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in the stationary regime.
 
-#### 4.3.2.1 Markov Chain over Internal States
+#### {CH}.3.2.1 Markov Chain over Internal States
 
 Define the internal state as $$S_t = (A(t), B(t)) \in \{0,1\}^2$$. There are four possible internal states: $$s_0 = (0,0)$$, $$s_1 = (0,1)$$, $$s_2 = (1,0)$$, and $$s_3 = (1,1)$$. At each tick, given $$S_t$$ and $$U_t$$, the next state $$S_{t+1} = (A(t+1), B(t+1))$$ is deterministically defined by the Lex rules. Since $$U_t$$ is random with $$P(U_t = 1) = p$$, the process $$\{S_t\}$$ is a 4-state Markov chain with transition probabilities depending on $$p$$.
 
@@ -322,7 +322,7 @@ For sanity checks: $$p = 0.5$$ gives numerator $$= 1 - 0.5 + 0.25 = 0.75$$, deno
 
 Note that $$\text{Acc}(p) \leq \max(p,1-p)$$ for all $$p \in (0,1)$$; the Neo does not reach the Bayes limit.
 
-#### 4.3.2.2 Simulation Results (Next-Bit Prediction)
+#### {CH}.3.2.2 Simulation Results (Next-Bit Prediction)
 
 We simulate the Neo for $$T = 200{,}000$$ ticks for each $$p \in \{0.2,0.5,0.8\}$$. The procedure is: (1) sample $$U_0, \dots, U_T$$ i.i.d. $$\text{Bernoulli}(p)$$, (2) initialize $$A(0)=B(0)=0$$, (3) for $$t = 0,\dots,T-1$$, update $$A(t+1),B(t+1)$$ using the Lex rules and use $$A(t+1)$$ as prediction for $$U_{t+1}$$, and (4) compute empirical accuracy $$\hat{\text{Acc}}(p) = \frac{1}{T}\sum_{t=0}^{T-1} \mathbf{1}\{A(t+1)=U_{t+1}\}$$.
 
