@@ -270,9 +270,27 @@ Since the chain is stationary, this is also the distribution of $$A(t+1)$$, $$A(
 
 We now derive $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in closed form. Key points: $$U_{t+1}$$ is independent of $$(S_t, U_t)$$ and has distribution $$\text{Bernoulli}(p)$$. Under stationarity, the marginal distribution of $$A(t+1)$$ is the same as that of $$A(t)$$, i.e., $$P(A(t+1)=1) = P_\pi(A=1) = q(p) = \frac{p(2-p)}{D(p)}$$, so $$P(A(t+1)=0) = 1 - q(p)$$.
 
-Given these, we can write: $$\text{Acc}(p) = P(A(t+1)=1, U_{t+1}=1) + P(A(t+1)=0, U_{t+1}=0) = P(A(t+1)=1)\,P(U_{t+1}=1) + P(A(t+1)=0)\,P(U_{t+1}=0) = q(p)\cdot p + (1-q(p))\cdot (1-p)$$. Plugging $$q(p) = \dfrac{p(2-p)}{D(p)}$$ gives $$\text{Acc}(p) = \frac{p(2-p)}{D(p)}\cdot p + \left(1 - \frac{p(2-p)}{D(p)}\right)\cdot (1-p)$$. Using the alternative form: $$\text{Acc}(p) = (1-p) + (2p-1)\,q(p) = (1-p) + (2p-1)\frac{p(2-p)}{D(p)}$$.
+Given these, we can write:
 
-Computing the numerator explicitly: let $$\text{Acc}(p) = \frac{N(p)}{D(p)}$$, so $$N(p) = (1-p)D(p) + (2p-1)p(2-p)$$. The first term is $$(1-p)D(p) = (1-p)(1+2p-2p^2) = 1 + 2p - 2p^2 - p -2p^2 + 2p^3 = 1 + p - 4p^2 + 2p^3$$. The second term is $$(2p-1)p(2-p) = p(2p-1)(2-p)$$. Computing $$(2p-1)(2-p) = 4p - 2p^2 - 2 + p = -2 + 5p - 2p^2$$, and multiplying by $$p$$ gives $$(2p-1)p(2-p) = -2p + 5p^2 - 2p^3$$. Adding both contributions:
+$$\begin{aligned} \text{Acc}(p) &= P(A(t+1)=1, U_{t+1}=1) + P(A(t+1)=0, U_{t+1}=0)\\ &= P(A(t+1)=1)\,P(U_{t+1}=1) + P(A(t+1)=0)\,P(U_{t+1}=0)\\ &= q(p)\cdot p + (1-q(p))\cdot (1-p). \end{aligned}$$
+
+Plugging $$q(p) = \dfrac{p(2-p)}{D(p)}$$ gives:
+
+$$\text{Acc}(p) = \frac{p(2-p)}{D(p)}\cdot p + \left(1 - \frac{p(2-p)}{D(p)}\right)\cdot (1-p).$$
+
+Using the alternative form:
+
+$$\text{Acc}(p) = (1-p) + (2p-1)\,q(p) = (1-p) + (2p-1)\frac{p(2-p)}{D(p)}.$$
+
+Computing the numerator explicitly: let $$\text{Acc}(p) = \frac{N(p)}{D(p)}$$, so $$N(p) = (1-p)D(p) + (2p-1)p(2-p)$$. The first term is:
+
+$$(1-p)D(p) = (1-p)(1+2p-2p^2) = 1 + 2p - 2p^2 - p -2p^2 + 2p^3 = 1 + p - 4p^2 + 2p^3.$$
+
+The second term is $$(2p-1)p(2-p) = p(2p-1)(2-p)$$. Computing $$(2p-1)(2-p) = 4p - 2p^2 - 2 + p = -2 + 5p - 2p^2$$, and multiplying by $$p$$ gives:
+
+$$(2p-1)p(2-p) = -2p + 5p^2 - 2p^3.$$
+
+Adding both contributions:
 
 $$\begin{aligned} N(p) &= \big(1 + p - 4p^2 + 2p^3\big) + \big(-2p + 5p^2 - 2p^3\big)\\ &= 1 + (p - 2p) + (-4p^2 + 5p^2) + (2p^3 - 2p^3)\\ &= 1 - p + p^2. \end{aligned}$$
 
