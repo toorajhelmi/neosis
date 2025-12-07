@@ -98,19 +98,27 @@ The stationary distribution $$\pi(x, u)$$ encodes how the Neo's internal state c
 
 So far we have treated the Neo in full generality, expressing survivability $$\Xi$$ in terms of its stationary interaction with the NeoVerse projection. In practice, however, it is rarely possible to write down the stationary distribution $$\pi(x, u)$$ in closed form for an arbitrary topology. To make progress, we analyze Neo motifs: small, structurally simple Neos embedded in simple but nontrivial NeoVerse models. These motifs give us concrete, interpretable examples where we can compute both the stationary behavior and the resulting survivability analytically.
 
-We start with one of the simplest—and most revealing—motifs: a "copy Neo" interacting with an $$m$$-bit Markov NeoVerse projection. Despite its simplicity, this setup already exhibits clear trade-offs between environmental noise, task dimensionality, and reward structure. We will derive closed forms for $$\Xi$$ under two reward regimes: one where Sparks are granted only when the entire prediction vector is correct, and one where Sparks are proportional to the fraction of correctly predicted bits. In the second case, the Neo retains the last $$L$$ percepts, producing an $$L$$-dimensional internal state that evolves as a shift register. Its stationary distribution becomes non-trivial, reflecting the joint structure induced by noise, temporal aggregation, and the Lex update rule.
+The analytical approach depends on the complexity of the Neo's internal dynamics. For simple cases where the Neo's behavior can be characterized directly without feedback loops, we can use maximum likelihood methods to determine optimal predictions and compute survivability. However, when the Neo contains internal feedback loops that create complex temporal dependencies, the analysis requires computing the stationary distribution of the joint Markov chain over internal states and NeoVerse inputs. From this stationary distribution, we can derive prediction accuracy and ultimately survivability.
 
-### 4.3.1 m-Bit Markov NeoVerse and the Copy Neo 
+We present two cases that illustrate these different analytical approaches. The first case considers a simple "copy Neo" that directly stores the current NeoVerse projection without internal feedback. This allows us to use maximum likelihood estimation to find the optimal decoder and compute accuracy directly. The second case examines a more complex "p-estimator Neo" with internal feedback loops that create memory and temporal dependencies. For this case, we must compute the stationary distribution of the internal state Markov chain to determine prediction accuracy and survivability.
 
-We consider an $$m$$-bit NeoVerse (NV) projection $$U_t = (U_t(1), \ldots, U_t(m)) \in \{0,1\}^m$$, where each coordinate evolves as an independent binary Markov chain with flip probability $$\alpha \in [0,1]$$:
+### 4.3.1 m-Bit Markov NeoVerse and the Copy Neo
+
+We consider an $$m$$-bit NeoVerse (NV) projection
+
+$$U_t = (U_t(1), \ldots, U_t(m)) \in \{0,1\}^m,$$
+
+where each coordinate evolves as an independent binary Markov chain with flip probability $$\alpha \in [0,1]$$:
 
 $$P(U_{t+1}(j) \neq U_t(j)) = \alpha, \quad P(U_{t+1}(j) = U_t(j)) = 1 - \alpha.$$
 
-Each coordinate is symmetric, so in its stationary regime
+A copy Neo directly stores the current NV projection,
 
-$$P(U_t(j) = 0) = P(U_t(j) = 1) = \frac{1}{2}.$$
+$$X_t = U_t,$$
 
-A copy Neo directly stores the current NV projection, so its internal state is $$X_t = U_t$$, and its output is the readout $$Y_t = g(X_t) = X_t$$.
+and its output is
+
+$$Y_t = g(X_t) = X_t.$$
 
 #### Joint Stationary Distribution $$\pi(x, u)$$
 
@@ -154,209 +162,405 @@ $$P(U^+ = u', \, Y = y) = 2^{-m} \prod_{j=1}^m \left[(1-\alpha) \mathbb{1}\{u'_j
 
 #### Conditional Prediction Law
 
-Using Bayes' rule,
+Since $$Y_t = U_t$$,
 
-$$P(U^+ = u' \mid Y = y) = \frac{P(U^+ = u', \, Y = y)}{P(Y = y)} = \prod_{j=1}^m \left[(1-\alpha) \mathbb{1}\{u'_j = y_j\} + \alpha \, \mathbb{1}\{u'_j \neq y_j\}\right].$$
+$$P(U_{t+1} = u' \mid Y_t = y) = P(U_{t+1} = u' \mid U_t = y).$$
 
-The most likely next NV is obtained by maximizing this expression; the maximizing pattern is $$u' = y$$. Hence the optimal decoder is
+Each bit evolves independently, so
+
+$$P(U_{t+1}(j) = u'_j \mid U_t(j) = y_j) = \begin{cases} 1-\alpha, & u'_j = y_j, \\ \alpha, & u'_j \neq y_j. \end{cases}$$
+
+Thus,
+
+$$P(U_{t+1} = u' \mid Y_t = y) = \prod_{j=1}^m \left[(1-\alpha) \mathbb{1}\{u'_j = y_j\} + \alpha \, \mathbb{1}\{u'_j \neq y_j\}\right].$$
+
+#### Optimal Decoder
+
+To choose the most likely next vector $$u'$$, we maximize the above product over all $$u' \in \{0,1\}^m$$.
+
+Each bit contributes either:
+- a factor $$1-\alpha$$ if we match the current bit $$y_j$$,
+- a factor $$\alpha$$ if we flip it.
+
+When $$\alpha < 0.5$$, matching gives the larger factor. Because bits are independent, maximizing the full product means maximizing each factor individually, giving
 
 $$\hat{u}(y) = y.$$
 
+(If $$\alpha > 0.5$$, the maximizing bitwise choice would be $$1-y$$; at $$\alpha = 0.5$$ all predictions are equally likely.)
+
+In the predictive regime $$\alpha < 0.5$$, the optimal decoder is therefore
+
+$$\hat{u}(Y_t) = Y_t.$$
+
 #### Prediction Accuracy
 
-The accuracy is
+Accuracy is
 
-$$\text{Acc} = P(\hat{u}(Y) = U^+) = \sum_{y \in \{0,1\}^m} P(Y = y) \, P(U^+ = y \mid Y = y).$$
+$$\text{Acc} = P(\hat{u}(Y_t) = U_{t+1}) = P(U_{t+1} = U_t).$$
 
-Using $$P(Y = y) = 2^{-m}$$ and
+Since each bit stays the same with probability $$1-\alpha$$,
 
-$$P(U^+ = y \mid Y = y) = \prod_{j=1}^m (1-\alpha) = (1-\alpha)^m,$$
+$$P(U_{t+1} = U_t) = (1-\alpha)^m.$$
 
-we obtain
+Thus
 
 $$\text{Acc} = (1-\alpha)^m.$$
 
 #### Energy Drift and Variance
 
-At each tick,
-
-$$\Delta E_t = r \, \mathbb{1}\{\hat{u}(Y_t) = U^+\} - c_\ell.$$
-
-Since correctness is Bernoulli with success probability $$\text{Acc}$$,
-
-$$\mu = \mathbb{E}[\Delta E_t] = r \, \text{Acc} - c_\ell = r(1-\alpha)^m - c_\ell,$$
-
-$$\sigma^2 = \text{Var}(\Delta E_t) = r^2 \, \text{Acc}(1 - \text{Acc}) = r^2 (1-\alpha)^m [1 - (1-\alpha)^m].$$
-
-#### Survivability
-
-Let $$E_t$$ evolve as
-
-$$E_{t+1} = E_t + \Delta E_t, \quad E_0 > 0,$$
-
-with absorption at $$E_t = 0$$. Using the diffusion approximation,
-
-$$\Xi = 0 \quad \text{if } r \, \text{Acc} \leq c_\ell,$$
-
-and otherwise
-
-$$\Xi \approx 1 - \exp\left(-\frac{2\mu E_0}{\sigma^2}\right) = 1 - \exp\left(-\frac{2E_0}{r^2 (1-\alpha)^m [1 - (1-\alpha)^m]} (r(1-\alpha)^m - c_\ell)\right).$$
-
-### 4.3.2 Majority-over-3 Neo
-
-We now consider a Neo whose internal state consists of the last three observations of a 1-bit NeoVerse (NV). The NV is a symmetric binary Markov chain $$U_t \in \{0,1\}$$ with $$P(U_{t+1} \neq U_t) = \alpha$$ and $$P(U_{t+1} = U_t) = 1 - \alpha$$. In stationarity, $$P(U_t = 0) = P(U_t = 1) = \frac{1}{2}$$.
-
-The Neo stores the last three NV values $$X_t = (U_t, U_{t-1}, U_{t-2}) \in \{0,1\}^3$$, and outputs the majority of these three bits, $$Y_t = g(X_t) = \text{Maj}(X_t) \in \{0,1\}$$. As a predictor, the Neo uses the simple rule $$\hat{u}(Y_t) = Y_t$$, i.e., it predicts that the next NV bit $$U_{t+1}$$ will equal the majority of the last three observations.
-
-#### Joint Stationary Distribution $$\pi(x, u)$$
-
-We analyze the joint process $$(X_t, U_t)$$ in its stationary regime. The joint stationary distribution is
-
-$$\pi(x, u) = \lim_{t \to \infty} P(X_t = x, \, U_t = u),$$
-
-with the constraint that the first coordinate of $$x$$ must equal the current NV state: $$x = (x_0, x_1, x_2)$$, $$x_0 = U_t = u$$. Hence $$\pi(x, u) = 0$$ if $$x_0 \neq u$$, and
-
-$$\pi(x, u) = \pi_3(x) \, \mathbb{1}\{x_0 = u\},$$
-
-where $$\pi_3(x) = P(X_t = x)$$ is the stationary distribution over 3-bit windows.
-
-To compute $$\pi_3(x)$$, interpret $$x_0 = U_t$$, $$x_1 = U_{t-1}$$, $$x_2 = U_{t-2}$$. In stationarity,
-
-$$\pi_3(x) = P(U_{t-2} = x_2) \, P(U_{t-1} = x_1 \mid U_{t-2} = x_2) \, P(U_t = x_0 \mid U_{t-1} = x_1).$$
-
-The base term is $$P(U_{t-2} = x_2) = \frac{1}{2}$$. The Markov transitions are
-
-$$P(U_{s+1} = a \mid U_s = b) = \begin{cases} 1-\alpha, & a = b, \\ \alpha, & a \neq b. \end{cases}$$
-
-Define the number of flips inside the 3-bit pattern
-
-$$\Delta(x) = \mathbb{1}\{x_1 \neq x_0\} + \mathbb{1}\{x_2 \neq x_1\} \in \{0,1,2\}.$$
-
-Then the number of non-flips is $$2 - \Delta(x)$$. The stationary probability of a given pattern is
-
-$$\pi_3(x) = \frac{1}{2} (1-\alpha)^{2-\Delta(x)} \alpha^{\Delta(x)}.$$
-
-Thus the joint SD is
-
-$$\pi(x, u) = \frac{1}{2} (1-\alpha)^{2-\Delta(x)} \alpha^{\Delta(x)} \, \mathbb{1}\{x_0 = u\}.$$
-
-#### Accuracy of the Majority-3 Predictor
-
-We now compute the prediction accuracy
-
-$$\text{Acc}_3 = P(\hat{u}(Y_t) = U_{t+1}) = P(Y_t = U_{t+1}).$$
-
-Because $$Y_t = g(X_t) = \text{Maj}(X_t)$$ and $$U_{t+1}$$ depends only on $$U_t = x_0$$, we can write
-
-$$\text{Acc}_3 = \sum_{x, u} \pi(x, u) \, P(U_{t+1} = g(x) \mid U_t = u).$$
-
-Using $$\pi(x, u) = \pi_3(x) \, \mathbb{1}\{x_0 = u\}$$,
-
-$$\text{Acc}_3 = \sum_x \pi_3(x) \, P(U_{t+1} = \text{Maj}(x) \mid U_t = x_0).$$
-
-The NV transition rule gives
-
-$$P(U_{t+1} = \text{Maj}(x) \mid U_t = x_0) = \begin{cases} 1-\alpha, & \text{Maj}(x) = x_0, \\ \alpha, & \text{Maj}(x) \neq x_0. \end{cases}$$
-
-Define $$m(x) = \text{Maj}(x)$$, $$A = \{x : m(x) = x_0\}$$. Then
-
-$$\text{Acc}_3 = \sum_{x \in A} \pi_3(x) (1-\alpha) + \sum_{x \notin A} \pi_3(x) \alpha = (1-\alpha) \sum_{x \in A} \pi_3(x) + \alpha \left(1 - \sum_{x \in A} \pi_3(x)\right).$$
-
-Let
-
-$$q_3 := \sum_{x \in A} \pi_3(x) = P(m(X_t) = U_t),$$
-
-the probability that the majority of the last three bits agrees with the current bit. Then
-
-$$\text{Acc}_3 = \alpha + (1-2\alpha) q_3.$$
-
-It remains to compute $$q_3$$ under $$\pi_3$$. We enumerate the eight patterns $$x = (x_0, x_1, x_2) \in \{0,1\}^3$$, their $$\Delta(x)$$, and whether $$m(x) = x_0$$:
-
-- **000**: $$\Delta = 0$$, $$m(x) = 0 = x_0$$ (in $$A$$).
-- **001**: $$\Delta = 1$$, $$m(x) = 0 = x_0$$ (in $$A$$).
-- **010**: $$\Delta = 2$$, $$m(x) = 0 = x_0$$ (in $$A$$).
-- **011**: $$\Delta = 1$$, $$m(x) = 1 \neq x_0$$ (not in $$A$$).
-- **100**: $$\Delta = 1$$, $$m(x) = 0 \neq x_0$$ (not in $$A$$).
-- **101**: $$\Delta = 2$$, $$m(x) = 1 = x_0$$ (in $$A$$).
-- **110**: $$\Delta = 1$$, $$m(x) = 1 = x_0$$ (in $$A$$).
-- **111**: $$\Delta = 0$$, $$m(x) = 1 = x_0$$ (in $$A$$).
-
-So the patterns in $$A$$ are: **000, 001, 010, 101, 110, 111**.
-
-Using $$\pi_3(x) = \frac{1}{2} (1-\alpha)^{2-\Delta(x)} \alpha^{\Delta(x)}$$, group them by $$\Delta(x)$$:
-
-- **$$\Delta = 0$$**: patterns **000, 111**: contribution $$2 \cdot \frac{1}{2} (1-\alpha)^2 = (1-\alpha)^2$$.
-- **$$\Delta = 1$$**: patterns **001, 110**: contribution $$2 \cdot \frac{1}{2} (1-\alpha)\alpha = (1-\alpha)\alpha$$.
-- **$$\Delta = 2$$**: patterns **010, 101**: contribution $$2 \cdot \frac{1}{2} \alpha^2 = \alpha^2$$.
-
-Thus
-
-$$q_3 = (1-\alpha)^2 + (1-\alpha)\alpha + \alpha^2.$$
-
-Expanding, $$(1-\alpha)^2 = 1 - 2\alpha + \alpha^2$$, so
-
-$$q_3 = 1 - 2\alpha + \alpha^2 + \alpha - \alpha^2 + \alpha^2 = 1 - \alpha + \alpha^2.$$
-
-Hence $$q_3 = 1 - \alpha + \alpha^2$$.
-
-Substituting into $$\text{Acc}_3 = \alpha + (1-2\alpha) q_3$$ and simplifying,
-
-$$\text{Acc}_3 = \alpha + (1-2\alpha)(1-\alpha+\alpha^2) = 1 - 2\alpha + 3\alpha^2 - 2\alpha^3.$$
-
-Thus the prediction accuracy of the majority-over-3 Neo is
-
-$$\text{Acc}_3 = 1 - 2\alpha + 3\alpha^2 - 2\alpha^3.$$
-
-#### Energy Drift, Variance, and Survivability
-
-As before, let the Neo gain $$r > 0$$ Nex units when the prediction is correct and pay a living cost $$c_\ell > 0$$ every tick. The per-tick energy increment is
+Energy changes according to
 
 $$\Delta E_t = r \, \mathbb{1}\{\hat{u}(Y_t) = U_{t+1}\} - c_\ell.$$
 
-Under stationarity, correctness is Bernoulli with success probability $$\text{Acc}_3$$. Therefore
+Let
 
-$$\mu = \mathbb{E}[\Delta E_t] = r \, \text{Acc}_3 - c_\ell = r(1-2\alpha+3\alpha^2-2\alpha^3) - c_\ell,$$
+$$Z_t = \mathbb{1}\{\hat{u}(Y_t) = U_{t+1}\},$$
 
-$$\sigma^2 = \text{Var}(\Delta E_t) = r^2 \text{Acc}_3 (1 - \text{Acc}_3) = r^2 (1-2\alpha+3\alpha^2-2\alpha^3) [1 - (1-2\alpha+3\alpha^2-2\alpha^3)].$$
+so $$Z_t \sim \text{Bernoulli}(\text{Acc})$$.
 
-Let $$E_t$$ evolve as
+Mean drift:
+
+$$\mu = \mathbb{E}[\Delta E_t] = r(1-\alpha)^m - c_\ell.$$
+
+Variance:
+
+$$\sigma^2 = r^2 \, \text{Acc}(1 - \text{Acc}) = r^2 (1-\alpha)^m [1 - (1-\alpha)^m].$$
+
+#### Survivability
+
+Let
 
 $$E_{t+1} = E_t + \Delta E_t, \quad E_0 > 0,$$
 
-with absorption at $$E_t = 0$$. Using the same diffusion approximation as before, the survivability $$\Xi_3$$ satisfies
+with absorption at $$E_t = 0$$.
 
-$$\Xi_3 = 0 \quad \text{if } r \, \text{Acc}_3 \leq c_\ell,$$
+From the diffusion approximation:
 
-and when $$r \, \text{Acc}_3 > c_\ell$$,
+$$\Xi = 0 \quad \text{if } r(1-\alpha)^m \leq c_\ell,$$
 
-$$\Xi_3 \approx 1 - \exp\left(-\frac{2(r \, \text{Acc}_3 - c_\ell) E_0}{r^2 \text{Acc}_3 (1 - \text{Acc}_3)}\right),$$
+and for $$r(1-\alpha)^m > c_\ell$$,
 
-with $$\text{Acc}_3 = 1 - 2\alpha + 3\alpha^2 - 2\alpha^3$$.
+$$\Xi \approx 1 - \exp\left(-\frac{2E_0 (r(1-\alpha)^m - c_\ell)}{r^2 (1-\alpha)^m [1 - (1-\alpha)^m]}\right).$$
 
-This completes the SD-based derivation of the majority-over-3 Neo.
+### 4.3.2 p-Estimator Neo: Full Derivation
 
-### 4.3.3 Memory Chain for Temporal Storage
+We now consider a more complex case where the Neo contains internal feedback loops that create temporal dependencies. This requires computing the stationary distribution of the internal state Markov chain to determine prediction accuracy and survivability.
 
-To produce a temporal-majority output, the Neo must internally maintain the recent NV history. Because the Neo only receives the current bit $$X_t$$, past values $$X_{t-1}$$ and $$X_{t-2}$$ must be reconstructed through its internal nodes. A simple solution is a memory chain in which each node copies the value of its predecessor with a one-tick delay.
+#### 4.3.2.1 Setting and Goal
 
-Let the Neo's input channel satisfy $$U_t[1] = X_t$$. The first memory node $$M(1)$$ receives only this input and uses a Lex function with weight $$1$$, bias $$-0.5$$, and no stochastic term. Its update
+The NeoVerse emits a binary percept stream
 
-$$M(1)_{t+1} = H(X_t - 0.5)$$
+$$U_t \sim \text{Bernoulli}(p), \quad t = 0,1,2,\ldots$$
 
-ensures that $$M(1)$$ simply stores the previous input bit: $$M(1)_t = X_{t-1}$$. The second memory node $$M(2)$$ applies the same Lex rule but takes $$M(1)$$ as its input:
+independently over time, with an unknown parameter $$p \in (0,1)$$. The Neo does not receive $$p$$; it only observes the bits $$U_t$$.
 
-$$M(2)_{t+1} = H(M(1)_t - 0.5) = M(1)_t,$$
+We consider a small Neo whose job is to:
 
-so $$M(2)_t = X_{t-2}$$. Thus the Neo's internal state at time $$t$$ is
+1. Run its internal Lex dynamics driven by the input stream $$\{U_t\}$$.
+2. Produce a prediction for the next percept using node $$A$$: $$\hat{U}_{t+1} = A(t+1)$$.
+3. Achieve high next-bit prediction accuracy $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$, in the long run (stationary regime).
+4. Use its internal stationary behavior as an implicit estimate of the bias $$p$$.
 
-$$(X_t, \, X_{t-1}, \, X_{t-2}) = (U_t[1], \, M(1)_t, \, M(2)_t),$$
+Because the stream is i.i.d. Bernoulli, the theoretical optimal predictor (with true $$p$$) is "always predict the majority bit," with accuracy
 
-exactly the three-step temporal buffer required for majority computation.
+$$\text{Acc}^*(p) = \max\{p, 1-p\}.$$
 
-This construction extends immediately to longer windows: a chain of $$L-1$$ nodes, each copying the previous one using the same Lex parameters, yields
+So this Neo cannot ever reach 100% accuracy unless $$p \in \{0,1\}$$; the interesting question is how its architecture + feedback shape its stationary prediction accuracy and its implicit representation of $$p$$.
 
-$$(X_t, X_{t-1}, \ldots, X_{t-L+1}).$$
+#### 4.3.2.2 Architecture of the p-Estimator Neo
 
-Because the updates are deterministic and noise-free, this chain produces the precise memory structure that gives rise to the stationary distribution $$\pi_L(x)$$ used in the accuracy and survivability analysis.
+The Neo has two internal nodes:
 
+* **Node $$A$$** — the predictor node. Its state drives the output.
+* **Node $$B$$** — a memory node that tracks recent behavior of $$A$$.
+
+Node states are binary:
+
+$$A(t), B(t) \in \{0,1\}.$$
+
+We disable intrinsic node noise ($$\alpha_A = \alpha_B = 0$$) to isolate the effect of weights and feedback.
+
+**Node $$A$$ (Predictor)**
+
+Inputs to $$A$$:
+
+* $$U_t$$: current percept
+* $$A(t)$$: self-feedback
+* $$B(t)$$: input from memory node
+
+Lex update:
+
+$$A(t+1) = H\big(2U_t + 1\cdot A(t) - 2\cdot B(t) - 1\big),$$
+
+where $$H(x) = 1$$ if $$x \geq 0$$ and $$0$$ otherwise.
+
+**Node $$B$$ (Memory)**
+
+Inputs to $$B$$:
+
+* $$A(t)$$: previous predictor state
+
+Lex update:
+
+$$B(t+1) = H\big(A(t) - 0.5\big).$$
+
+So $$B(t+1) = 1$$ iff $$A(t) = 1$$; otherwise $$B(t+1) = 0$$.
+
+In words: $$B$$ copies $$A$$ with a one-tick delay, providing a crude memory of whether $$A$$ was recently active.
+
+**Prediction Rule**
+
+At time $$t$$:
+
+1. The Neo observes $$U_t$$.
+2. It updates $$A(t+1), B(t+1)$$ via the rules above.
+3. It uses $$\hat{U}_{t+1} = A(t+1)$$ as its prediction for the next percept $$U_{t+1}$$.
+
+We then measure
+
+$$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$
+
+in the stationary regime.
+
+#### 4.3.2.3 Markov Chain over Internal States
+
+Define the internal state:
+
+$$S_t = (A(t), B(t)) \in \{0,1\}^2.$$
+
+There are four possible internal states:
+
+$$s_0 = (0,0), \quad s_1 = (0,1), \quad s_2 = (1,0), \quad s_3 = (1,1).$$
+
+At each tick, given $$S_t$$ and $$U_t$$, the next state $$S_{t+1} = (A(t+1), B(t+1))$$ is deterministically defined by the Lex rules. Since $$U_t$$ is random with $$P(U_t = 1) = p$$, the process $$\{S_t\}$$ is a 4-state Markov chain with transition probabilities depending on $$p$$.
+
+We now derive:
+
+1. The state transition map $$(S_t, U_t) \mapsto S_{t+1}$$.
+2. The transition matrix $$P(p)$$ over the 4 states.
+3. The stationary distribution $$\pi(p)$$.
+4. From that, the prediction accuracy $$\text{Acc}(p)$$.
+
+**Deterministic Next State for Each $$S_t$$ and $$U_t$$**
+
+We explicitly compute $$S_{t+1} = (A(t+1),B(t+1))$$ for all four states and both values of $$U_t$$.
+
+Recall:
+
+$$\begin{aligned} A(t+1) &= H(2U_t + A(t) - 2B(t) - 1),\\ B(t+1) &= H(A(t) - 0.5). \end{aligned}$$
+
+**Case 1:** $$S_t = s_0 = (A,B)=(0,0)$$
+
+* If $$U_t = 0$$: $$a_A = 2\cdot 0 + 0 - 2\cdot 0 - 1 = -1 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$. So $$S_{t+1} = (0,0) = s_0$$.
+* If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 0 - 1 = 1 \Rightarrow A(t+1)=1$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$. So $$S_{t+1} = (1,0) = s_2$$.
+
+**Case 2:** $$S_t = s_1 = (0,1)$$
+
+* If $$U_t = 0$$: $$a_A = 0 + 0 - 2\cdot 1 - 1 = -3 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$. So $$S_{t+1} = (0,0) = s_0$$.
+* If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 2\cdot 1 - 1 = -1 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$. So $$S_{t+1} = (0,0) = s_0$$.
+
+Thus from $$s_1$$ we always go to $$s_0$$, regardless of $$U_t$$.
+
+**Case 3:** $$S_t = s_2 = (1,0)$$
+
+* If $$U_t = 0$$: $$a_A = 0 + 1 - 0 - 1 = 0 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$. So $$S_{t+1} = (1,1) = s_3$$.
+* If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 0 - 1 = 2 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$. So $$S_{t+1} = (1,1) = s_3$$.
+
+From $$s_2$$ we always go to $$s_3$$, regardless of $$U_t$$.
+
+**Case 4:** $$S_t = s_3 = (1,1)$$
+
+* If $$U_t = 0$$: $$a_A = 0 + 1 - 2\cdot 1 - 1 = -2 \Rightarrow A(t+1)=0$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$. So $$S_{t+1} = (0,1) = s_1$$.
+* If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 2\cdot 1 - 1 = 0 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$. So $$S_{t+1} = (1,1) = s_3$$.
+
+So from $$s_3$$: $$U_t = 0 \Rightarrow s_1$$; $$U_t = 1 \Rightarrow s_3$$.
+
+**Transition Matrix $$P(p)$$**
+
+Now we incorporate the randomness of $$U_t$$. Since $$P(U_t = 1) = p$$, $$P(U_t = 0) = 1-p$$, we can compute the Markov transition probabilities between the 4 states.
+
+Label states in order $$(s_0,s_1,s_2,s_3)$$.
+
+* From $$s_0$$:
+    * $$U_t=0$$ (prob $$1-p$$) → $$s_0$$
+    * $$U_t=1$$ (prob $$p$$) → $$s_2$$
+* Row 0: $$P_{0\rightarrow\cdot} = \big(1-p,\;0,\;p,\;0\big)$$.
+
+* From $$s_1$$:
+    * Always goes to $$s_0$$
+* Row 1: $$P_{1\rightarrow\cdot} = \big(1,\;0,\;0,\;0\big)$$.
+
+* From $$s_2$$:
+    * Always goes to $$s_3$$
+* Row 2: $$P_{2\rightarrow\cdot} = \big(0,\;0,\;0,\;1\big)$$.
+
+* From $$s_3$$:
+    * $$U_t=0$$ (prob $$1-p$$) → $$s_1$$
+    * $$U_t=1$$ (prob $$p$$) → $$s_3$$
+* Row 3: $$P_{3\rightarrow\cdot} = \big(0,\;1-p,\;0,\;p\big)$$.
+
+Collecting everything, the transition matrix is
+
+$$P(p) = \begin{pmatrix} 1-p & 0 & p & 0 \\ 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 1-p & 0 & p \end{pmatrix}.$$
+
+**Stationary Distribution $$\pi(p)$$**
+
+Let $$\pi(p) = (\pi_0,\pi_1,\pi_2,\pi_3)$$ be the stationary distribution over states $$s_0,\dots,s_3$$. It satisfies:
+
+$$\pi = \pi P(p), \quad \pi_0+\pi_1+\pi_2+\pi_3 = 1.$$
+
+From $$\pi = \pi P$$, we get:
+
+1. Coordinate 0: $$\pi_0 = \pi_0(1-p) + \pi_1$$.
+2. Coordinate 1: $$\pi_1 = (1-p)\pi_3$$.
+3. Coordinate 2: $$\pi_2 = p\pi_0$$.
+4. Coordinate 3: $$\pi_3 = \pi_2 + p\pi_3$$.
+
+We now solve step by step.
+
+From (4):
+
+$$\pi_3 = \pi_2 + p\pi_3 \quad\Rightarrow\quad \pi_3(1-p) = \pi_2 \quad\Rightarrow\quad \pi_3 = \frac{\pi_2}{1-p}.$$
+
+From (3) we know $$\pi_2 = p\pi_0$$, so:
+
+$$\pi_3 = \frac{p\pi_0}{1-p}.$$
+
+From (2):
+
+$$\pi_1 = (1-p)\pi_3 = (1-p)\cdot \frac{p\pi_0}{1-p} = p\pi_0.$$
+
+From (1):
+
+$$\pi_0 = (1-p)\pi_0 + \pi_1 \quad\Rightarrow\quad \pi_0 - (1-p)\pi_0 = \pi_1 \quad\Rightarrow\quad p\pi_0 = \pi_1,$$
+
+which is consistent with what we already got, so no new constraint.
+
+Now apply normalization:
+
+$$\pi_0 + \pi_1 + \pi_2 + \pi_3 = 1.$$
+
+Substitute $$\pi_1 = p\pi_0$$, $$\pi_2 = p\pi_0$$, and $$\pi_3 = \dfrac{p\pi_0}{1-p}$$:
+
+$$\pi_0 + p\pi_0 + p\pi_0 + \frac{p\pi_0}{1-p} = 1.$$
+
+Factor $$\pi_0$$:
+
+$$\pi_0\left(1 + 2p + \frac{p}{1-p}\right) = 1.$$
+
+Compute the bracket:
+
+$$1 + 2p + \frac{p}{1-p} = \frac{(1-p)(1+2p) + p}{1-p} = \frac{1 + 2p - p - 2p^2 + p}{1-p} = \frac{1 + 2p - 2p^2}{1-p}.$$
+
+Define
+
+$$D(p) = 1 + 2p - 2p^2.$$
+
+Then:
+
+$$\pi_0 \cdot \frac{D(p)}{1-p} = 1 \quad\Rightarrow\quad \pi_0 = \frac{1-p}{D(p)}.$$
+
+And therefore:
+
+$$\begin{aligned} \pi_1 &= p \pi_0 = \frac{p(1-p)}{D(p)},\\[4pt] \pi_2 &= p \pi_0 = \frac{p(1-p)}{D(p)},\\[4pt] \pi_3 &= \frac{p}{1-p}\pi_0 = \frac{p}{1-p}\cdot \frac{1-p}{D(p)} = \frac{p}{D(p)}. \end{aligned}$$
+
+So the stationary distribution is:
+
+$$\boxed{ \pi(p) = \left( \frac{1-p}{1+2p-2p^2},\; \frac{p(1-p)}{1+2p-2p^2},\; \frac{p(1-p)}{1+2p-2p^2},\; \frac{p}{1+2p-2p^2} \right). }$$
+
+**Stationary Probability that $$A = 1$$**
+
+The prediction node $$A$$ is 1 in states $$s_2 = (1,0)$$ and $$s_3 = (1,1)$$. Thus:
+
+$$P_\pi(A(t) = 1) = \pi_2 + \pi_3 = \frac{p(1-p)}{D(p)} + \frac{p}{D(p)} = \frac{p(2-p)}{D(p)},$$
+
+where $$D(p) = 1 + 2p - 2p^2$$.
+
+So:
+
+$$\boxed{ P_\pi(A=1) = \frac{p(2-p)}{1+2p-2p^2}. }$$
+
+Since the chain is stationary, this is also the distribution of $$A(t+1)$$, $$A(t+2)$$, etc.
+
+**Prediction Accuracy $$\text{Acc}(p)$$**
+
+We now derive $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in closed form.
+
+Key points:
+
+* $$U_{t+1}$$ is independent of $$(S_t, U_t)$$ and has distribution $$\text{Bernoulli}(p)$$.
+* Under stationarity, the marginal distribution of $$A(t+1)$$ is the same as that of $$A(t)$$, i.e., $$P(A(t+1)=1) = P_\pi(A=1) = q(p) = \frac{p(2-p)}{D(p)}$$. So $$P(A(t+1)=0) = 1 - q(p)$$.
+
+Given these, we can write:
+
+$$\begin{aligned} \text{Acc}(p) &= P(A(t+1)=1, U_{t+1}=1) + P(A(t+1)=0, U_{t+1}=0)\\ &= P(A(t+1)=1)\,P(U_{t+1}=1) + P(A(t+1)=0)\,P(U_{t+1}=0)\\ &= q(p)\cdot p + (1-q(p))\cdot (1-p). \end{aligned}$$
+
+Plug $$q(p) = \dfrac{p(2-p)}{D(p)}$$:
+
+$$\text{Acc}(p) = \frac{p(2-p)}{D(p)}\cdot p + \left(1 - \frac{p(2-p)}{D(p)}\right)\cdot (1-p).$$
+
+Using the alternative form:
+
+$$\text{Acc}(p) = (1-p) + (2p-1)\,q(p) = (1-p) + (2p-1)\frac{p(2-p)}{D(p)}.$$
+
+Computing the numerator explicitly:
+
+Let $$\text{Acc}(p) = \frac{N(p)}{D(p)}$$.
+
+Then
+
+$$N(p) = (1-p)D(p) + (2p-1)p(2-p).$$
+
+First term:
+
+$$(1-p)D(p) = (1-p)(1+2p-2p^2) = 1 + 2p - 2p^2 - p -2p^2 + 2p^3 = 1 + p - 4p^2 + 2p^3.$$
+
+Second term:
+
+$$(2p-1)p(2-p) = p(2p-1)(2-p).$$
+
+Compute $$(2p-1)(2-p)$$:
+
+$$(2p-1)(2-p) = 4p - 2p^2 - 2 + p = -2 + 5p - 2p^2.$$
+
+Multiply by $$p$$:
+
+$$(2p-1)p(2-p) = -2p + 5p^2 - 2p^3.$$
+
+Add both contributions:
+
+$$\begin{aligned} N(p) &= \big(1 + p - 4p^2 + 2p^3\big) + \big(-2p + 5p^2 - 2p^3\big)\\ &= 1 + (p - 2p) + (-4p^2 + 5p^2) + (2p^3 - 2p^3)\\ &= 1 - p + p^2. \end{aligned}$$
+
+Therefore,
+
+$$\boxed{ \text{Acc}(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}. }$$
+
+For sanity checks:
+
+* $$p = 0.5$$: Numerator $$= 1 - 0.5 + 0.25 = 0.75$$, Denominator $$= 1 + 1 - 0.5 = 1.5$$, $$\text{Acc}(0.5) = 0.75/1.5 = 0.5$$ (chance level, as expected).
+* $$p = 0.2$$: Numerator $$= 1 - 0.2 + 0.04 = 0.84$$, Denominator $$= 1 + 0.4 - 0.08 = 1.32$$, $$\text{Acc}(0.2) \approx 0.636$$.
+* $$p = 0.8$$: Numerator $$= 1 - 0.8 + 0.64 = 0.84$$, Denominator $$= 1 + 1.6 - 1.28 = 1.32$$, $$\text{Acc}(0.8) \approx 0.636$$.
+
+Note that $$\text{Acc}(p) \leq \max(p,1-p)$$ for all $$p \in (0,1)$$; the Neo does not reach the Bayes limit.
+
+#### 4.3.2.4 Simulation Results (Next-Bit Prediction)
+
+We simulate the Neo for $$T = 200{,}000$$ ticks for each $$p \in \{0.2,0.5,0.8\}$$.
+
+Procedure:
+
+1. Sample $$U_0, \dots, U_T$$ i.i.d. $$\text{Bernoulli}(p)$$.
+2. Initialize $$A(0)=B(0)=0$$.
+3. For $$t = 0,\dots,T-1$$:
+    * Update $$A(t+1),B(t+1)$$ using the Lex rules.
+    * Use $$A(t+1)$$ as prediction for $$U_{t+1}$$.
+4. Compute empirical accuracy $$\hat{\text{Acc}}(p) = \frac{1}{T}\sum_{t=0}^{T-1} \mathbf{1}\{A(t+1)=U_{t+1}\}$$.
+
+Sample outcomes ($$T$$ large):
+
+| $$p$$ | Theoretical $$\text{Acc}(p)$$ | Empirical $$\hat{\text{Acc}}(p)$$ (example) |
+|-------|------------------------------|---------------------------------------------|
+| 0.2   | $$\approx 0.636$$             | $$\approx 0.638$$                           |
+| 0.5   | $$0.5$$                       | $$\approx 0.501$$                           |
+| 0.8   | $$\approx 0.636$$             | $$\approx 0.634$$                           |
 
