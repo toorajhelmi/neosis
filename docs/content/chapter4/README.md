@@ -256,7 +256,15 @@ So from $$s_3$$: $$U_t = 0 \Rightarrow s_1$$; $$U_t = 1 \Rightarrow s_3$$.
 
 **Transition Matrix $$P(p)$$**
 
-Now we incorporate the randomness of $$U_t$$. Since $$P(U_t = 1) = p$$ and $$P(U_t = 0) = 1-p$$, we can compute the Markov transition probabilities between the 4 states. Label states in order $$(s_0,s_1,s_2,s_3)$$. From $$s_0$$: $$U_t=0$$ (prob $$1-p$$) → $$s_0$$, $$U_t=1$$ (prob $$p$$) → $$s_2$$, so row 0 is $$P_{0\rightarrow\cdot} = \big(1-p,\;0,\;p,\;0\big)$$. From $$s_1$$: always goes to $$s_0$$, so row 1 is $$P_{1\rightarrow\cdot} = \big(1,\;0,\;0,\;0\big)$$. From $$s_2$$: always goes to $$s_3$$, so row 2 is $$P_{2\rightarrow\cdot} = \big(0,\;0,\;0,\;1\big)$$. From $$s_3$$: $$U_t=0$$ (prob $$1-p$$) → $$s_1$$, $$U_t=1$$ (prob $$p$$) → $$s_3$$, so row 3 is $$P_{3\rightarrow\cdot} = \big(0,\;1-p,\;0,\;p\big)$$.
+Now we incorporate the randomness of $$U_t$$. Since $$P(U_t = 1) = p$$ and $$P(U_t = 0) = 1-p$$, we can compute the Markov transition probabilities between the 4 states. Label states in order $$(s_0,s_1,s_2,s_3)$$.
+
+From $$s_0$$: $$U_t=0$$ (prob $$1-p$$) → $$s_0$$, $$U_t=1$$ (prob $$p$$) → $$s_2$$, so row 0 is $$P_{0\rightarrow\cdot} = \big(1-p,\;0,\;p,\;0\big)$$.
+
+From $$s_1$$: always goes to $$s_0$$, so row 1 is $$P_{1\rightarrow\cdot} = \big(1,\;0,\;0,\;0\big)$$.
+
+From $$s_2$$: always goes to $$s_3$$, so row 2 is $$P_{2\rightarrow\cdot} = \big(0,\;0,\;0,\;1\big)$$.
+
+From $$s_3$$: $$U_t=0$$ (prob $$1-p$$) → $$s_1$$, $$U_t=1$$ (prob $$p$$) → $$s_3$$, so row 3 is $$P_{3\rightarrow\cdot} = \big(0,\;1-p,\;0,\;p\big)$$.
 
 Collecting everything, the transition matrix is
 
