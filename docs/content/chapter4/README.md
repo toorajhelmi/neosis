@@ -385,9 +385,6 @@ The curve $$r_{\text{crit}}(p)$$ partitions the $$(p,r)$$-plane into two phases:
 
 **Supercritical regime:** $$r > r_{\text{crit}}(p) \Rightarrow \Xi(p; r, E_0) > 0$$. Positive energy drift allows nonzero survivability.
 
-
-
-
 #### 4.3.2.2 Simulation Study
 
 This section evaluates the behavior of the two-node p-estimator Neo through direct simulation of the Neo cycle. The implementation follows the formal operational rules of perception, internal state update, Spark emission, and energy accounting described in the Neosis specification. Survival expectations are compared to the drift-based analysis developed in the Neo-Survivability document.
