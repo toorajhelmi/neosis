@@ -1,4 +1,4 @@
-# Chapter 2 — Neosis Axioms and Formal Model
+# Chapter 2 — Neosis Formal Model
 
 ## 2.1 Primitive Ingredients and State
 
@@ -173,35 +173,45 @@ by collecting the corresponding bits from $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ 
 
 In addition to these deterministic inputs, each node also receives a stochastic binary input
 $$
-\eta_i(t) \sim \text{Bernoulli}(0.5),
+\eta_i(t) \sim \text{Bernoulli}(p_i),
 $$
-independent across nodes and ticks unless otherwise specified. This random bit allows local computations to be intrinsically stochastic even when $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ are fixed.
+where $$p_i \in (0,1)$$ is a per-node noise bias parameter stored in the node's parameter vector. This random bit allows local computations to be intrinsically stochastic even when $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ are fixed. The parameter $$p_i$$ controls the bias of the stochastic input, enabling nodes to evolve different levels of intrinsic randomness.
 
-### 2.4.2 Parametric Local Update Rule (Stochastic Lex)
+Each node $$i$$ also receives a binary gate input $$g_i(t) \in \{0,1\}$$, which may be drawn from $$\mathbf{U}_t$$ (as a perceptual input) or from $$\mathbf{V}_t$$ (as feedback from another internal node). The gate bit controls whether the node updates from its other inputs or tends to maintain its previous state, as described in the update rule below.
+
+### 2.4.2 Parametric Local Update Rule 
 
 Each node $$i$$ carries a continuous parameter vector
 $$
-\theta_i \in \mathbb{R}^{k_i + 2},
+\theta_i \in \mathbb{R}^{k_i + 3},
 $$
-which we interpret as a concatenation of weights and a bias:
+which we interpret as a concatenation of weights, noise parameters, and a bias:
 $$
-\theta_i = (w_i, \alpha_i, b_i),
+\theta_i = (w_i, \alpha_i, p_i, b_i),
 $$
 where
 $$
-w_i \in \mathbb{R}^{k_i}, \qquad \alpha_i \in \mathbb{R}, \qquad b_i \in \mathbb{R}.
+w_i \in \mathbb{R}^{k_i}, \qquad \alpha_i \in \mathbb{R}, \qquad p_i \in (0,1), \qquad b_i \in \mathbb{R}.
 $$
+The parameter $$p_i$$ controls the bias of the stochastic input $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$, allowing each node to have adjustable stochasticity. When $$p_i = 0.5$$, the noise is unbiased; values closer to 0 or 1 produce more deterministic behavior.
 
-Given the binary input vector $$\mathbf{z}_i(t) \in \mathbb{B}^{k_i}$$ and the stochastic bit $$\eta_i(t) \in \mathbb{B}$$, the node first computes a real-valued activation
-$$
-a_i(t) = w_i^\top \mathbf{z}_i(t) + \alpha_i\, \eta_i(t) + b_i,
-$$
-and then applies a threshold to obtain the new binary state:
-$$
-\mathbf{V}_{t+1}[i]
-= \text{Lex}_i\big(\mathbf{z}_i(t), \eta_i(t), \theta_i\big)
-= H\big(a_i(t)\big),
-$$
+Given the binary input vector $$\mathbf{z}_i(t) \in \mathbb{B}^{k_i}$$, the stochastic bit $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$, and the gate bit $$g_i(t) \in \{0,1\}$$, the node update rule is:
+
+- If $$g_i(t) = 0$$, the node tends to copy its previous state:
+  $$
+  \mathbf{V}_{t+1}[i] = \mathbf{V}_t[i].
+  $$
+
+- If $$g_i(t) = 1$$, the node updates from its other inputs. The node first computes a real-valued activation
+  $$
+  a_i(t) = w_i^\top \mathbf{z}_i(t) + \alpha_i\, \eta_i(t) + b_i,
+  $$
+  and then applies a threshold to obtain the new binary state:
+  $$
+  \mathbf{V}_{t+1}[i] = \text{Lex}_i\big(\mathbf{z}_i(t), \eta_i(t), g_i(t), \theta_i\big) = H\big(a_i(t)\big).
+  $$
+
+This gate mechanism allows nodes to explicitly freeze their state when $$g_i(t) = 0$$, while enabling normal computation when $$g_i(t) = 1$$. The gate bit $$g_i(t)$$ is treated as part of the node's input set, so it may be wired from perceptual inputs $$\mathbf{U}_t$$ or from other internal nodes via the edge set $$E_t$$.
 with the Heaviside step function
 $$
 H(x) =
@@ -213,10 +223,11 @@ $$
 
 This definition preserves the properties we want:
 
-- **Locality**: each update depends only on $$\mathbf{z}_i(t)$$, $$\eta_i(t)$$, and $$\theta_i$$.  
+- **Locality**: each update depends only on $$\mathbf{z}_i(t)$$, $$\eta_i(t)$$, $$g_i(t)$$, and $$\theta_i$$.  
 - **Binary state**: outputs stay in $$\mathbb{B}$$.  
-- **Stochasticity**: even with fixed $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$, the next state can vary due to $$\eta_i(t)$$.  
-- **Structural robustness**: when $$k_i$$ changes, we only resize $$w_i$$ and the construction of $$\mathbf{z}_i(t)$$; $$\alpha_i$$ and $$b_i$$ remain single scalars.
+- **Adjustable stochasticity**: the per-node parameter $$p_i$$ controls the bias of $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$, allowing evolution to tune the level of intrinsic randomness at each node.  
+- **Explicit freeze control**: the gate bit $$g_i(t)$$ provides direct control over whether a node updates or maintains its previous state, enabling richer temporal dynamics.  
+- **Structural robustness**: when $$k_i$$ changes, we only resize $$w_i$$ and the construction of $$\mathbf{z}_i(t)$$; $$\alpha_i$$, $$p_i$$, and $$b_i$$ remain single scalars.
 
 Snapshot semantics remain as before: all nodes read $$\mathbf{V}_t$$, $$\mathbf{U}_t$$, and their own $$\eta_i(t)$$ at the beginning of tick $$t$$, then update in parallel to produce $$\mathbf{V}_{t+1}$$.
 
@@ -405,23 +416,25 @@ For each node index $$i = 1,\dots,n_t$$:
    $$
    by reading from $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$.
 
-2. Sample a stochastic bit
-   $$
-   \eta_i(t) \sim \text{Bernoulli}(0.5).
-   $$
+2. Read the gate bit $$g_i(t) \in \{0,1\}$$ from the node's inputs (which may come from $$\mathbf{V}_t$$ or $$\mathbf{U}_t$$ via the edge set $$E_t$$).
 
-3. Compute the activation using the node’s parameters $$\theta_i = (w_i, \alpha_i, b_i)$$:
+3. Sample a stochastic bit using the node's noise bias parameter:
    $$
-   a_i(t) = w_i^\top \mathbf{z}_i(t) + \alpha_i\, \eta_i(t) + b_i.
+   \eta_i(t) \sim \text{Bernoulli}(p_i),
    $$
+   where $$p_i \in (0,1)$$ is stored in $$\theta_i = (w_i, \alpha_i, p_i, b_i)$$.
 
-4. Update the node’s binary state using the local rule
-   $$
-   \mathbf{V}_{t+1}[i]
-     = \text{Lex}_i\big(\mathbf{z}_i(t), \eta_i(t), \theta_i\big)
-     = H\big(a_i(t)\big),
-   $$
-   where $$H(\cdot)$$ is the Heaviside step function.
+4. Update the node's binary state using the local rule:
+   - If $$g_i(t) = 0$$, set $$\mathbf{V}_{t+1}[i] = \mathbf{V}_t[i]$$ (freeze).
+   - If $$g_i(t) = 1$$, compute the activation using the node's parameters:
+     $$
+     a_i(t) = w_i^\top \mathbf{z}_i(t) + \alpha_i\, \eta_i(t) + b_i,
+     $$
+     and set
+     $$
+     \mathbf{V}_{t+1}[i] = \text{Lex}_i\big(\mathbf{z}_i(t), \eta_i(t), g_i(t), \theta_i\big) = H\big(a_i(t)\big),
+     $$
+     where $$H(\cdot)$$ is the Heaviside step function.
 
 We adopt snapshot semantics: all nodes read $$\mathbf{V}_t$$ and $$\mathbf{U}_t$$ and their own $$\eta_i(t)$$ at the start of tick $$t$$, and all updates to $$\mathbf{V}_{t+1}$$ are conceptually applied in parallel.
 
@@ -558,9 +571,12 @@ The formal model above makes a specific set of design choices: a Neo is an evolv
 At the level of a single node, the update rule
 $$
 \mathbf{V}_{t+1}[i]
-  = H\big(w_i^\top \mathbf{z}_i(t) + \alpha_i \eta_i(t) + b_i\big)
+  = \begin{cases}
+    \mathbf{V}_t[i], & \text{if } g_i(t) = 0,\\
+    H\big(w_i^\top \mathbf{z}_i(t) + \alpha_i \eta_i(t) + b_i\big), & \text{if } g_i(t) = 1,
+    \end{cases}
 $$
-is deliberately close to a threshold neuron: it combines a weighted sum of inputs with a bias and then applies a nonlinearity. The directed edges $$E_t$$ play the role of synapses, determining which nodes can influence which others, and the continuous parameters $$\theta_i = (w_i, \alpha_i, b_i)$$ determine the strength and sign of those influences.
+is deliberately close to a threshold neuron: it combines a weighted sum of inputs with a bias and then applies a nonlinearity, with an explicit gate mechanism that allows nodes to freeze their state. The directed edges $$E_t$$ play the role of synapses, determining which nodes can influence which others, and the continuous parameters $$\theta_i = (w_i, \alpha_i, p_i, b_i)$$ determine the strength and sign of those influences, as well as the bias of the stochastic input.
 
 The key differences from a standard artificial neuron are:
 
@@ -572,19 +588,20 @@ This makes each node loosely analogous to a neuron with a discrete firing state 
 
 ### 2.8.2 Why Stochasticity at Each Node?
 
-The inclusion of a stochastic bit $$\eta_i(t) \sim \text{Bernoulli}(0.5)$$ per node is intentional rather than cosmetic. Even with binary inputs $$\mathbf{z}_i(t)$$ fixed, the activation
+The inclusion of a stochastic bit $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$ per node is intentional rather than cosmetic. Even with binary inputs $$\mathbf{z}_i(t)$$ fixed, the activation
 $$
 a_i(t) = w_i^\top \mathbf{z}_i(t) + \alpha_i \eta_i(t) + b_i
 $$
-can change from tick to tick through $$\eta_i(t)$$, and thus the output can fluctuate.
+can change from tick to tick through $$\eta_i(t)$$, and thus the output can fluctuate. The per-node parameter $$p_i \in (0,1)$$ controls the bias of this stochastic input, allowing evolution to tune the level of intrinsic randomness at each node independently.
 
 This local randomness serves several purposes:
 
-- **Exploration in parameter and structure space**: stochastic node outputs can cause different sequences of rewards $$S_t$$ under the same environment, which in turn biases Evo’s choices of mutations. This provides an intrinsic exploration mechanism without needing an additional external noise process at the level of Evo.
+- **Exploration in parameter and structure space**: stochastic node outputs can cause different sequences of rewards $$S_t$$ under the same environment, which in turn biases Evo's choices of mutations. This provides an intrinsic exploration mechanism without needing an additional external noise process at the level of Evo.
 - **Symmetry breaking**: in purely deterministic systems, structurally identical Neos placed in identical environments would follow identical trajectories. The per-node stochasticity allows initially identical Neos to diverge, supporting richer population-level dynamics without complicating the deterministic part of the update rule.
 - **Modeling stochastic environments**: many NeoVerses are inherently noisy. Allowing internal computations to incorporate randomness makes it easier for Neos to represent and approximate stochastic mappings from past percepts to future outcomes, rather than being restricted to deterministic input–output relationships.
+- **Adjustable noise levels**: the parameter $$p_i$$ enables nodes to evolve different stochasticity profiles. A node with $$p_i \approx 0.5$$ provides balanced exploration, while $$p_i$$ near 0 or 1 produces more deterministic behavior, allowing the Neo to balance exploration and exploitation at the node level.
 
-Crucially, the stochasticity is added in the simplest possible way: a single Bernoulli bit enters linearly with weight $$\alpha_i$$. This keeps the local rule analytically tractable while still providing a source of randomness that can be up- or down-weighted by evolution (through changes in $$\alpha_i$$).
+Crucially, the stochasticity is added in the simplest possible way: a single Bernoulli bit enters linearly with weight $$\alpha_i$$. This keeps the local rule analytically tractable while still providing a source of randomness that can be up- or down-weighted by evolution (through changes in $$\alpha_i$$) and bias-tuned through the parameter $$p_i$$.
 
 ### 2.8.3 Minimality and Extensibility
 
