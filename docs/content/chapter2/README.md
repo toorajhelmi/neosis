@@ -629,3 +629,102 @@ The overall structure of a Neo is chosen to be minimal but extensible:
 - **Straightforward generalizations**: the current node rule is threshold-based, but replacing $$H(\cdot)$$ by another nonlinearity, or allowing continuous-valued node states, requires only local modifications to Section 2.4. The rest of the framework (structure, energy, mutation, Cycle) remains unchanged.
 
 In summary, the chosen Neo structure sits deliberately between biological inspiration and mathematical simplicity. It is close enough to a network of stochastic threshold neurons with evolving synapses to be cognitively meaningful, yet minimal enough to support precise analysis of survival, evolution, and emergent computation in the subsequent chapters.
+
+## 2.9 Neo and Other Computational Models
+
+To situate Neo within the broader landscape of computational models, we compare it with several established frameworks: recurrent neural networks, Hopfield networks, McCulloch–Pitts threshold networks, spiking neural networks, and probabilistic finite automata. These comparisons highlight both the mathematical connections and the distinctive features that make Neo a unique computational object.
+
+### 2.9.1 Neo and Recurrent Neural Networks
+
+RNNs provide continuous-state dynamics of the form
+
+$$
+\mathbf{h}_{t+1} = f(W\mathbf{h}_t + U\mathbf{x}_t + \mathbf{b}),
+$$
+
+with $$f$$ a smooth nonlinearity (tanh, ReLU). Neo shares with RNNs a dependence on recurrent structure and a parallel update pattern, but differs fundamentally in its discrete state space and nondifferentiable threshold nonlinearity.
+
+Replacing $$f$$ with a Heaviside function and allowing intrinsic noise turns the Neo update into a discrete analogue of an RNN cell:
+
+$$
+\mathbf{V}_{t+1} = H(W\mathbf{V}_t + B\mathbf{X}_t + \alpha\boldsymbol{\eta}_t + \mathbf{b}),
+$$
+
+except that Neo's rule includes the freeze gate $$g_i(t)$$, which forces exact state persistence when $$g_i(t) = 0$$, something ordinary RNNs do not structurally encode except via learned sigmoid gates in LSTM/GRU architectures. The presence of a tunable $$\text{Bernoulli}(p_i)$$ perturbation shifts the Neo closer to a stochastic recurrent automaton rather than a differentiable dynamical system.
+
+### 2.9.2 Neo and Hopfield Networks
+
+A classical Hopfield update is
+
+$$
+s_i(t+1) = \text{sign}\left(\sum_j W_{ij} s_j(t)\right),
+$$
+
+operating under symmetric weights to guarantee an energy-minimization principle. Neo resembles Hopfield units in its binary thresholding, yet diverges sharply through directed connectivity, stochastic activations, external inputs, and freeze gating. If one removes stochasticity ($$\alpha_i = 0$$), removes freeze, and enforces weight symmetry, the Neo update collapses toward Hopfield-like behavior. But with $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$ and arbitrary directed edges (Section {CH}.4.1), Neo is no longer confined to gradient descent on a Lyapunov energy; its transitions instead form a probabilistic threshold dynamical system unconstrained by symmetry or convergence guarantees.
+
+### 2.9.3 Neo and McCulloch–Pitts Threshold Networks
+
+The closest mathematical ancestor of Neo is the McCulloch–Pitts neuron:
+
+$$
+v_i(t+1) = H\left(\sum_j w_{ij} v_j(t) - \theta_i\right).
+$$
+
+Neo extends this rule in two orthogonal directions. First, the stochastic term $$\alpha_i \eta_i(t)$$ introduces controlled randomness into the activation function, keeping the local rule analytically simple but probabilistically expressive. Second, the freeze gate turns the update into a conditional assignment:
+
+$$
+\mathbf{V}_{t+1}[i] = \begin{cases}
+\mathbf{V}_t[i], & \text{if } g_i(t) = 0,\\
+H\big(w_i^\top \mathbf{z}_i(t) + \alpha_i \eta_i(t) + b_i\big), & \text{if } g_i(t) = 1,
+\end{cases}
+$$
+
+which makes Neo nodes capable of behaving like latches or memory elements independent of the weighted sum. Unlike fixed McCulloch–Pitts networks, Neo's connectivity evolves (Section {CH}.5), so the set of inputs $$\mathbf{z}_i(t)$$ is a dynamic quantity. This combination yields a threshold unit that is both structurally fluid and stochastically parameterized.
+
+### 2.9.4 Neo and Spiking Neural Networks
+
+A typical spiking neuron satisfies
+
+$$
+v_i(t+1) = \lambda v_i(t) + \sum_j w_{ij} s_j(t) - \theta_i, \quad s_i(t) = \mathbf{1}[v_i(t) \ge 0],
+$$
+
+where $$v_i(t)$$ is a continuous membrane potential. Superficially, both SNNs and Neos emit binary spikes, but their internal mechanisms differ: SNNs rely on temporal integration and threshold crossing, whereas Neo updates instantaneously with no membrane accumulation. Noise in SNNs often appears as probabilistic spike generation conditioned on $$v_i(t)$$; Neo's stochasticity is structurally simpler—the noise $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$ enters linearly (Section {CH}.4.2).
+
+The freeze gate has no analogue in standard SNNs, which lack native state-holding operators. Thus Neo achieves a spike-like binary output through a fundamentally different, purely threshold-based local rule with explicitly programmable persistence.
+
+### 2.9.5 Neo and Probabilistic Finite Automata
+
+A probabilistic finite automaton (PFA) uses a transition kernel
+
+$$
+P(s_{t+1} = s' \mid s_t, x_t),
+$$
+
+defining state changes as conditional probabilities. When one considers the global Neo state vector $$\mathbf{V}_t \in \{0,1\}^{n_t}$$, the Neo update induces exactly such a kernel: for each node,
+
+$$
+\Pr(\mathbf{V}_{t+1}[i] = 1 \mid \mathbf{V}_t, \mathbf{U}_t) = \begin{cases}
+1, & \text{if } g_i(t) = 0 \text{ and } \mathbf{V}_t[i] = 1,\\
+\Pr(w_i^\top \mathbf{z}_i(t) + \alpha_i \eta_i(t) + b_i \ge 0), & \text{if } g_i(t) = 1,
+\end{cases}
+$$
+
+and similarly for output 0. Because $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$, these probabilities take closed analytic form:
+
+$$
+\Pr(\mathbf{V}_{t+1}[i] = 1) = \begin{cases}
+1, & \text{if } g_i(t) = 0 \text{ and } \mathbf{V}_t[i] = 1,\\
+1, & \text{if } g_i(t) = 1 \text{ and } w_i^\top \mathbf{z}_i(t) + b_i \ge 0,\\
+p_i, & \text{if } g_i(t) = 1 \text{ and } -\alpha_i \le w_i^\top \mathbf{z}_i(t) + b_i < 0,\\
+0, & \text{if } g_i(t) = 1 \text{ and } w_i^\top \mathbf{z}_i(t) + b_i < -\alpha_i.
+\end{cases}
+$$
+
+The Neo therefore behaves precisely as a parametric probabilistic finite-state machine, where weights define implicit transition probabilities and freeze introduces deterministic self-loops. Unlike classical PFA transitions, these probabilities depend smoothly on the weight vector and bias, giving Neo both the interpretability of automata and the expressiveness of parameterized nonlinear models.
+
+### 2.9.6 Synthesis
+
+Across these comparisons, Neo emerges not as a variant of any single established computational model but as a synthesis of their core mathematical motifs. The update rule retains the threshold simplicity of McCulloch–Pitts neurons while admitting the stochastic richness of probabilistic automata. It mirrors RNN recurrence but without continuous states or differentiability, and it resembles spiking networks in its discreteness without adopting their temporal membrane dynamics. The freeze gate, in particular, introduces a structural control mechanism absent from all these systems, giving Neo a formal ability to preserve state independent of ongoing computation.
+
+This combination of binary substrate, stochastic thresholding, dynamic graph structure, and programmable persistence distinguishes Neo as a computational object whose nearest relatives lie in the intersection of threshold networks and probabilistic automata, while still remaining anchored in the formalism described in Sections {CH}.3–{CH}.4 of the Neosis model.
