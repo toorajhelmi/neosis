@@ -325,14 +325,6 @@ Note that $$\text{Acc}(p) \leq \max(p,1-p)$$ for all $$p \in (0,1)$$; the Neo do
 
 #### Survivability of the p-Estimator Neo
 
-For the 2-node p-estimator Neo, we have already computed the stationary joint behavior of the Neo and the Bernoulli NeoVerse. In particular, the Neo achieves a stationary next-bit prediction accuracy
-
-$$\text{Acc}(p) = A(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}.$$
-
-This accuracy is the only ingredient needed to plug the p-estimator into the general Neo survivability framework.
-
-**Energy Dynamics Under Binary Reward**
-
 Each tick produces a Spark reward $$S_t = r \, \mathbf{1}\{A(t+1) = U_{t+1}\}$$, and incurs a living cost $$c_\ell = n = 2$$, the number of nodes in the Neo. Thus the increment of Nex is
 
 $$\Delta E_t = r \, \mathbf{1}\{A(t+1) = U_{t+1}\} - c_\ell.$$
@@ -371,7 +363,7 @@ For the 2-node p-estimator $$c_\ell = 2$$, so the critical reward-to-cost ratio 
 
 $$r_{\text{crit}}(p) = \frac{2}{A(p)} = \frac{2(1 + 2p - 2p^2)}{1 - p + p^2}.$$
 
-Examples: $$p = 0.2$$: $$A(0.2) = 7/11 \Rightarrow r_{\text{crit}} \approx 3.14$$; $$p = 0.5$$: $$A(0.5) = 1/2 \Rightarrow r_{\text{crit}} = 4$$. Thus the Neo requires less reward to survive in biased environments (e.g., $$p = 0.2$$) and the most reward under maximal uncertainty ($$p = 0.5$$).
+For example, when $$p = 0.2$$, we have $$A(0.2) = 7/11$$, which gives $$r_{\text{crit}} \approx 3.14$$. When $$p = 0.5$$, we have $$A(0.5) = 1/2$$, giving $$r_{\text{crit}} = 4$$. This shows that the Neo requires less reward to survive in biased environments (such as $$p = 0.2$$) and requires the most reward under maximal uncertainty ($$p = 0.5$$).
 
 **Final Survivability Expression for the p-Estimator**
 
