@@ -415,7 +415,7 @@ Key geometric properties of this phase boundary:
 
 **Lower threshold in biased environments:** e.g. $$r_{\text{crit}}(0.2) \approx 3.14 < 4$$.
 
-**Figure 4.3.B** — Phase diagram in $$(p,r)$$-space
+**Figure 4.3.3.1** — Phase diagram in $$(p,r)$$-space
 
 ![Phase diagram](../assets/neo-phase.png)
 
@@ -500,11 +500,11 @@ The difference between $$p = 0.2$$ and $$p = 0.5$$ affects the magnitude of drif
 
 **Results**
 
-Figure 4.3.2.2.1 shows simulated energy trajectories on a logarithmic scale. As predicted, all runs with $$r = 2$$ terminate rapidly, while $$r = 4$$ produces slow, sometimes oscillatory drift that keeps the Neo near the survival boundary. Runs with $$r = 5$$ display clear exponential-in-log growth, consistent with a strongly positive drift in the stationary regime. The close agreement between these trajectories and the theoretical predictions confirms that survival is overwhelmingly determined by stationary accuracy rather than transient dynamics.
+Figure 4.3.2.3.1 shows simulated energy trajectories on a logarithmic scale. As predicted, all runs with $$r = 2$$ terminate rapidly, while $$r = 4$$ produces slow, sometimes oscillatory drift that keeps the Neo near the survival boundary. Runs with $$r = 5$$ display clear exponential-in-log growth, consistent with a strongly positive drift in the stationary regime. The close agreement between these trajectories and the theoretical predictions confirms that survival is overwhelmingly determined by stationary accuracy rather than transient dynamics.
 
 Although the accuracy at $$p = 0.2$$ is slightly higher than at $$p = 0.5$$, the difference is modest for this architecture, and over the 200-tick window the curves for the two environments appear broadly similar. Longer simulations make the gap more visible, but even in this short horizon the expected ordering of drift is evident.
 
-**Figure 4.3.2.2.1** — Energy trajectories for the two-node p-estimator Neo
+**Figure 4.3.2.3.1** — Energy trajectories for the two-node p-estimator Neo
 ![Phase diagram](../assets/neo-p-est-sim.png)
 
 Energy trajectories for the two-node p-estimator Neo under binary prediction reward, in NeoVerses with $$p = 0.2$$ and $$p = 0.5$$. The curves illustrate the effect of reward amplitude $$r \in \{2, 4, 5\}$$ on survival or extinction. Trajectories stop when $$E_t = 0$$.
