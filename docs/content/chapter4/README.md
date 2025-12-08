@@ -417,7 +417,7 @@ Key geometric properties of this phase boundary:
 
 **Figure 4.3.3.1** — Phase diagram in $$(p,r)$$-space
 
-![Phase diagram](../assets/neo-phase.png)
+<img src="../assets/neo-phase.png" alt="Phase diagram" style="max-width: 100%; width: 100%;" />
 
 This figure plots $$r_{\text{crit}}(p)$$ as a curve in the $$(p,r)$$-plane, shading: the region below the curve as "Extinction", the region above as "Survival". Optionally overlay Monte Carlo survival probabilities as a color map to show how the 0–1 transition aligns with the analytic boundary.
 
