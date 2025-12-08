@@ -705,19 +705,18 @@ defining state changes as conditional probabilities. When one considers the glob
 
 $$
 \Pr(\mathbf{V}_{t+1}[i] = 1 \mid \mathbf{V}_t, \mathbf{U}_t) = \begin{cases}
-1, & \text{if } g_i(t) = 0 \text{ and } \mathbf{V}_t[i] = 1,\\
+\mathbf{V}_t[i], & \text{if } g_i(t) = 0,\\
 \Pr(w_i^\top \mathbf{z}_i(t) + \alpha_i \eta_i(t) + b_i \ge 0), & \text{if } g_i(t) = 1,
 \end{cases}
 $$
 
-and similarly for output 0. Because $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$, these probabilities take closed analytic form:
+where the freeze case $$g_i(t) = 0$$ deterministically preserves the previous state. Because $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$, when $$g_i(t) = 1$$ these probabilities take closed analytic form:
 
 $$
-\Pr(\mathbf{V}_{t+1}[i] = 1) = \begin{cases}
-1, & \text{if } g_i(t) = 0 \text{ and } \mathbf{V}_t[i] = 1,\\
-1, & \text{if } g_i(t) = 1 \text{ and } w_i^\top \mathbf{z}_i(t) + b_i \ge 0,\\
-p_i, & \text{if } g_i(t) = 1 \text{ and } -\alpha_i \le w_i^\top \mathbf{z}_i(t) + b_i < 0,\\
-0, & \text{if } g_i(t) = 1 \text{ and } w_i^\top \mathbf{z}_i(t) + b_i < -\alpha_i.
+\Pr(\mathbf{V}_{t+1}[i] = 1 \mid g_i(t) = 1) = \begin{cases}
+1, & \text{if } w_i^\top \mathbf{z}_i(t) + b_i \ge 0,\\
+p_i, & \text{if } -\alpha_i \le w_i^\top \mathbf{z}_i(t) + b_i < 0,\\
+0, & \text{if } w_i^\top \mathbf{z}_i(t) + b_i < -\alpha_i.
 \end{cases}
 $$
 
