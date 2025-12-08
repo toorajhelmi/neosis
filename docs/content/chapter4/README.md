@@ -279,28 +279,21 @@ $$\pi = \pi P(p), \quad \pi_0+\pi_1+\pi_2+\pi_3 = 1.$$
 From $$\pi = \pi P$$, we get the system:
 
 $$\pi_0 = \pi_0(1-p) + \pi_1,$$
-
 $$\pi_1 = (1-p)\pi_3,$$
-
 $$\pi_2 = p\pi_0,$$
-
 $$\pi_3 = \pi_2 + p\pi_3.$$
 
 So the stationary distribution is:
 
 $$\boxed{ \pi(p) = \left( \frac{1-p}{1+2p-2p^2},\; \frac{p(1-p)}{1+2p-2p^2},\; \frac{p(1-p)}{1+2p-2p^2},\; \frac{p}{1+2p-2p^2} \right). }$$
 
-**Stationary Probability that $$A = 1$$**
-
-The prediction node $$A$$ is 1 in states $$s_2 = (1,0)$$ and $$s_3 = (1,1)$$. Thus: $$P_\pi(A(t) = 1) = \pi_2 + \pi_3 = \frac{p(1-p)}{D(p)} + \frac{p}{D(p)} = \frac{p(2-p)}{D(p)}$$, where $$D(p) = 1 + 2p - 2p^2$$. So:
+Now we can calculate the stationary probability that $$A = 1$$. The prediction node $$A$$ is 1 in states $$s_2 = (1,0)$$ and $$s_3 = (1,1)$$. Thus: $$P_\pi(A(t) = 1) = \pi_2 + \pi_3 = \frac{p(1-p)}{D(p)} + \frac{p}{D(p)} = \frac{p(2-p)}{D(p)}$$, where $$D(p) = 1 + 2p - 2p^2$$. So:
 
 $$\boxed{ P_\pi(A=1) = \frac{p(2-p)}{1+2p-2p^2}. }$$
 
 Since the chain is stationary, this is also the distribution of $$A(t+1)$$, $$A(t+2)$$, etc.
 
-**Prediction Accuracy $$\text{Acc}(p)$$**
-
-We now derive $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in closed form. Key points: $$U_{t+1}$$ is independent of $$(S_t, U_t)$$ and has distribution $$\text{Bernoulli}(p)$$. Under stationarity, the marginal distribution of $$A(t+1)$$ is the same as that of $$A(t)$$, i.e., $$P(A(t+1)=1) = P_\pi(A=1) = q(p) = \frac{p(2-p)}{D(p)}$$, so $$P(A(t+1)=0) = 1 - q(p)$$.
+We can derive $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in closed form. Note that: $$U_{t+1}$$ is independent of $$(S_t, U_t)$$ and has distribution $$\text{Bernoulli}(p)$$. Under stationarity, the marginal distribution of $$A(t+1)$$ is the same as that of $$A(t)$$, i.e., $$P(A(t+1)=1) = P_\pi(A=1) = q(p) = \frac{p(2-p)}{D(p)}$$, so $$P(A(t+1)=0) = 1 - q(p)$$.
 
 Given these, we can write:
 
@@ -328,13 +321,19 @@ $$\begin{aligned} N(p) &= \big(1 + p - 4p^2 + 2p^3\big) + \big(-2p + 5p^2 - 2p^3
 
 Therefore, $$\boxed{ \text{Acc}(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}. }$$
 
-For sanity checks: $$p = 0.5$$ gives numerator $$= 1 - 0.5 + 0.25 = 0.75$$, denominator $$= 1 + 1 - 0.5 = 1.5$$, so $$\text{Acc}(0.5) = 0.75/1.5 = 0.5$$ (chance level, as expected). For $$p = 0.2$$: numerator $$= 1 - 0.2 + 0.04 = 0.84$$, denominator $$= 1 + 0.4 - 0.08 = 1.32$$, so $$\text{Acc}(0.2) \approx 0.636$$. For $$p = 0.8$$: numerator $$= 1 - 0.8 + 0.64 = 0.84$$, denominator $$= 1 + 1.6 - 1.28 = 1.32$$, so $$\text{Acc}(0.8) \approx 0.636$$.
-
 Note that $$\text{Acc}(p) \leq \max(p,1-p)$$ for all $$p \in (0,1)$$; the Neo does not reach the Bayes limit.
 
 #### 4.3.2.2 Simulation Study
 
-We simulate the Neo for $$T = 200{,}000$$ ticks for each $$p \in \{0.2,0.5,0.8\}$$. The procedure is: (1) sample $$U_0, \dots, U_T$$ i.i.d. $$\text{Bernoulli}(p)$$, (2) initialize $$A(0)=B(0)=0$$, (3) for $$t = 0,\dots,T-1$$, update $$A(t+1),B(t+1)$$ using the Lex rules and use $$A(t+1)$$ as prediction for $$U_{t+1}$$, and (4) compute empirical accuracy $$\hat{\text{Acc}}(p) = \frac{1}{T}\sum_{t=0}^{T-1} \mathbf{1}\{A(t+1)=U_{t+1}\}$$.
+We simulate the Neo for $$T = 200{,}000$$ ticks for each $$p \in \{0.2,0.5,0.8\}$$. The procedure is: 
+
+(1) sample $$U_0, \dots, U_T$$ i.i.d. $$\text{Bernoulli}(p)$$, 
+
+(2) initialize $$A(0)=B(0)=0$$, 
+
+(3) for $$t = 0,\dots,T-1$$, update $$A(t+1),B(t+1)$$ using the Lex rules and use $$A(t+1)$$ as prediction for $$U_{t+1}$$, and 
+
+(4) compute empirical accuracy $$\hat{\text{Acc}}(p) = \frac{1}{T}\sum_{t=0}^{T-1} \mathbf{1}\{A(t+1)=U_{t+1}\}$$.
 
 Sample outcomes ($$T$$ large):
 
