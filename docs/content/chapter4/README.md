@@ -276,15 +276,14 @@ Let $$\pi(p) = (\pi_0,\pi_1,\pi_2,\pi_3)$$ be the stationary distribution over s
 
 $$\pi = \pi P(p), \quad \pi_0+\pi_1+\pi_2+\pi_3 = 1.$$
 
-From $$\pi = \pi P$$, we get: (1) coordinate 0: $$\pi_0 = \pi_0(1-p) + \pi_1$$, (2) coordinate 1: $$\pi_1 = (1-p)\pi_3$$, (3) coordinate 2: $$\pi_2 = p\pi_0$$, and (4) coordinate 3: $$\pi_3 = \pi_2 + p\pi_3$$.
+From $$\pi = \pi P$$, we get: 
 
-We now solve step by step. From (4): $$\pi_3 = \pi_2 + p\pi_3 \Rightarrow \pi_3(1-p) = \pi_2 \Rightarrow \pi_3 = \frac{\pi_2}{1-p}$$. From (3) we know $$\pi_2 = p\pi_0$$, so $$\pi_3 = \frac{p\pi_0}{1-p}$$. From (2): $$\pi_1 = (1-p)\pi_3 = (1-p)\cdot \frac{p\pi_0}{1-p} = p\pi_0$$. From (1): $$\pi_0 = (1-p)\pi_0 + \pi_1 \Rightarrow \pi_0 - (1-p)\pi_0 = \pi_1 \Rightarrow p\pi_0 = \pi_1$$, which is consistent with what we already got, so no new constraint.
+(1) coordinate 0: $$\pi_0 = \pi_0(1-p) + \pi_1$$, 
+(2) coordinate 1: $$\pi_1 = (1-p)\pi_3$$, 
+(3) coordinate 2: $$\pi_2 = p\pi_0$$, and 
+(4) coordinate 3: $$\pi_3 = \pi_2 + p\pi_3$$.
 
-Now apply normalization: $$\pi_0 + \pi_1 + \pi_2 + \pi_3 = 1$$. Substitute $$\pi_1 = p\pi_0$$, $$\pi_2 = p\pi_0$$, and $$\pi_3 = \dfrac{p\pi_0}{1-p}$$: $$\pi_0 + p\pi_0 + p\pi_0 + \frac{p\pi_0}{1-p} = 1$$. Factor $$\pi_0$$: $$\pi_0\left(1 + 2p + \frac{p}{1-p}\right) = 1$$.
-
-Compute the bracket: $$1 + 2p + \frac{p}{1-p} = \frac{(1-p)(1+2p) + p}{1-p} = \frac{1 + 2p - p - 2p^2 + p}{1-p} = \frac{1 + 2p - 2p^2}{1-p}$$. Define $$D(p) = 1 + 2p - 2p^2$$. Then: $$\pi_0 \cdot \frac{D(p)}{1-p} = 1 \Rightarrow \pi_0 = \frac{1-p}{D(p)}$$.
-
-And therefore: $$\pi_1 = p \pi_0 = \frac{p(1-p)}{D(p)}$$, $$\pi_2 = p \pi_0 = \frac{p(1-p)}{D(p)}$$, and $$\pi_3 = \frac{p}{1-p}\pi_0 = \frac{p}{1-p}\cdot \frac{1-p}{D(p)} = \frac{p}{D(p)}$$. So the stationary distribution is:
+So the stationary distribution is:
 
 $$\boxed{ \pi(p) = \left( \frac{1-p}{1+2p-2p^2},\; \frac{p(1-p)}{1+2p-2p^2},\; \frac{p(1-p)}{1+2p-2p^2},\; \frac{p}{1+2p-2p^2} \right). }$$
 
