@@ -375,9 +375,7 @@ The explicit survivability formula highlights that the p-estimator Neo does not 
 
 $$r_{\text{crit}}(p) = \frac{2}{A(p)} = \frac{2(1 + 2p - 2p^2)}{1 - p + p^2},$$
 
-where $$A(p)$$ is the stationary prediction accuracy of the Neo. This critical curve summarizes how demanding the environment is for a given bias $$p$$.
-
-The curve $$r_{\text{crit}}(p)$$ partitions the $$(p,r)$$-plane into two phases:
+where $$A(p)$$ is the stationary prediction accuracy of the Neo. This critical curve summarizes how demanding the environment is for a given bias $$p$$. The curve $$r_{\text{crit}}(p)$$ partitions the $$(p,r)$$-plane into two phases:
 
 **Subcritical regime:** $$r < r_{\text{crit}}(p) \Rightarrow \Xi(p; r, E_0) = 0$$. Energy drift is non-positive; the Neo dies with probability one.
 
@@ -403,11 +401,9 @@ $$\Xi(p; r, E_0) \approx 1 - \exp\left(-\frac{2E_0 (rA(p) - 2)}{r^2 A(p)(1 - A(p
 
 Geometrically, the phase boundary has three key properties. **Symmetry:** $$r_{\text{crit}}(p) = r_{\text{crit}}(1-p)$$, so the diagram is symmetric around $$p = 0.5$$. **Maximal hardness at $$p = 0.5$$:** $$r_{\text{crit}}(0.5) = 4$$ is the highest point on the curve. **Lower threshold in biased environments:** for example $$r_{\text{crit}}(0.2) \approx 3.14 < 4$$, so the p-estimator finds it easier to survive when the NV is biased.
 
-**Figure 4.3.2.1.2.1** — Phase diagram in $$(p,r)$$-space
+**Figure 4.3.2.1.2.1** — Phase diagram in $$(p,r)$$-space. This figure plots $$r_{\text{crit}}(p)$$ as a curve in the $$(p,r)$$-plane, shading: the region below the curve as "Extinction", the region above as "Survival". Optionally overlay Monte Carlo survival probabilities as a color map to show how the 0–1 transition aligns with the analytic boundary.
 
 ![Phase diagram](../assets/neo-phase.png)
-
-This figure plots $$r_{\text{crit}}(p)$$ as a curve in the $$(p,r)$$-plane, shading: the region below the curve as "Extinction", the region above as "Survival". Optionally overlay Monte Carlo survival probabilities as a color map to show how the 0–1 transition aligns with the analytic boundary.
 
 #### Universality Near the Critical Line
 
@@ -481,9 +477,7 @@ Figure 4.3.2.2.1 shows simulated energy trajectories on a logarithmic scale. As 
 
 Although the accuracy at $$p = 0.2$$ is slightly higher than at $$p = 0.5$$, the difference is modest for this architecture, and over the 200-tick window the curves for the two environments appear broadly similar. Longer simulations make the gap more visible, but even in this short horizon the expected ordering of drift is evident.
 
-**Figure 4.3.2.2.1** — Energy trajectories for the two-node p-estimator Neo
+**Figure 4.3.2.2.1** — Energy trajectories for the two-node p-estimator Neo under binary prediction reward, in NeoVerses with $$p = 0.2$$ and $$p = 0.5$$. The curves illustrate the effect of reward amplitude $$r \in \{2, 4, 5\}$$ on survival or extinction. Trajectories stop when $$E_t = 0$$.
 
 <img src="../assets/neo-p-est-sim.png" alt="Simulation results" style="max-width: 100%; width: 100%;" />
-
-Energy trajectories for the two-node p-estimator Neo under binary prediction reward, in NeoVerses with $$p = 0.2$$ and $$p = 0.5$$. The curves illustrate the effect of reward amplitude $$r \in \{2, 4, 5\}$$ on survival or extinction. Trajectories stop when $$E_t = 0$$.
 
