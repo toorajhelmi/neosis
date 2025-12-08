@@ -479,7 +479,7 @@ Although the accuracy at $$p = 0.2$$ is slightly higher than at $$p = 0.5$$, the
 
 **Figure 4.3.2.2.1** — Energy trajectories for the two-node p-estimator Neo under binary prediction reward, in NeoVerses with $$p = 0.2$$ and $$p = 0.5$$. The curves illustrate the effect of reward amplitude $$r \in \{2, 4, 5\}$$ on survival or extinction. Trajectories stop when $$E_t = 0$$.
 
-<img src="../assets/neo-p-est-sim.png" alt="Simulation results" style="display: block; max-width: 100%; width: 100%; margin: 0 auto;" />
+![Simulation results](../assets/neo-p-est-sim.png)
 
 **Validating Criticality Through Simulation**
 
@@ -497,5 +497,5 @@ The agreement confirms that the drift condition captures the true operational dy
 
 **Figure 4.3.2.2.2** — Survival probability as a function of $$r$$. This figure plots empirical survival probability against $$r$$ for both NeoVerse biases and marks the predicted thresholds. The alignment between theory and simulation shows that criticality is an intrinsic property of Neosis energy dynamics rather than an artifact of approximation.
 
-<img src="../assets/neo-crit-valid.png" alt="Criticality validation" style="display: block; max-width: 100%; width: 100%; margin: 0 auto;" />
+![Criticality validation](../assets/neo-crit-valid.png)
 
