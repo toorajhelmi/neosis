@@ -323,7 +323,7 @@ Therefore, $$\boxed{ \text{Acc}(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}. }$$
 
 Note that $$\text{Acc}(p) \leq \max(p,1-p)$$ for all $$p \in (0,1)$$; the Neo does not reach the Bayes limit.
 
-#### Survivability of the p-Estimator Neo
+#### 4.3.2.2 Survivability of the p-Estimator Neo
 
 Each tick produces a Spark reward $$S_t = r \, \mathbf{1}\{A(t+1) = U_{t+1}\}$$, and incurs a living cost $$c_\ell = n = 2$$, the number of nodes in the Neo. Thus the increment of Nex is
 
@@ -371,7 +371,7 @@ $$\Xi(p; r, E_0) = \begin{cases} 0, & r \leq \frac{2}{A(p)}, \\ 1 - \exp\left(-\
 
 This formula completely characterizes how survival depends on: the NV bias $$p$$, the architecture (through $$A(p)$$), the Spark reward $$r$$, the energy cost $$n=2$$, and the initial Nex $$E_0$$.
 
-### 4.3 Criticality Analysis of the p-Estimator Neo
+### 4.3.3 Criticality Analysis of the p-Estimator Neo
 
 The survivability analysis revealed that the p-estimator Neo exhibits a sharp transition between certain death and possible long-term survival as the reward parameter $$r$$ crosses a critical threshold
 
@@ -385,7 +385,7 @@ The curve $$r_{\text{crit}}(p)$$ partitions the $$(p,r)$$-plane into two phases:
 
 **Supercritical regime:** $$r > r_{\text{crit}}(p) \Rightarrow \Xi(p; r, E_0) > 0$$. Positive energy drift allows nonzero survivability.
 
-#### 4.3.5 Phase Diagram in $$(p,r)$$-Space
+#### 4.3.3.1 Phase Diagram in $$(p,r)$$-Space
 
 For the p-estimator Neo with cost $$c_\ell = 2$$, the critical line in $$(p,r)$$-space is
 
@@ -421,7 +421,7 @@ Key geometric properties of this phase boundary:
 
 This figure plots $$r_{\text{crit}}(p)$$ as a curve in the $$(p,r)$$-plane, shading: the region below the curve as "Extinction", the region above as "Survival". Optionally overlay Monte Carlo survival probabilities as a color map to show how the 0–1 transition aligns with the analytic boundary.
 
-#### 4.3.6 Universality Near the Critical Line
+#### 4.3.3.2 Universality Near the Critical Line
 
 Near the critical line $$r = r_{\text{crit}}(p)$$, the Neo's energy behaves like a biased random walk with small drift and variance $$\sigma^2(p) = r^2 A(p)(1 - A(p))$$.
 
@@ -456,7 +456,7 @@ Any Neo with binary reward and constant per-tick cost, whose stationary behavior
 
 In other words, the qualitative phase structure and scaling near criticality are universal across this whole family of Neos; the p-estimator Neo is a concrete instantiation where we can write everything in closed form via $$A(p)$$.
 
-#### 4.3.2.2 Simulation Study
+#### 4.3.2.3 Simulation Study
 
 This section evaluates the behavior of the two-node p-estimator Neo through direct simulation of the Neo cycle. The implementation follows the formal operational rules of perception, internal state update, Spark emission, and energy accounting described in the Neosis specification. Survival expectations are compared to the drift-based analysis developed in the Neo-Survivability document.
 
