@@ -417,7 +417,7 @@ Key geometric properties of this phase boundary:
 
 **Figure 4.3.B** — Phase diagram in $$(p,r)$$-space
 
-<img src="assets/neo-phase.png" alt="Phase diagram" />
+<img src="../assets/neo-phase.png" alt="Phase diagram" />
 
 This figure plots $$r_{\text{crit}}(p)$$ as a curve in the $$(p,r)$$-plane, shading: the region below the curve as "Extinction", the region above as "Survival". Optionally overlay Monte Carlo survival probabilities as a color map to show how the 0–1 transition aligns with the analytic boundary.
 
@@ -506,7 +506,7 @@ Although the accuracy at $$p = 0.2$$ is slightly higher than at $$p = 0.5$$, the
 
 **Figure 4.3.2.2.1** — Energy trajectories for the two-node p-estimator Neo
 
-<img src="assets/neo-p-est-sim.png" alt="Simulation results" />
+<img src="../assets/neo-p-est-sim.png" alt="Simulation results" />
 
 Energy trajectories for the two-node p-estimator Neo under binary prediction reward, in NeoVerses with $$p = 0.2$$ and $$p = 0.5$$. The curves illustrate the effect of reward amplitude $$r \in \{2, 4, 5\}$$ on survival or extinction. Trajectories stop when $$E_t = 0$$.
 
