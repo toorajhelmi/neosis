@@ -276,12 +276,14 @@ Let $$\pi(p) = (\pi_0,\pi_1,\pi_2,\pi_3)$$ be the stationary distribution over s
 
 $$\pi = \pi P(p), \quad \pi_0+\pi_1+\pi_2+\pi_3 = 1.$$
 
-From $$\pi = \pi P$$, we get: 
+From $$\pi = \pi P$$, we get:
 
-(1) coordinate 0: $$\pi_0 = \pi_0(1-p) + \pi_1$$, 
-(2) coordinate 1: $$\pi_1 = (1-p)\pi_3$$, 
-(3) coordinate 2: $$\pi_2 = p\pi_0$$, and 
-(4) coordinate 3: $$\pi_3 = \pi_2 + p\pi_3$$.
+$$\begin{cases}
+\pi_0 = \pi_0(1-p) + \pi_1, \\
+\pi_1 = (1-p)\pi_3, \\
+\pi_2 = p\pi_0, \\
+\pi_3 = \pi_2 + p\pi_3.
+\end{cases}$$
 
 So the stationary distribution is:
 
