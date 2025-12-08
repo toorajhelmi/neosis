@@ -481,3 +481,23 @@ Although the accuracy at $$p = 0.2$$ is slightly higher than at $$p = 0.5$$, the
 
 <img src="../assets/neo-p-est-sim.png" alt="Simulation results" style="max-width: 100%; width: 100%;" />
 
+**Validating Criticality Through Simulation**
+
+The analytical survivability condition derived earlier predicts a critical reward ratio
+
+$$r_{\text{crit}}(p) = \frac{c_\ell}{A(p)},$$
+
+which separates inevitable extinction from sustained survival. To test whether this phase boundary appears in actual Neo trajectories—not only in the diffusion approximation—we simulated the two-node p-estimator Neo in Bernoulli-$$p$$ NeoVerses while sweeping the reward amplitude $$r$$.
+
+The results exhibit a sharp transition consistent with theory. For $$p = 0.2$$, survival probability remains zero until $$r \approx 3.1$$, then rises rapidly toward one; for $$p = 0.5$$, the corresponding transition occurs at $$r = 4$$. These breakpoints match the analytical predictions obtained from
+
+$$\mu = rA(p) - c_\ell, \quad r_{\text{crit}} = \frac{c_\ell}{A(p)}.$$
+
+The agreement confirms that the drift condition captures the true operational dynamics: the Neo's lifetime changes discontinuously as $$r$$ crosses $$r_{\text{crit}}(p)$$, demonstrating a genuine survival phase transition.
+
+**Figure 4.3.2.2.2** — Survival probability as a function of $$r$$
+
+<img src="../assets/neo-crit-valid.png" alt="Criticality validation" style="max-width: 100%; width: 100%;" />
+
+This figure plots empirical survival probability against $$r$$ for both NeoVerse biases and marks the predicted thresholds. The alignment between theory and simulation shows that criticality is an intrinsic property of Neosis energy dynamics rather than an artifact of approximation.
+
