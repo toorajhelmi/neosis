@@ -224,31 +224,27 @@ We explicitly compute $$S_{t+1} = (A(t+1),B(t+1))$$ for all four states and both
 
 $$\begin{aligned} A(t+1) &= H(2U_t + A(t) - 2B(t) - 1),\\ B(t+1) &= H(A(t) - 0.5). \end{aligned}$$
 
-**Case 1:** $$S_t = s_0 = (A,B)=(0,0)$$. If $$U_t = 0$$: $$a_A = 2\cdot 0 + 0 - 2\cdot 0 - 1 = -1 
-\Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 
-\Rightarrow B(t+1)=0$$, so $$S_{t+1} = (0,0) = s_0$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 0 - 1 = 1
-\Rightarrow A(t+1)=1$$, $$a_B = 0 - 0.5 = -0.5 
-\Rightarrow B(t+1)=0$$, so $$S_{t+1} = (1,0) = s_2$$.
+**Case 1:** $$S_t = s_0 = (A,B)=(0,0)$$. If $$U_t = 0$$: $$a_A = 2\cdot 0 + 0 - 2\cdot 0 - 1 = -1 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$, so $$S_{t+1} = (0,0) = s_0$$. 
 
-**Case 2:** $$S_t = s_1 = (0,1)$$. If $$U_t = 0$$: $$a_A = 0 + 0 - 2\cdot 1 - 1 = -3 
-\Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 
-\Rightarrow B(t+1)=0$$, so $$S_{t+1} = (0,0) = s_0$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 2\cdot 1 - 1 = -1 
-\Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 
-\Rightarrow B(t+1)=0$$, so $$S_{t+1} = (0,0) = s_0$$. Thus from $$s_1$$ we always go to $$s_0$$, regardless of $$U_t$$.
+If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 0 - 1 = 1 \Rightarrow A(t+1)=1$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$, so $$S_{t+1} = (1,0) = s_2$$.
 
-**Case 3:** $$S_t = s_2 = (1,0)$$. If $$U_t = 0$$: $$a_A = 0 + 1 - 0 - 1 = 0 
-\Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 
-\Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 0 - 1 = 2 
-\Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 
-\Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. From $$s_2$$ we always go to $$s_3$$, regardless of $$U_t$$.
+**Case 2:** $$S_t = s_1 = (0,1)$$. If $$U_t = 0$$: $$a_A = 0 + 0 - 2\cdot 1 - 1 = -3 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$, so $$S_{t+1} = (0,0) = s_0$$. 
 
-**Case 4:** $$S_t = s_3 = (1,1)$$. If $$U_t = 0$$: $$a_A = 0 + 1 - 2\cdot 1 - 1 = -2 
-\Rightarrow A(t+1)=0$$, $$a_B = 1 - 0.5 = 0.5 
-\Rightarrow B(t+1)=1$$, so $$S_{t+1} = (0,1) = s_1$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 2\cdot 1 - 1 = 0 
-\Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 
-\Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. So from $$s_3$$: $$U_t = 0 
-\Rightarrow s_1$$; $$U_t = 1 
-\Rightarrow s_3$$.
+If $$U_t = 1$$: $$a_A = 2\cdot 1 + 0 - 2\cdot 1 - 1 = -1 \Rightarrow A(t+1)=0$$, $$a_B = 0 - 0.5 = -0.5 \Rightarrow B(t+1)=0$$, so $$S_{t+1} = (0,0) = s_0$$. 
+
+Thus from $$s_1$$ we always go to $$s_0$$, regardless of $$U_t$$.
+
+**Case 3:** $$S_t = s_2 = (1,0)$$. If $$U_t = 0$$: $$a_A = 0 + 1 - 0 - 1 = 0 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. 
+
+If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 0 - 1 = 2 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. 
+
+From $$s_2$$ we always go to $$s_3$$, regardless of $$U_t$$.
+
+**Case 4:** $$S_t = s_3 = (1,1)$$. If $$U_t = 0$$: $$a_A = 0 + 1 - 2\cdot 1 - 1 = -2 \Rightarrow A(t+1)=0$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$, so $$S_{t+1} = (0,1) = s_1$$. 
+
+If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 2\cdot 1 - 1 = 0 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 \Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. 
+
+So from $$s_3$$: $$U_t = 0 \Rightarrow s_1$$; $$U_t = 1 \Rightarrow s_3$$.
 
 **Transition Matrix $$P(p)$$**
 
