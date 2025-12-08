@@ -376,7 +376,7 @@ This formula completely characterizes how survival depends on: the NV bias $$p$$
 
 This section evaluates the behavior of the two-node p-estimator Neo through direct simulation of the Neo cycle. The implementation follows the formal operational rules of perception, internal state update, Spark emission, and energy accounting described in the Neosis specification. Survival expectations are compared to the drift-based analysis developed in the Neo-Survivability document.
 
-**{CH}.3.2.2.1 Setup**
+**Setup**
 
 The Neo is placed in an i.i.d. Bernoulli NeoVerse with $$U_t \sim \text{Bernoulli}(p)$$, $$p \in \{0.2, 0.5\}$$. Its internal state evolves according to the deterministic update rules:
 
@@ -396,7 +396,7 @@ with an absorbing boundary at $$E_t = 0$$.
 
 The simulation runs for 200 ticks or until the Neo dies.
 
-**{CH}.3.2.2.2 Expected Behavior**
+**Expected Behavior**
 
 Because the two-node architecture has a strong attractor, the internal configuration settles rapidly—typically within a few ticks—into the stationary regime described in the analytical section. In this regime the accuracy
 
@@ -414,7 +414,7 @@ For the reward values studied here ($$r = 2, 4, 5$$), theory predicts:
 
 The difference between $$p = 0.2$$ and $$p = 0.5$$ affects the magnitude of drift but not its sign for these reward choices. Consequently, both environments lead to qualitatively similar survivability patterns.
 
-**{CH}.3.2.2.3 Results**
+**Results**
 
 Figure 4.1 shows simulated energy trajectories on a logarithmic scale. As predicted, all runs with $$r = 2$$ terminate rapidly, while $$r = 4$$ produces slow, sometimes oscillatory drift that keeps the Neo near the survival boundary. Runs with $$r = 5$$ display clear exponential-in-log growth, consistent with a strongly positive drift in the stationary regime. The close agreement between these trajectories and the theoretical predictions confirms that survival is overwhelmingly determined by stationary accuracy rather than transient dynamics.
 
