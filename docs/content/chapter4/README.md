@@ -365,7 +365,6 @@ $$r_{\text{crit}}(p) = \frac{2}{A(p)} = \frac{2(1 + 2p - 2p^2)}{1 - p + p^2}.$$
 
 For example, when $$p = 0.2$$, we have $$A(0.2) = 7/11$$, which gives $$r_{\text{crit}} \approx 3.14$$. When $$p = 0.5$$, we have $$A(0.5) = 1/2$$, giving $$r_{\text{crit}} = 4$$. This shows that the Neo requires less reward to survive in biased environments (such as $$p = 0.2$$) and requires the most reward under maximal uncertainty ($$p = 0.5$$).
 
-
 Substituting $$A(p)$$ directly yields:
 
 $$\Xi(p; r, E_0) = \begin{cases} 0, & r \leq \frac{2}{A(p)}, \\ 1 - \exp\left(-\frac{2E_0 (rA(p) - 2)}{r^2 A(p)(1 - A(p))}\right), & r > \frac{2}{A(p)}. \end{cases}$$
@@ -380,51 +379,14 @@ $$r_{\text{crit}}(p) = \frac{2}{A(p)} = \frac{2(1 + 2p - 2p^2)}{1 - p + p^2},$$
 
 where $$A(p)$$ is the stationary prediction accuracy of the Neo.
 
-This section examines the shape, monotonicity, and implications of this critical curve.
-
-#### 4.3.1 Behavioral Meaning of the Critical Curve
-
 The curve $$r_{\text{crit}}(p)$$ partitions the $$(p,r)$$-plane into two phases:
 
 **Subcritical regime:** $$r < r_{\text{crit}}(p) \Rightarrow \Xi(p; r, E_0) = 0$$. Energy drift is non-positive; the Neo dies with probability one.
 
 **Supercritical regime:** $$r > r_{\text{crit}}(p) \Rightarrow \Xi(p; r, E_0) > 0$$. Positive energy drift allows nonzero survivability.
 
-Because the Neo performs best when the Bernoulli NV is biased, $$A(p)$$ is minimized at $$p = 0.5$$, the critical reward is maximal at $$p = 0.5$$: $$r_{\text{crit}}(0.5) = 4$$. Thus the environment with highest uncertainty (balanced bits) requires the largest Spark reward for survival, while biased environments ($$p \neq 0.5$$) require a smaller reward. This reproduces the general Neosis principle: **Environmental structure acts as free energy.**
 
-#### 4.3.2 Shape and Interpretation
 
-The expression
-
-$$r_{\text{crit}}(p) = \frac{2}{A(p)}$$
-
-implies:
-
-**Symmetry:** $$A(p) = A(1-p)$$, $$r_{\text{crit}}(p) = r_{\text{crit}}(1-p)$$, so the hardest NV is the least biased, not one side specifically.
-
-**Divergence behavior:** Although $$r_{\text{crit}}(p)$$ remains finite for all $$p \in (0,1)$$, it increases sharply as $$p \to 0.5$$, reflecting the fact that the Neo's fixed architecture cannot exploit environments lacking structure.
-
-**Ordering:** $$r_{\text{crit}}(0.2) \approx 3.14 < r_{\text{crit}}(0.5) = 4$$. The p-estimator is more "fit" in biased environments.
-
-**Architectural limitation:** Since accuracy $$A(p)$$ never exceeds $$0.636$$, this Neo never reaches Bayesian optimality, which forces higher reward levels than an ideal predictor would require. This makes criticality a structural probe into limitations of the node topology.
-
-#### 4.3.3 Graphical Depiction of Criticality Curve
-
-Figure 4.3.A plots the function
-
-$$r_{\text{crit}}(p) = \frac{2}{A(p)}$$
-
-for $$p \in [0,1]$$. The curve displays:
-
-- A minimum at the two extremes $$p = 0$$ and $$p = 1$$
-- A peak at $$p = 0.5$$
-- Symmetry about $$p = 0.5$$
-
-**Figure 4.3.A** — Critical reward curve $$r_{\text{crit}}(p)$$
-
-(Placeholder: insert graph here)
-
-This figure should visualize clearly the phase boundary between survival and certain extinction. You can optionally overlay simulation-derived survival probabilities to show how sharply the survival transition aligns with the analytic curve.
 
 #### 4.3.2.2 Simulation Study
 
