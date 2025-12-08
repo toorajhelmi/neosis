@@ -1,4 +1,4 @@
-# Chapter 5 — Micro Analysis of a Single Neo
+# Chapter 5 — Micro Motifs
 
 ## 5.1 Scope and Objectives
 
