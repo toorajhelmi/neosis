@@ -505,8 +505,7 @@ Figure 4.3.2.2.1 shows simulated energy trajectories on a logarithmic scale. As 
 Although the accuracy at $$p = 0.2$$ is slightly higher than at $$p = 0.5$$, the difference is modest for this architecture, and over the 200-tick window the curves for the two environments appear broadly similar. Longer simulations make the gap more visible, but even in this short horizon the expected ordering of drift is evident.
 
 **Figure 4.3.2.2.1** — Energy trajectories for the two-node p-estimator Neo
-
-<img src="../assets/neo-p-est-sim.png" alt="Simulation results" width="100%" />
+![Phase diagram](../assets/neo-p-est-sim.png)
 
 Energy trajectories for the two-node p-estimator Neo under binary prediction reward, in NeoVerses with $$p = 0.2$$ and $$p = 0.5$$. The curves illustrate the effect of reward amplitude $$r \in \{2, 4, 5\}$$ on survival or extinction. Trajectories stop when $$E_t = 0$$.
 
