@@ -278,7 +278,7 @@ V'_t \in \mathbb{B}^{n_t+1}, \qquad
 $$
 
 where $$V'_t[n_t+1]$$ is initialized to 0 and the new parameter vector $$\theta_{n_t+1}$$ is drawn
-from an initialization distribution over $$\mathbb{R}^{k_{n_t+1}+2}$$.
+from an initialization distribution over $$\mathbb{R}^{k_{n_t+1}+3}$$.
 
 Optionally, Evo may introduce new edges involving the new node:
 $$
@@ -337,7 +337,7 @@ $$
 $$
 
 where $$\Delta_i$$ is drawn from a zero-mean perturbation distribution on
-$$\mathbb{R}^{k_i+2}$$. All other nodes and edges remain unchanged.
+$$\mathbb{R}^{k_i+3}$$. All other nodes and edges remain unchanged.
 
 This primitive enables exploration of local computational behaviors.
 
