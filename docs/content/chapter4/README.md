@@ -278,12 +278,12 @@ $$\pi = \pi P(p), \quad \pi_0+\pi_1+\pi_2+\pi_3 = 1.$$
 
 From $$\pi = \pi P$$, we get:
 
-$$\begin{cases}
-\pi_0 = \pi_0(1-p) + \pi_1, \\
-\pi_1 = (1-p)\pi_3, \\
-\pi_2 = p\pi_0, \\
-\pi_3 = \pi_2 + p\pi_3.
-\end{cases}$$
+$$\left\{\begin{aligned}
+\pi_0 &= \pi_0(1-p) + \pi_1, \\
+\pi_1 &= (1-p)\pi_3, \\
+\pi_2 &= p\pi_0, \\
+\pi_3 &= \pi_2 + p\pi_3.
+\end{aligned}\right.$$
 
 So the stationary distribution is:
 
