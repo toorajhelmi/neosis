@@ -689,7 +689,7 @@ $$
 v_i(t+1) = \lambda v_i(t) + \sum_j w_{ij} s_j(t) - \theta_i, \quad s_i(t) = \mathbf{1}[v_i(t) \ge 0],
 $$
 
-where $$v_i(t)$$ is a continuous membrane potential. Superficially, both SNNs and Neos emit binary spikes, but their internal mechanisms differ: SNNs rely on temporal integration and threshold crossing, whereas Neo updates instantaneously with no membrane accumulation. Noise in SNNs often appears as probabilistic spike generation conditioned on $$v_i(t)$$; Neo's stochasticity is structurally simpler—the noise $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$ enters linearly (Section {CH}.4.2).
+where $$v_i(t)$$ is a continuous membrane potential. Superficially, both SNNs and Neos emit binary spikes, but their internal mechanisms differ: SNNs rely on temporal integration and threshold crossing, whereas Neo updates instantaneously with no membrane accumulation. Noise in SNNs often appears as probabilistic spike generation conditioned on $$v_i(t)$$; Neo's stochasticity is structurally simpler—the noise $$\eta_i(t) \sim \text{Bernoulli}(p_i)$$ enters linearly.
 
 The freeze gate has no analogue in standard SNNs, which lack native state-holding operators. Thus Neo achieves a spike-like binary output through a fundamentally different, purely threshold-based local rule with explicitly programmable persistence.
 
@@ -726,4 +726,4 @@ The Neo therefore behaves precisely as a parametric probabilistic finite-state m
 
 Across these comparisons, Neo emerges not as a variant of any single established computational model but as a synthesis of their core mathematical motifs. The update rule retains the threshold simplicity of McCulloch–Pitts neurons while admitting the stochastic richness of probabilistic automata. It mirrors RNN recurrence but without continuous states or differentiability, and it resembles spiking networks in its discreteness without adopting their temporal membrane dynamics. The freeze gate, in particular, introduces a structural control mechanism absent from all these systems, giving Neo a formal ability to preserve state independent of ongoing computation.
 
-This combination of binary substrate, stochastic thresholding, dynamic graph structure, and programmable persistence distinguishes Neo as a computational object whose nearest relatives lie in the intersection of threshold networks and probabilistic automata, while still remaining anchored in the formalism described in Sections {CH}.3–{CH}.4 of the Neosis model.
+This combination of binary substrate, stochastic thresholding, dynamic graph structure, and programmable persistence distinguishes Neo as a computational object whose nearest relatives lie in the intersection of threshold networks and probabilistic automata.
