@@ -1,4 +1,4 @@
-# Chapter {CH} — Micro Static Analysis of a Single Neo
+# Chapter 4 — Micro Static Analysis of a Single Neo
 
 A Neo survives by predicting the NeoVerse (NV). At every tick, it receives a small snapshot of the world—$$m$$ binary inputs $$U_t \in \{0,1\}^m$$—and updates its internal state according to the Lex rule. From this updated state it produces an output vector $$Y_t$$, interpreted as its prediction of the next NV state $$U_{t+1}$$. Correct predictions generate Sparks, which increase the Neo's Nex. Regardless of correctness, each update consumes a fixed amount of Nex simply to remain alive.
 
@@ -8,7 +8,7 @@ Because the computation is fixed, the Neo eventually settles into a long-run sta
 
 The purpose of this chapter is to determine how much predictive ability a fixed Neo possesses purely from its stationary behavior. By characterizing how its stationary output relates to the NV's stationary dynamics, we can determine its expected Nex gain, its expected Nex loss, and ultimately whether it will survive.
 
-## {CH}.1 Neo as a Predictive System
+## 4.1 Neo as a Predictive System
 
 Prediction is only meaningful when the environment exhibits stable statistical structure. If the NeoVerse changed its distribution over time—drifting, aging, or altering its transition rules—then a static Neo could not maintain predictive accuracy. Even though learning-capable Neos will be treated later, the static Neo analyzed here can only exploit whatever statistical regularities are already present. Its predictive power depends entirely on whether the relationship between $$U_t$$ and $$U_{t+1}$$ remains consistent over time.
 
@@ -24,7 +24,7 @@ converges to a well-defined stationary distribution. All predictive properties o
 
 A stationary NV therefore makes micro analysis possible: it ensures that a fixed Neo has a well-defined, time-invariant predictive relationship with the environment.
 
-## {CH}.2 Neo's Survivability
+## 4.2 Neo's Survivability
 
 Once the Neo and the perceived NeoVerse (NV) projection settle into their joint stationary regime, their long-run behavior is captured by the stationary distribution
 
@@ -94,7 +94,7 @@ $$\Xi = \Xi(\pi(x, u), \, g, \, P(U^+ \mid U), \, r, \, c_\ell, \, E_0).$$
 
 The stationary distribution $$\pi(x, u)$$ encodes how the Neo's internal state co-varies with its perceived environment; the output mapping $$g$$ and NV dynamics $$P(U^+ \mid U)$$ determine prediction accuracy; and the Spark reward $$r$$, living cost $$c_\ell$$, and initial Nex $$E_0$$ translate predictive performance into a concrete survival probability.
 
-## {CH}.3 Neo Motifs and Analytical Examples
+## 4.3 Neo Motifs and Analytical Examples
 
 So far we have treated the Neo in full generality, expressing survivability $$\Xi$$ in terms of its stationary interaction with the NeoVerse projection. In practice, however, it is rarely possible to write down the stationary distribution $$\pi(x, u)$$ in closed form for an arbitrary topology. To make progress, we analyze Neo motifs: small, structurally simple Neos embedded in simple but nontrivial NeoVerse models. These motifs give us concrete, interpretable examples where we can compute both the stationary behavior and the resulting survivability analytically.
 
@@ -102,7 +102,7 @@ The analytical approach depends on the complexity of the Neo's internal dynamics
 
 We present two cases that illustrate these different analytical approaches. The first case considers a simple "copy Neo" that directly stores the current NeoVerse projection without internal feedback. This allows us to use maximum likelihood estimation to find the optimal decoder and compute accuracy directly. The second case examines a more complex "p-estimator Neo" with internal feedback loops that create memory and temporal dependencies. For this case, we must compute the stationary distribution of the internal state Markov chain to determine prediction accuracy and survivability.
 
-### {CH}.3.1 m-Bit Markov NeoVerse and the Copy Neo
+### 4.3.1 m-Bit Markov NeoVerse and the Copy Neo
 
 We consider an $$m$$-bit NeoVerse (NV) projection $$U_t = (U_t(1), \ldots, U_t(m)) \in \{0,1\}^m$$, where each coordinate evolves as an independent binary Markov chain with flip probability $$\alpha \in [0,1]$$. The transition probabilities are
 
@@ -178,7 +178,7 @@ $$\Xi \approx 1 - \exp\left(-\frac{2E_0 (r(1-\alpha)^m - c_\ell)}{r^2 (1-\alpha)
 
 When the mean drift is non-positive, the Neo will eventually die with probability one. When the drift is positive, survivability increases with initial energy $$E_0$$ and with the ratio of mean drift to variance, reflecting the balance between expected gains and the risk of stochastic fluctuations leading to death.
 
-### {CH}.3.2 p-Estimator Neo
+### 4.3.2 p-Estimator Neo
 
 In this case we consider a NeoVerse similar to what we had in case 1 (a binary stream), we would like to use a more complex Neo that can do better than a simple copy operation as it was in case 1. The NeoVerse emits a binary percept stream $$U_t \sim \text{Bernoulli}(p)$$, $$t = 0,1,2,\ldots$$, independently over time, with an unknown parameter $$p \in (0,1)$$. The Neo does not receive $$p$$; it only observes the bits $$U_t$$.
 
@@ -212,7 +212,7 @@ $$A(t+1) = H\big(2U_t + 1\cdot A(t) - 2\cdot B(t) - 1\big),$$
 
 **Prediction Rule**: At time $$t$$, the Neo observes $$U_t$$, updates $$A(t+1), B(t+1)$$ via the rules above, and uses $$\hat{U}_{t+1} = A(t+1)$$ as its prediction for the next percept $$U_{t+1}$$. We then measure $$\text{Acc}(p) = P\big(A(t+1) = U(t+1)\big)$$ in the stationary regime.
 
-#### {CH}.3.2.1 Anlytical Study 
+#### 4.3.2.1 Anlytical Study 
 
 Define the internal state as $$S_t = (A(t), B(t)) \in \{0,1\}^2$$. There are four possible internal states: $$s_0 = (0,0)$$, $$s_1 = (0,1)$$, $$s_2 = (1,0)$$, and $$s_3 = (1,1)$$. At each tick, given $$S_t$$ and $$U_t$$, the next state $$S_{t+1} = (A(t+1), B(t+1))$$ is deterministically defined by the Lex rules. Since $$U_t$$ is random with $$P(U_t = 1) = p$$, the process $$\{S_t\}$$ is a 4-state Markov chain with transition probabilities depending on $$p$$.
 
@@ -371,7 +371,7 @@ $$\Xi(p; r, E_0) = \begin{cases} 0, & r \leq \frac{2}{A(p)}, \\ 1 - \exp\left(-\
 
 This formula completely characterizes how survival depends on: the NV bias $$p$$, the architecture (through $$A(p)$$), the Spark reward $$r$$, the energy cost $$n=2$$, and the initial Nex $$E_0$$.
 
-### {CH}.3 Criticality Analysis of the p-Estimator Neo
+### 4.3 Criticality Analysis of the p-Estimator Neo
 
 The survivability analysis revealed that the p-estimator Neo exhibits a sharp transition between certain death and possible long-term survival as the reward parameter $$r$$ crosses a critical threshold
 
@@ -385,7 +385,7 @@ The curve $$r_{\text{crit}}(p)$$ partitions the $$(p,r)$$-plane into two phases:
 
 **Supercritical regime:** $$r > r_{\text{crit}}(p) \Rightarrow \Xi(p; r, E_0) > 0$$. Positive energy drift allows nonzero survivability.
 
-#### {CH}.3.5 Phase Diagram in $$(p,r)$$-Space
+#### 4.3.5 Phase Diagram in $$(p,r)$$-Space
 
 For the p-estimator Neo with cost $$c_\ell = 2$$, the critical line in $$(p,r)$$-space is
 
@@ -415,13 +415,13 @@ Key geometric properties of this phase boundary:
 
 **Lower threshold in biased environments:** e.g. $$r_{\text{crit}}(0.2) \approx 3.14 < 4$$.
 
-**Figure {CH}.3.B** — Phase diagram in $$(p,r)$$-space
+**Figure 4.3.B** — Phase diagram in $$(p,r)$$-space
 
-![Phase diagram](../assets/neo-phase.png)
+<img src="../assets/neo-phase.png" alt="Phase diagram" />
 
 This figure plots $$r_{\text{crit}}(p)$$ as a curve in the $$(p,r)$$-plane, shading: the region below the curve as "Extinction", the region above as "Survival". Optionally overlay Monte Carlo survival probabilities as a color map to show how the 0–1 transition aligns with the analytic boundary.
 
-#### {CH}.3.6 Universality Near the Critical Line
+#### 4.3.6 Universality Near the Critical Line
 
 Near the critical line $$r = r_{\text{crit}}(p)$$, the Neo's energy behaves like a biased random walk with small drift and variance $$\sigma^2(p) = r^2 A(p)(1 - A(p))$$.
 
@@ -456,7 +456,7 @@ Any Neo with binary reward and constant per-tick cost, whose stationary behavior
 
 In other words, the qualitative phase structure and scaling near criticality are universal across this whole family of Neos; the p-estimator Neo is a concrete instantiation where we can write everything in closed form via $$A(p)$$.
 
-#### {CH}.3.2.2 Simulation Study
+#### 4.3.2.2 Simulation Study
 
 This section evaluates the behavior of the two-node p-estimator Neo through direct simulation of the Neo cycle. The implementation follows the formal operational rules of perception, internal state update, Spark emission, and energy accounting described in the Neosis specification. Survival expectations are compared to the drift-based analysis developed in the Neo-Survivability document.
 
@@ -500,13 +500,13 @@ The difference between $$p = 0.2$$ and $$p = 0.5$$ affects the magnitude of drif
 
 **Results**
 
-Figure {CH}.3.2.2.1 shows simulated energy trajectories on a logarithmic scale. As predicted, all runs with $$r = 2$$ terminate rapidly, while $$r = 4$$ produces slow, sometimes oscillatory drift that keeps the Neo near the survival boundary. Runs with $$r = 5$$ display clear exponential-in-log growth, consistent with a strongly positive drift in the stationary regime. The close agreement between these trajectories and the theoretical predictions confirms that survival is overwhelmingly determined by stationary accuracy rather than transient dynamics.
+Figure 4.3.2.2.1 shows simulated energy trajectories on a logarithmic scale. As predicted, all runs with $$r = 2$$ terminate rapidly, while $$r = 4$$ produces slow, sometimes oscillatory drift that keeps the Neo near the survival boundary. Runs with $$r = 5$$ display clear exponential-in-log growth, consistent with a strongly positive drift in the stationary regime. The close agreement between these trajectories and the theoretical predictions confirms that survival is overwhelmingly determined by stationary accuracy rather than transient dynamics.
 
 Although the accuracy at $$p = 0.2$$ is slightly higher than at $$p = 0.5$$, the difference is modest for this architecture, and over the 200-tick window the curves for the two environments appear broadly similar. Longer simulations make the gap more visible, but even in this short horizon the expected ordering of drift is evident.
 
-**Figure {CH}.3.2.2.1** — Energy trajectories for the two-node p-estimator Neo
+**Figure 4.3.2.2.1** — Energy trajectories for the two-node p-estimator Neo
 
-![Simulation results](../assets/neo-p-est-sim.png)
+<img src="../assets/neo-p-est-sim.png" alt="Simulation results" />
 
 Energy trajectories for the two-node p-estimator Neo under binary prediction reward, in NeoVerses with $$p = 0.2$$ and $$p = 0.5$$. The curves illustrate the effect of reward amplitude $$r \in \{2, 4, 5\}$$ on survival or extinction. Trajectories stop when $$E_t = 0$$.
 
