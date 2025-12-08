@@ -385,6 +385,75 @@ The curve $$r_{\text{crit}}(p)$$ partitions the $$(p,r)$$-plane into two phases:
 
 **Supercritical regime:** $$r > r_{\text{crit}}(p) \Rightarrow \Xi(p; r, E_0) > 0$$. Positive energy drift allows nonzero survivability.
 
+#### 4.3.5 Phase Diagram in $$(p,r)$$-Space
+
+For the p-estimator Neo with cost $$c_\ell = 2$$, the critical line in $$(p,r)$$-space is
+
+$$r_{\text{crit}}(p) = \frac{2}{A(p)} = \frac{2(1 + 2p - 2p^2)}{1 - p + p^2}, \quad A(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}.$$
+
+This line partitions the $$(p,r)$$-plane into two regimes:
+
+**Extinction (Subcritical) Region**
+
+$$D_{\text{die}} = \{(p,r): r \leq r_{\text{crit}}(p)\},$$
+
+where energy drift $$\mu(p) = rA(p) - 2 \leq 0$$ and survivability $$\Xi = 0$$.
+
+**Survival (Supercritical) Region**
+
+$$D_{\text{live}} = \{(p,r): r > r_{\text{crit}}(p)\},$$
+
+where $$\mu(p) > 0$$ and
+
+$$\Xi(p; r, E_0) \approx 1 - \exp\left(-\frac{2E_0 (rA(p) - 2)}{r^2 A(p)(1 - A(p))}\right) > 0.$$
+
+Key geometric properties of this phase boundary:
+
+**Symmetry:** $$r_{\text{crit}}(p) = r_{\text{crit}}(1-p)$$, so the diagram is symmetric around $$p = 0.5$$.
+
+**Maximal hardness at $$p = 0.5$$:** $$r_{\text{crit}}(0.5) = 4$$ is the highest point on the curve.
+
+**Lower threshold in biased environments:** e.g. $$r_{\text{crit}}(0.2) \approx 3.14 < 4$$.
+
+**Figure 4.3.B** — Phase diagram in $$(p,r)$$-space (placeholder)
+
+Description: This figure should plot $$r_{\text{crit}}(p)$$ as a curve in the $$(p,r)$$-plane, shading: the region below the curve as "Extinction", the region above as "Survival". Optionally overlay Monte Carlo survival probabilities as a color map to show how the 0–1 transition aligns with the analytic boundary.
+
+#### 4.3.6 Universality Near the Critical Line
+
+Near the critical line $$r = r_{\text{crit}}(p)$$, the Neo's energy behaves like a biased random walk with small drift and variance $$\sigma^2(p) = r^2 A(p)(1 - A(p))$$.
+
+Write $$r = r_{\text{crit}}(p) + \varepsilon$$, with $$\varepsilon$$ small. Then
+
+$$\mu(p) = rA(p) - 2 = (r_{\text{crit}}(p) + \varepsilon)A(p) - 2 = 2 + \varepsilon A(p) - 2 = \varepsilon A(p).$$
+
+So close to criticality:
+
+**Drift scales linearly with the distance from the critical line:** $$\mu \approx A(p) \, \varepsilon$$.
+
+**Variance remains finite and non-zero:**
+
+$$\sigma^2(p) = r^2 A(p)(1 - A(p)) \approx r_{\text{crit}}(p)^2 A(p)(1 - A(p)).$$
+
+Plugging into the survivability expression for small $$\mu$$:
+
+$$\Xi(p; r, E_0) \approx 1 - \exp\left(-\frac{2E_0 \mu}{\sigma^2}\right) \approx \frac{2E_0 \mu}{\sigma^2} \approx C(p, E_0) \, \varepsilon,$$
+
+where
+
+$$C(p, E_0) = \frac{2E_0 A(p)}{r_{\text{crit}}(p)^2 A(p)(1 - A(p))} = \frac{2E_0}{r_{\text{crit}}(p)^2 (1 - A(p))}.$$
+
+So near the critical line:
+
+- Survivability rises linearly in $$r - r_{\text{crit}}(p)$$.
+- The detailed architecture enters only through $$A(p)$$ (hence $$r_{\text{crit}}(p)$$ and the prefactor).
+
+This yields a simple universality statement:
+
+Any Neo with binary reward and constant per-tick cost, whose stationary behavior can be summarized by a scalar accuracy $$\text{Acc}$$, lies in the same universality class: near the critical line $$r = c_\ell / \text{Acc}$$, survivability grows linearly in the distance to criticality, with a slope that depends smoothly on $$\text{Acc}$$ and $$E_0$$, but not on finer architectural details.
+
+In other words, the qualitative phase structure and scaling near criticality are universal across this whole family of Neos; the p-estimator Neo is a concrete instantiation where we can write everything in closed form via $$A(p)$$.
+
 #### 4.3.2.2 Simulation Study
 
 This section evaluates the behavior of the two-node p-estimator Neo through direct simulation of the Neo cycle. The implementation follows the formal operational rules of perception, internal state update, Spark emission, and energy accounting described in the Neosis specification. Survival expectations are compared to the drift-based analysis developed in the Neo-Survivability document.
