@@ -244,9 +244,11 @@ $$\begin{aligned} A(t+1) &= H(2U_t + A(t) - 2B(t) - 1),\\ B(t+1) &= H(A(t) - 0.5
 
 **Case 4:** $$S_t = s_3 = (1,1)$$. If $$U_t = 0$$: $$a_A = 0 + 1 - 2\cdot 1 - 1 = -2 
 \Rightarrow A(t+1)=0$$, $$a_B = 1 - 0.5 = 0.5 
-\Rightarrow B(t+1)=1$$, so $$S_{t+1} = (0,1) = s_1$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 2\cdot 1 - 1 = 0 \Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 
+\Rightarrow B(t+1)=1$$, so $$S_{t+1} = (0,1) = s_1$$. If $$U_t = 1$$: $$a_A = 2\cdot 1 + 1 - 2\cdot 1 - 1 = 0 
+\Rightarrow A(t+1)=1$$, $$a_B = 1 - 0.5 = 0.5 
 \Rightarrow B(t+1)=1$$, so $$S_{t+1} = (1,1) = s_3$$. So from $$s_3$$: $$U_t = 0 
-\Rightarrow s_1$$; $$U_t = 1 \Rightarrow s_3$$.
+\Rightarrow s_1$$; $$U_t = 1 
+\Rightarrow s_3$$.
 
 **Transition Matrix $$P(p)$$**
 
