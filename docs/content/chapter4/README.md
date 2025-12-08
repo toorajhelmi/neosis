@@ -323,6 +323,64 @@ Therefore, $$\boxed{ \text{Acc}(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}. }$$
 
 Note that $$\text{Acc}(p) \leq \max(p,1-p)$$ for all $$p \in (0,1)$$; the Neo does not reach the Bayes limit.
 
+#### Survivability of the p-Estimator Neo
+
+For the 2-node p-estimator Neo, we have already computed the stationary joint behavior of the Neo and the Bernoulli NeoVerse. In particular, the Neo achieves a stationary next-bit prediction accuracy
+
+$$\text{Acc}(p) = A(p) = \frac{1 - p + p^2}{1 + 2p - 2p^2}.$$
+
+This accuracy is the only ingredient needed to plug the p-estimator into the general Neo survivability framework.
+
+**Energy Dynamics Under Binary Reward**
+
+Each tick produces a Spark reward $$S_t = r \, \mathbf{1}\{A(t+1) = U_{t+1}\}$$, and incurs a living cost $$c_\ell = n = 2$$, the number of nodes in the Neo. Thus the increment of Nex is
+
+$$\Delta E_t = r \, \mathbf{1}\{A(t+1) = U_{t+1}\} - c_\ell.$$
+
+In stationarity, correctness is a Bernoulli event with probability $$A(p)$$, so
+
+$$\Delta E_t = \begin{cases} r - c_\ell, & \text{with probability } A(p), \\ -c_\ell, & \text{with probability } 1 - A(p). \end{cases}$$
+
+**Mean Drift and Variance**
+
+From this two-point distribution:
+
+$$\mu(p) = \mathbb{E}[\Delta E_t] = rA(p) - c_\ell,$$
+
+$$\sigma^2(p) = \text{Var}(\Delta E_t) = r^2 A(p)(1 - A(p)).$$
+
+These two quantities fully determine survivability.
+
+**Survivability Criterion**
+
+Let $$E_t$$ denote Nex, with initial energy $$E_0 > 0$$ and absorbing boundary at $$E = 0$$. Under a standard diffusion approximation of the biased random walk $$E_{t+1} = E_t + \Delta E_t$$, the Neo's survivability (probability of never hitting zero) is
+
+$$\Xi(p; r, E_0) \approx \begin{cases} 0, & \mu(p) \leq 0, \\ 1 - \exp\left(-\frac{2\mu(p)E_0}{\sigma^2(p)}\right), & \mu(p) > 0, \end{cases}$$
+
+where
+
+$$\mu(p) = rA(p) - c_\ell, \quad \sigma^2(p) = r^2 A(p)(1 - A(p)).$$
+
+**Critical Reward Level**
+
+Survival is possible only if drift is positive:
+
+$$\mu(p) > 0 \iff r > \frac{c_\ell}{A(p)}.$$
+
+For the 2-node p-estimator $$c_\ell = 2$$, so the critical reward-to-cost ratio is
+
+$$r_{\text{crit}}(p) = \frac{2}{A(p)} = \frac{2(1 + 2p - 2p^2)}{1 - p + p^2}.$$
+
+Examples: $$p = 0.2$$: $$A(0.2) = 7/11 \Rightarrow r_{\text{crit}} \approx 3.14$$; $$p = 0.5$$: $$A(0.5) = 1/2 \Rightarrow r_{\text{crit}} = 4$$. Thus the Neo requires less reward to survive in biased environments (e.g., $$p = 0.2$$) and the most reward under maximal uncertainty ($$p = 0.5$$).
+
+**Final Survivability Expression for the p-Estimator**
+
+Substituting $$A(p)$$ directly yields:
+
+$$\Xi(p; r, E_0) = \begin{cases} 0, & r \leq \frac{2}{A(p)}, \\ 1 - \exp\left(-\frac{2E_0 (rA(p) - 2)}{r^2 A(p)(1 - A(p))}\right), & r > \frac{2}{A(p)}. \end{cases}$$
+
+This formula completely characterizes how survival depends on: the NV bias $$p$$, the architecture (through $$A(p)$$), the Spark reward $$r$$, the energy cost $$n=2$$, and the initial Nex $$E_0$$.
+
 #### 4.3.2.2 Simulation Study
 
 We simulate the Neo for $$T = 200{,}000$$ ticks for each $$p \in \{0.2,0.5,0.8\}$$. The procedure is: 
