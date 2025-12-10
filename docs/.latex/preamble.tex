@@ -108,9 +108,10 @@
 \usepackage{eso-pic}
 
 % Command to add "IN PROGRESS" watermark
-% Usage: \inprogress (before a chapter) or \inprogresschapter{Chapter Title}
+% Usage: \inprogress (before a chapter) - applies to all subsequent pages
+% Note: Remove watermark with \ClearShipoutPictureBG
 \newcommand{\inprogress}{%
-  \AddToShipoutPictureBG*{%
+  \AddToShipoutPictureBG{%
     \AtPageLowerLeft{%
       \rotatebox{45}{%
         \makebox[\paperwidth]{%
@@ -121,9 +122,14 @@
   }%
 }
 
+% Command to remove watermark (if needed between chapters)
+\newcommand{\clearwatermark}{%
+  \ClearShipoutPictureBG%
+}
+
 % Alternative: lighter watermark
 \newcommand{\inprogresslight}{%
-  \AddToShipoutPictureBG*{%
+  \AddToShipoutPictureBG{%
     \AtPageLowerLeft{%
       \rotatebox{45}{%
         \makebox[\paperwidth]{%
