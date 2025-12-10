@@ -112,11 +112,29 @@
 % Note: Remove watermark with \ClearShipoutPictureBG
 \newcommand{\inprogress}{%
   \AddToShipoutPictureBG{%
-    \AtPageLowerLeft{%
+    \AtPageCenter{%
       \rotatebox{45}{%
-        \makebox[\dimexpr\paperwidth+\paperheight]{%
-          \hspace*{-\dimexpr\paperheight/2}%
-          \textcolor{red!30!white}{\fontsize{100}{100}\selectfont IN PROGRESS}%
+        \makebox[0pt][c]{%
+          \textcolor{red!30!white}{\fontsize{200}{200}\selectfont IN PROGRESS}%
+        }%
+      }%
+    }%
+    % Add second instance offset to ensure full coverage
+    \AtPageCenter{%
+      \rotatebox{45}{%
+        \makebox[0pt][c]{%
+          \raisebox{400pt}{%
+            \textcolor{red!30!white}{\fontsize{200}{200}\selectfont IN PROGRESS}%
+          }%
+        }%
+      }%
+    }%
+    \AtPageCenter{%
+      \rotatebox{45}{%
+        \makebox[0pt][c]{%
+          \raisebox{-400pt}{%
+            \textcolor{red!30!white}{\fontsize{200}{200}\selectfont IN PROGRESS}%
+          }%
         }%
       }%
     }%
