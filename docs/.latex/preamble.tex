@@ -112,10 +112,10 @@
 % Note: Remove watermark with \ClearShipoutPictureBG
 \newcommand{\inprogress}{%
   \AddToShipoutPictureBG{%
-    \AtPageLowerLeft{%
+    \AtPageCenter{%
       \rotatebox{45}{%
-        \makebox[\paperwidth]{%
-          \textcolor{red!30!white}{\fontsize{72}{72}\selectfont IN PROGRESS}%
+        \makebox[0pt][c]{%
+          \textcolor{red!30!white}{\fontsize{120}{120}\selectfont IN PROGRESS}%
         }%
       }%
     }%
