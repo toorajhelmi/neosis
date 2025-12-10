@@ -115,7 +115,17 @@
     \AtPageCenter{%
       \rotatebox{45}{%
         \makebox[0pt][c]{%
-          \textcolor{red!30!white}{\fontsize{120}{120}\selectfont IN PROGRESS}%
+          \textcolor{red!30!white}{\fontsize{100}{100}\selectfont IN PROGRESS}%
+        }%
+      }%
+    }%
+    % Add a second instance offset to ensure full coverage
+    \AtPageCenter{%
+      \rotatebox{45}{%
+        \makebox[0pt][c]{%
+          \raisebox{200pt}{%
+            \textcolor{red!30!white}{\fontsize{100}{100}\selectfont IN PROGRESS}%
+          }%
         }%
       }%
     }%
