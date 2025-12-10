@@ -104,3 +104,33 @@
   \renewcommand{\headrulewidth}{0pt}%
 }
 
+% Watermark support for "In Progress" chapters
+\usepackage{eso-pic}
+
+% Command to add "IN PROGRESS" watermark
+% Usage: \inprogress (before a chapter) or \inprogresschapter{Chapter Title}
+\newcommand{\inprogress}{%
+  \AddToShipoutPictureBG*{%
+    \AtPageLowerLeft{%
+      \rotatebox{45}{%
+        \makebox[\paperwidth]{%
+          \textcolor{red!30!white}{\fontsize{72}{72}\selectfont IN PROGRESS}%
+        }%
+      }%
+    }%
+  }%
+}
+
+% Alternative: lighter watermark
+\newcommand{\inprogresslight}{%
+  \AddToShipoutPictureBG*{%
+    \AtPageLowerLeft{%
+      \rotatebox{45}{%
+        \makebox[\paperwidth]{%
+          \textcolor{gray!20!white}{\fontsize{60}{60}\selectfont DRAFT}%
+        }%
+      }%
+    }%
+  }%
+}
+
